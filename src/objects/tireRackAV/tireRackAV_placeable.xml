@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<placeable type="simplePlaceable">
+    <storeData>
+        <name>
+            <en>Dual wheels front BKT 540/65R30</en>
+            <fr>Jumelées avant BKT 540/65R30</fr>
+            <de>Zwillingsräder vorne BKT 540/65R30</de>
+        </name>
+        <functions>
+            <function>$l10n_as_dual_store_function_av</function>
+        </functions>
+        <image>objects/tireRackAV/store_tireRackAV.dds</image>
+        <price>3500</price>
+        <dailyUpkeep>0</dailyUpkeep>
+        <lifetime>1000</lifetime>
+        <rotation>0</rotation>
+        <brand>LIZARD</brand>
+        <species>PLACEABLE</species>
+        <category>gardenSheds</category>
+        <brush>
+            <type>placeable</type>
+            <category>decoration</category>
+            <tab>uncategorized</tab>
+        </brush>
+        <canBeSold>true</canBeSold>
+        <showInStore>true</showInStore>
+    </storeData>
+
+    <base>
+        <filename>objects/tireRackAV/tireRackAV_placeable.i3d</filename>
+        <canBeRenamed>false</canBeRenamed>
+        <boughtWithFarmland>true</boughtWithFarmland>
+    </base>
+
+    <placement useRandomYRotation="false" useManualYRotation="true">
+        <sounds>
+            <place template="smallImp" pitchScale="1.4"/>
+        </sounds>
+    </placement>
+    <!-- zones vides : évite les avertissements "Missing ... areas" dans le log -->
+    <clearAreas/>
+    <indoorAreas/>
+    <leveling requireLeveling="false">
+        <levelAreas/>
+    </leveling>
+    <ai>
+        <updateAreas/>
+    </ai>
+</placeable>

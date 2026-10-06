@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<i3D name="tireRackAR.i3d" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
+  <Asset>
+    <Export program="GIANTS Editor 64bit" version="10.0.13"/>
+  </Asset>
+
+  <Files>
+    <File fileId="2" filename="$data/objects/pallets/shared/euroPallet/euroPalletNew_diffuse.png"/>
+    <File fileId="6" filename="$data/objects/pallets/shared/euroPallet/euroPalletOld_diffuse.png"/>
+    <File fileId="3" filename="$data/objects/pallets/shared/euroPallet/euroPallet_normal.png"/>
+    <File fileId="4" filename="$data/objects/pallets/shared/euroPallet/euroPallet_specular.png"/>
+    <File fileId="5" filename="$data/shaders/placeableShader.xml"/>
+    <File fileId="21" filename="$data/shaders/tireMudShader.xml"/>
+    <File fileId="13" filename="$data/shaders/vehicleShader.xml"/>
+    <File fileId="22" filename="$data/shared/default_normal.png"/>
+    <File fileId="25" filename="$data/shared/detailLibrary/flat_normal.png"/>
+    <File fileId="26" filename="$data/shared/detailLibrary/metallic/clear_diffuse.png"/>
+    <File fileId="24" filename="$data/shared/detailLibrary/metallic/rough_specular.png"/>
+    <File fileId="19" filename="$data/shared/detailLibrary/nonMetallic/dirt_diffuse.png"/>
+    <File fileId="17" filename="$data/shared/detailLibrary/nonMetallic/dirt_specular.png"/>
+    <File fileId="20" filename="$data/shared/detailLibrary/nonMetallic/mud_normal.png"/>
+    <File fileId="16" filename="$data/shared/detailLibrary/nonMetallic/rubber/rubberBlack_diffuse.png"/>
+    <File fileId="15" filename="$data/shared/detailLibrary/nonMetallic/rubber/rubber_normal.png"/>
+    <File fileId="14" filename="$data/shared/detailLibrary/nonMetallic/rubber/rubber_specular.png"/>
+    <File fileId="23" filename="$data/shared/wheels/rims/rim001_vmask.png"/>
+    <File fileId="11" filename="$data/shared/wheels/tires/bkt/agrimaxVFlecto/agrimaxVFlecto_normal.png"/>
+    <File fileId="12" filename="$data/shared/wheels/tires/bkt/agrimaxVFlecto/agrimaxVFlecto_vmask.png"/>
+    <File fileId="10" filename="$data/shared/white_diffuse.png"/>
+  </Files>
+
+
+  <Materials>
+    <Material name="agrimaxVFlecto_rubberBlack_mat1" materialId="359" customShaderId="13" customShaderVariation="tirePressureDeformation">
+      <Texture fileId="10"/>
+      <Normalmap fileId="11"/>
+      <Glossmap fileId="12"/>
+      <Custommap name="detailSpecular" fileId="14"/>
+      <Custommap name="detailNormal" fileId="15"/>
+      <Custommap name="detailDiffuse" fileId="16"/>
+      <CustomParameter name="porosity" value="0.5"/>
+      <CustomParameter name="morphPos" value="-0.6294 -0.9565 0.5 0.1"/>
+    </Material>
+    <Material name="euroPalletNew_mat" materialId="5" customShaderId="5" customShaderVariation="customDiffuseBlend">
+      <Texture fileId="2"/>
+      <Normalmap fileId="3"/>
+      <Glossmap fileId="4"/>
+      <Custommap name="mCustomDiffuse" fileId="6"/>
+    </Material>
+    <Material name="lambert1" materialId="6" diffuseColor="0.494118 0.494118 0.494118 1">
+    </Material>
+    <Material name="lambert1" materialId="7" diffuseColor="0.501961 0.501961 0.501961 1">
+    </Material>
+    <Material name="mud_mat1" materialId="358" customShaderId="21">
+      <Texture fileId="19"/>
+      <Normalmap fileId="20"/>
+      <Glossmap fileId="17"/>
+      <CustomParameter name="morphPos" value="-0.6294 -0.9565 0.5 0.1"/>
+    </Material>
+    <Material name="rim_outer_mat" materialId="374" customShaderId="13" customShaderVariation="rim">
+      <Texture fileId="10"/>
+      <Normalmap fileId="22"/>
+      <Glossmap fileId="23"/>
+      <Custommap name="detailSpecular" fileId="24"/>
+      <Custommap name="detailNormal" fileId="25"/>
+      <Custommap name="detailDiffuse" fileId="26"/>
+      <CustomParameter name="colorScale" value="0.6456 0.6456 0.6456"/>
+    </Material>
+  </Materials>
+
+
+  <Shapes externalShapesFile="tireRackAR.i3d.shapes">
+  </Shapes>
+
+  <Scene>
+    <Shape name="emptyPallet_component1" translation="0.00734284 0 8.54353e-05" scale="1.6997 2.4996 1.70033" shapeId="1" dynamic="true" compound="true" collisionFilterGroup="0x10004" collisionFilterMask="0xfe3ffb83" clipDistance="150" nodeId="26" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="6">
+      <Shape name="euroPallet_vis" shapeId="2" clipDistance="200" nodeId="27" castsShadows="true" receiveShadows="true" materialIds="5">
+        <TransformGroup name="collisions" clipDistance="10" nodeId="30">
+          <Shape name="floorCollision01" translation="-0.3 5.7e-05 0" shapeId="3" compoundChild="true" collisionFilterGroup="0x10000" collisionFilterMask="0xfe3dfb83" staticFriction="1" dynamicFriction="1" density="0.001" nodeId="31" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="7"/>
+          <Shape name="floorCollision02" translation="0.3 5.7e-05 0" shapeId="4" compoundChild="true" collisionFilterGroup="0x10000" collisionFilterMask="0xfe3dfb83" staticFriction="1" dynamicFriction="1" density="0.001" nodeId="32" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="7"/>
+        </TransformGroup>
+        <TransformGroup name="tensionBelts" nodeId="33">
+          <TransformGroup name="tensionBeltStart01" translation="0.600148 0.119 -0.192" rotation="0 -90 0" nodeId="34">
+            <TransformGroup name="tensionBeltEnd01" translation="-7.04351e-08 -1.42109e-16 1.194" nodeId="35"/>
+            <TransformGroup name="tensionBelt1Intersection1" translation="-7.04351e-08 0.06 0" nodeId="36"/>
+            <TransformGroup name="tensionBelt1Intersection2" translation="-7.04351e-08 0.06 1.194" nodeId="37"/>
+          </TransformGroup>
+          <TransformGroup name="tensionBeltStart02" translation="0.600148 0.119 0.192" rotation="0 -90 0" nodeId="38">
+            <TransformGroup name="tensionBeltEnd02" translation="-7.04351e-08 -1.42109e-16 1.19432" nodeId="39"/>
+            <TransformGroup name="tensionBelt2Intersection1" translation="-7.04351e-08 0.06 0" nodeId="40"/>
+            <TransformGroup name="tensionBelt2Intersection2" translation="-7.04351e-08 0.06 1.194" nodeId="41"/>
+          </TransformGroup>
+          <Shape name="beltActivationTrigger" shapeId="5" visibility="false" kinematic="true" trigger="true" collisionFilterGroup="0x20000000" collisionFilterMask="0x100000" nodeId="42" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="6"/>
+        </TransformGroup>
+        <TransformGroup name="PneuAR1" translation="-0.281832 0.487258 0.00968481" scale="0.588339 0.400064 0.588121" nodeId="452">
+          <TransformGroup name="VF_agrimaxVFlecto_NRO_650_65R42" translation="0.00576007 0.00390077 -0.0165528" nodeId="364">
+            <TransformGroup name="lod" lodDistance="0 25" clipDistance="600" nodeId="365">
+              <Shape name="lod0" shapeId="6" nodeId="366" castsShadows="true" receiveShadows="true" materialIds="359">
+                <Shape name="mudMesh" shapeId="7" clipDistance="35" nodeId="367" castsShadows="true" receiveShadows="true" materialIds="358"/>
+              </Shape>
+              <Shape name="lod1" shapeId="8" nodeId="368" castsShadows="true" receiveShadows="true" materialIds="359"/>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="dw_inner_hole02" translation="-0.24138 -0.00195062 0.00827641" scale="1 1.22505 1.22505" clipDistance="800" nodeId="429">
+            <Shape name="dw_inner_holeLeft02" shapeId="9" clipDistance="420" nodeId="430" castsShadows="true" receiveShadows="true" materialIds="374"/>
+            <Shape name="dw_inner_holeRight02" translation="0.00367732 -0.0105304 -0.0208544" shapeId="10" clipDistance="420" nodeId="431" castsShadows="true" receiveShadows="true" materialIds="374"/>
+          </TransformGroup>
+          <TransformGroup name="dw_inner_hole02" translation="0.23562 -0.00195062 0.00827641" scale="1 1.22505 1.22505" clipDistance="800" nodeId="440">
+            <Shape name="dw_inner_holeLeft02" shapeId="9" clipDistance="420" nodeId="441" castsShadows="true" receiveShadows="true" materialIds="374"/>
+            <Shape name="dw_inner_holeRight02" translation="0.00367732 -0.0105304 -0.0208544" shapeId="10" clipDistance="420" nodeId="442" castsShadows="true" receiveShadows="true" materialIds="374"/>
+          </TransformGroup>
+        </TransformGroup>
+        <TransformGroup name="PneuAR2" translation="0.200128 0.487258 0.00968481" scale="0.588339 0.400064 0.588121" nodeId="453">
+          <TransformGroup name="VF_agrimaxVFlecto_NRO_650_65R42" translation="0.003521 0.00390077 -0.0165528" nodeId="369">
+            <TransformGroup name="lod" lodDistance="0 25" clipDistance="600" nodeId="370">
+              <Shape name="lod0" shapeId="6" nodeId="371" castsShadows="true" receiveShadows="true" materialIds="359">
+                <Shape name="mudMesh" shapeId="7" clipDistance="35" nodeId="372" castsShadows="true" receiveShadows="true" materialIds="358"/>
+              </Shape>
+              <Shape name="lod1" shapeId="8" nodeId="373" castsShadows="true" receiveShadows="true" materialIds="359"/>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="dw_inner_hole02" translation="-0.239247 -0.00195062 0.00827641" scale="1 1.22505 1.22505" clipDistance="800" nodeId="446">
+            <Shape name="dw_inner_holeLeft02" shapeId="9" clipDistance="420" nodeId="447" castsShadows="true" receiveShadows="true" materialIds="374"/>
+            <Shape name="dw_inner_holeRight02" translation="0.00367732 -0.0105304 -0.0208544" shapeId="10" clipDistance="420" nodeId="448" castsShadows="true" receiveShadows="true" materialIds="374"/>
+          </TransformGroup>
+          <TransformGroup name="dw_inner_hole02" translation="0.235726 -0.00195062 0.00827641" scale="1 1.22505 1.22505" clipDistance="800" nodeId="449">
+            <Shape name="dw_inner_holeLeft02" shapeId="9" clipDistance="420" nodeId="450" castsShadows="true" receiveShadows="true" materialIds="374"/>
+            <Shape name="dw_inner_holeRight02" translation="0.00367732 -0.0105304 -0.0208544" shapeId="10" clipDistance="420" nodeId="451" castsShadows="true" receiveShadows="true" materialIds="374"/>
+          </TransformGroup>
+        </TransformGroup>
+      </Shape>
+    </Shape>
+</Scene>
+
+</i3D>

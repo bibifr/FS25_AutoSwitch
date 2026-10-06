@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <texts>
+        <text name="vtpas_on" text="On"/>
+        <text name="vtpas_off" text="Off"/>
+        <text name="vtpas_auto" text="Automatic"/>
+        <text name="vtpas_manual" text="Manual"/>
+        <text name="vtpas_slip_label" text="Wheel slip for diff lock"/>
+        <text name="vtpas_slip_tip" text="Wheel slip (%) above which differentials lock automatically (Enhanced Vehicle). Off = never."/>
+        <text name="vtpas_diff_label" text="Differentials (manual driving)"/>
+        <text name="vtpas_diff_tip" text="With AutoDrive or Courseplay the lock is always automatic. This setting applies when you drive yourself: Automatic = locks when slip exceeds the threshold; Manual = you control the differentials yourself."/>
+        <text name="vtpas_tire_label" text="Tire pressure (manual driving)"/>
+        <text name="vtpas_tire_tip" text="With AutoDrive or Courseplay inflating and deflating are always automatic. This setting applies when you drive yourself: Automatic = inflated on roads, deflated in fields; Manual = you use the mod's key."/>
+        <text name="vtpas_notifDiff_label" text="Differential notifications"/>
+        <text name="vtpas_notifDiff_tip" text="Shows a notification when a vehicle locks or unlocks its differentials."/>
+        <text name="vtpas_notifTires_label" text="Tire notifications"/>
+        <text name="vtpas_notifTires_tip" text="Shows a notification when a vehicle inflates or deflates its tires."/>
+        <text name="vtpas_notif_diffLocked" text="%s: differentials locked (slip %.0f%%)"/>
+        <text name="vtpas_notif_diffUnlocked" text="%s: differentials unlocked"/>
+        <text name="vtpas_notif_tiresInflated" text="%s: tires inflated (road pressure)"/>
+        <text name="vtpas_notif_tiresDeflated" text="%s: tires deflated (field pressure)"/>
+        <text name="vtpas_alert_pct_label" text="Slip alert: threshold"/>
+        <text name="vtpas_alert_pct_tip" text="Shows a red message when a vehicle's wheel slip stays above this percentage for the set duration. Off = no alert."/>
+        <text name="vtpas_alert_sec_label" text="Slip alert: duration"/>
+        <text name="vtpas_alert_sec_tip" text="Time (in seconds) the slip must stay above the threshold before the alert appears."/>
+        <text name="vtpas_alert_slip" text="%s: excessive wheel slip (%.0f%%) for more than %d s!"/>
+        <text name="vtpas_diffdelay_label" text="Differentials: delay before lock"/>
+        <text name="vtpas_diffdelay_tip" text="Time (in seconds) the wheel slip must stay above the threshold before the differentials lock automatically."/>
+        <text name="vtpas_decimal" text="."/>
+        <text name="vtpas_tiredelay_label" text="Tires: delay between two changes"/>
+        <text name="vtpas_tiredelay_tip" text="Minimum time (in seconds) between two pressure changes (inflate / deflate) to avoid rapid back-and-forth. Off = no delay."/>
+        <text name="vtpas_hintShow_label" text="Recommended speed range (in fields)"/>
+        <text name="vtpas_hintShow_tip" text="Shows the recommended speed range above the speedometer, updated continuously from the zone (field / road), tire pressure, soil type, soil moisture and wheel slip."/>
+        <text name="vtpas_hintPos_label" text="Speed range: height from bottom"/>
+        <text name="vtpas_hintPos_tip" text="Default position: distance (in cm, 24 to 27 inch screen) between the bottom of the screen and the display. You can also drag it with the mouse: show the cursor (Courseplay right click), then hold left click on the box. Changing this setting restores the default position."/>
+        <text name="vtpas_hint_range" text="Recommended range: %d - %d km/h"/>
+        <text name="vtpas_hint_min" text="Recommended speed: min %d km/h"/>
+        <text name="vtpas_hint_max" text="Recommended speed: max %d km/h"/>
+        <text name="vtpas_hint_free" text="Free speed"/>
+        <text name="vtpas_hint_risk" text="Risk of getting stuck: min %d km/h, don't stop"/>
+        <text name="vtpas_hint_field" text="Field"/>
+        <text name="vtpas_hint_road" text="Off-field"/>
+        <text name="vtpas_hint_soil" text="moisture %d %%"/>
+        <text name="vtpas_hint_frozen" text="frozen ground"/>
+        <text name="vtpas_hint_tiresField" text="field tires"/>
+        <text name="vtpas_hint_tiresRoad" text="road tires"/>
+        <text name="vtpas_hint_slip" text="slip %d %%"/>
+        <text name="vtpas_gt_StubbleTillage" text="stubble tilled"/>
+        <text name="vtpas_gt_Cultivated" text="cultivated"/>
+        <text name="vtpas_gt_Seedbed" text="seedbed"/>
+        <text name="vtpas_gt_Plowed" text="plowed"/>
+        <text name="vtpas_gt_RolledSeedbed" text="rolled seedbed"/>
+        <text name="vtpas_gt_Ridge" text="ridges"/>
+        <text name="vtpas_gt_Sown" text="sown"/>
+        <text name="vtpas_gt_DirectSown" text="direct sown"/>
+        <text name="vtpas_gt_Planted" text="planted"/>
+        <text name="vtpas_gt_RidgeSown" text="sown ridges"/>
+        <text name="vtpas_gt_Rollerlines" text="rolled"/>
+        <text name="vtpas_gt_HarvestReady" text="crop"/>
+        <text name="vtpas_gt_HarvestReadyO" text="crop"/>
+        <text name="vtpas_gt_Grass" text="grass"/>
+        <text name="vtpas_gt_GrassCut" text="cut grass"/>
+        <text name="vtpas_hint_riskShort" text="RISK OF GETTING STUCK"/>
+        <text name="vtpas_fieldMax_label" text="Speed range: field maximum"/>
+        <text name="vtpas_fieldMax_tip" text="Maximum upper speed of the recommended range when working in a field. The range can go lower depending on the implement, mud or tire pressure."/>
+        <text name="vtpas_durDiffs_label" text="Differential notifications: duration"/>
+        <text name="vtpas_durTires_label" text="Tire notifications: duration"/>
+        <text name="vtpas_durAlert_label" text="Slip alert: display duration"/>
+        <text name="vtpas_dur_tip" text="How long (in seconds) the message stays on screen."/>
+        <text name="vtpas_protectSeed_label" text="Protect sown crops (reverse / seeder)"/>
+        <text name="vtpas_protectSeed_tip" text="Prevents Mud System Physics from erasing crops under the wheels when the vehicle reverses, and under the wheels of a seeder or planter. Other mud crop damage is kept."/>
+        <text name="vtpas_mudPreset_title" text="AutoSwitch - Mud System Physics"/>
+        <text name="vtpas_mudPreset_text" text="Apply the settings recommended by AutoSwitch (realistic mud and bogging)?&#10;&#10;Yes: recommended Mud System Physics settings + Tractor Terrain Dynamics on 'Hard'.&#10;No: original Mud System Physics settings + Tractor Terrain Dynamics on 'Medium'.&#10;&#10;You can change this later in Settings &gt; General &gt; AutoSwitch."/>
+        <text name="vtpas_mudPreset_yes" text="Yes (recommended)"/>
+        <text name="vtpas_mudPreset_no" text="No (original)"/>
+        <text name="vtpas_mudPreset_label" text="Mud System Physics: settings"/>
+        <text name="vtpas_mudPreset_tip" text="Recommended = realistic AutoSwitch settings for Mud System Physics (soil profiles, wheel drag, off-field mud) and Tractor Terrain Dynamics on 'Hard'. Original = Mud System Physics defaults and TTD on 'Medium'."/>
+        <text name="vtpas_mudPreset_reco" text="Recommended"/>
+        <text name="vtpas_mudPreset_orig" text="Original"/>
+        <text name="vtpas_slipIcon_label" text="Slip icon"/>
+        <text name="vtpas_slipIcon_tip" text="Always shows (in a vehicle) a wheel icon with the slip percentage below it, attached to the speed range and moved with it. Colour: white, yellow from 10 %, orange at the differential threshold, red at the alert threshold."/>
+        <text name="vtpas_seedCoverFill_label" text="Fill seeder with closed cover"/>
+        <text name="vtpas_seedCoverFill_tip" text="Allows seeders and planters to be filled with seeds (big bag, pallet, trailer, auger, station) even when the hopper cover is closed. Off = base game behaviour."/>
+        <text name="vtpas_wetGrip_label" text="Wet ground grip (MoreRealistic)"/>
+        <text name="vtpas_wetGrip_tip" text="MoreRealistic ignores the grip computed by Mud System Physics and Tractor Terrain Dynamics. This setting reduces wheel grip in fields depending on local moisture (from 20 %, maximum at 70 %) and soil type, and lowers MoreRealistic's 'wet field' grip by 20 %. At 60 % moisture: about -23 % (low), -34 % (medium), -45 % (high), -56 % (very high)."/>
+        <text name="vtpas_wetGrip_low" text="Low"/>
+        <text name="vtpas_wetGrip_mid" text="Medium"/>
+        <text name="vtpas_wetGrip_high" text="High"/>
+        <text name="vtpas_directResow_label" text="Direct seeding: resow erased areas"/>
+        <text name="vtpas_directResow_tip" text="Lets direct seeders resow where the crop was erased (for example by Mud System Physics in mud) without cultivating first. Only spots with no plant at all are affected; existing crops are never touched."/>
+        <text name="vtpas_wetGrip_vhigh" text="Very high"/>
+        <text name="vtpas_turnUnlock_label" text="Differentials: unlock in turns"/>
+        <text name="vtpas_turnUnlock_tip" text="Automatically unlocks the differentials when steering exceeds about 15°, as required in real life to protect the drivetrain. They relock after the turn if slip continues."/>
+        <text name="vtpas_auto4wd_label" text="Drive: 4WD in fields / 2WD on road"/>
+        <text name="vtpas_auto4wd_tip" text="Automatically switches to four-wheel drive when entering a field and to two-wheel drive on the road (Enhanced Vehicle). In 2WD, if the rear axle slips beyond the threshold, 4WD engages first, then the differentials lock if slip continues; on the road it returns to 2WD once grip is back. A manual change is kept until the next field/road change."/>
+        <text name="vtpas_diffBonus_label" text="Locked differentials: grip bonus"/>
+        <text name="vtpas_diffBonus_tip" text="Adds a small grip bonus while the differentials are locked (Enhanced Vehicle), on top of the physical effect of locking: +2 % on the front wheels (front differential locked) and +3 % on the rear wheels (rear differential locked)."/>
+        <text name="input_AS_DUAL_SWITCH" text="Mount / remove dual wheels"/>
+        <text name="as_dual_store_function" text="On foot next to the rack, with a stopped tractor nearby: Right Ctrl + I. Full rack = mount dual wheels, empty rack = remove them. 30 min of work (15 min per tire), one tire every 15 min."/>
+        <text name="as_dual_mounting" text="Dual wheel mounting started: ready at %s"/>
+        <text name="as_dual_unmounting" text="Dual wheel removal started: ready at %s"/>
+        <text name="as_dual_done_on" text="Dual wheels mounted"/>
+        <text name="as_dual_done_off" text="Single wheels mounted"/>
+        <text name="as_dual_none" text="No dual wheels available for this tractor"/>
+        <text name="as_dual_nosingle" text="No single-wheel configuration found"/>
+        <text name="as_dual_norack" text="No tire rack nearby"/>
+        <text name="as_dual_stop" text="Stop the tractor to change wheels"/>
+        <text name="as_dual_money" text="Not enough money (%s)"/>
+        <text name="as_dual_cancel" text="Tractor moved: wheel change cancelled"/>
+        <text name="as_dual_failed" text="Wheel change failed"/>
+        <text name="as_dual_mp" text="Wheel change is only available in single player"/>
+        <text name="as_dual_notractor" text="No tractor parked near the tire rack"/>
+        <text name="as_dual_alreadytwin" text="This tractor already has dual wheels: the rack only provides dual wheels"/>
+        <text name="as_dual_running" text="Wheel change already in progress: ready at %s"/>
+        <text name="as_dual_rackempty" text="This rack is empty (or incomplete).&#10;&#10;Its tires are mounted on another tractor: remove them from that tractor first, or use a full rack."/>
+        <text name="as_dual_rackfull" text="This rack is not empty: it cannot take the removed tires.&#10;&#10;Use an empty rack."/>
+        <text name="as_dual_rackbusy" text="This rack is already used for another wheel change in progress."/>
+        <text name="as_dual_store_function_ar" text="2 BKT Agrimax V-Flecto 650/65R42 tires on rims. On foot next to the rack with a stopped tractor nearby: Right Ctrl + I. Alone = rear dual wheels; with the front rack = front + rear dual wheels. 30 min of work (15 min per tire)."/>
+        <text name="as_dual_store_function_av" text="2 BKT Agrimax V-Flecto 540/65R30 tires on rims. Use it with the rear rack to mount front + rear dual wheels (Right Ctrl + I, on foot next to the racks)."/>
+        <text name="as_dual_needar" text="No full rear dual wheel rack near this tractor.&#10;&#10;An empty rack means its tires are already mounted on another tractor: remove them from that tractor first, or buy a new rack."/>
+        <text name="as_dual_needav" text="This tractor only exists with front + rear dual wheels.&#10;&#10;Add a full front dual wheel rack near the tractor."/>
+        <text name="as_dual_needar_empty" text="To remove the dual wheels, an empty rear rack is needed near the tractor to put the tires on.&#10;&#10;A full rack cannot take more tires."/>
+        <text name="as_dual_needav_empty" text="This tractor also has front dual wheels: an empty front rack is also needed near the tractor."/>
+        <text name="as_dual_confirm_title" text="Wheel change"/>
+        <text name="as_dual_confirm_on" text="Mounting dual wheels: %d tires, %d min of work (ready around %s).&#10;&#10;The tractor will be immobilized during the change: you cannot enter it or start a helper. If it is moved, the change is cancelled.&#10;&#10;Start mounting?"/>
+        <text name="as_dual_confirm_off" text="Removing dual wheels: %d tires, %d min of work (ready around %s).&#10;&#10;The tractor will be immobilized during the change: you cannot enter it or start a helper. If it is moved, the change is cancelled.&#10;&#10;Start removal?"/>
+        <text name="as_dual_brand" text="No %s dual wheels for this tractor: change the tire brand in the workshop (available: %s)"/>
+        <text name="as_dual_locked" text="Tractor immobilized: wheel change in progress (ready at %s)"/>
+        <text name="as_dual_zone" text="Park the tractor inside the mounting area (rectangle on the ground next to the rack)"/>
+        <text name="as_dual_marker" text="Stand here"/>
+        <text name="as_dual_marker_on" text="Right Ctrl + I: change wheels"/>
+        <text name="as_dual_timer_title" text="Wheel change"/>
+        <text name="as_dual_timer_on" text="%s: mounting duals - %d min (ready at %s) - tire %d/%d"/>
+        <text name="as_dual_timer_off" text="%s: removing duals - %d min (ready at %s) - tire %d/%d"/>
+    </texts>
+</l10n>

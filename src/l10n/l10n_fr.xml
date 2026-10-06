@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <texts>
+        <text name="vtpas_on" text="Activé"/>
+        <text name="vtpas_off" text="Désactivé"/>
+        <text name="vtpas_auto" text="Automatique"/>
+        <text name="vtpas_manual" text="Manuel"/>
+        <text name="vtpas_slip_label" text="Patinage pour blocage des différentiels"/>
+        <text name="vtpas_slip_tip" text="Patinage (%) au-delà duquel les différentiels se verrouillent automatiquement (Enhanced Vehicle). Désactivé = jamais."/>
+        <text name="vtpas_diff_label" text="Différentiels (conduite manuelle)"/>
+        <text name="vtpas_diff_tip" text="Avec AutoDrive ou Courseplay, le blocage est toujours automatique. Ce réglage s'applique lorsque vous conduisez vous-même : Automatique = blocage dès que le patinage dépasse le seuil ; Manuel = vous gérez les différentiels vous-même."/>
+        <text name="vtpas_tire_label" text="Pression des pneus (conduite manuelle)"/>
+        <text name="vtpas_tire_tip" text="Avec AutoDrive ou Courseplay, le gonflage et le dégonflage sont toujours automatiques. Ce réglage s'applique lorsque vous conduisez vous-même : Automatique = pneus gonflés sur route et dégonflés dans les champs ; Manuel = vous utilisez la touche du mod."/>
+        <text name="vtpas_notifDiff_label" text="Notifications des différentiels"/>
+        <text name="vtpas_notifDiff_tip" text="Affiche une notification quand un véhicule verrouille ou déverrouille ses différentiels."/>
+        <text name="vtpas_notifTires_label" text="Notifications des pneus"/>
+        <text name="vtpas_notifTires_tip" text="Affiche une notification quand un véhicule gonfle ou dégonfle ses pneus."/>
+        <text name="vtpas_notif_diffLocked" text="%s : différentiels verrouillés (patinage %.0f %%)"/>
+        <text name="vtpas_notif_diffUnlocked" text="%s : différentiels déverrouillés"/>
+        <text name="vtpas_notif_tiresInflated" text="%s : pneus gonflés (pression route)"/>
+        <text name="vtpas_notif_tiresDeflated" text="%s : pneus dégonflés (pression champ)"/>
+        <text name="vtpas_alert_pct_label" text="Alerte de patinage : seuil"/>
+        <text name="vtpas_alert_pct_tip" text="Affiche un message rouge quand le patinage d'un véhicule reste au-dessus de ce pourcentage pendant la durée réglée. Désactivé = aucune alerte."/>
+        <text name="vtpas_alert_sec_label" text="Alerte de patinage : durée"/>
+        <text name="vtpas_alert_sec_tip" text="Durée (en secondes) pendant laquelle le patinage doit rester au-dessus du seuil avant que l'alerte s'affiche."/>
+        <text name="vtpas_alert_slip" text="%s : patinage excessif (%.0f %%) depuis plus de %d s !"/>
+        <text name="vtpas_diffdelay_label" text="Différentiels : délai avant blocage"/>
+        <text name="vtpas_diffdelay_tip" text="Durée (en secondes) pendant laquelle le patinage doit rester au-dessus du seuil avant que les différentiels se verrouillent automatiquement."/>
+        <text name="vtpas_decimal" text=","/>
+        <text name="vtpas_tiredelay_label" text="Pneus : délai entre deux changements"/>
+        <text name="vtpas_tiredelay_tip" text="Durée minimale (en secondes) entre deux changements de pression (gonflage / dégonflage), pour éviter les allers-retours trop rapides. Désactivé = aucun délai."/>
+        <text name="vtpas_hintShow_label" text="Plage de vitesse conseillée (dans les champs)"/>
+        <text name="vtpas_hintShow_tip" text="Affiche au-dessus du compteur la plage de vitesse conseillée, recalculée en continu selon la zone (champ / route), la pression des pneus, le sol, son humidité et le patinage."/>
+        <text name="vtpas_hintPos_label" text="Plage de vitesse : hauteur depuis le bas"/>
+        <text name="vtpas_hintPos_tip" text="Position par défaut : distance (en cm, écran 24 à 27 pouces) entre le bas de l'écran et l'affichage. Vous pouvez aussi le déplacer à la souris : affichez le curseur (clic droit de Courseplay) puis clic gauche maintenu sur le cadre. Changer ce réglage remet la position par défaut."/>
+        <text name="vtpas_hint_range" text="Plage conseillée : %d - %d km/h"/>
+        <text name="vtpas_hint_min" text="Vitesse conseillée : %d km/h mini"/>
+        <text name="vtpas_hint_max" text="Vitesse conseillée : %d km/h maxi"/>
+        <text name="vtpas_hint_free" text="Vitesse libre"/>
+        <text name="vtpas_hint_risk" text="Risque d'enlisement : %d km/h mini, sans s'arrêter"/>
+        <text name="vtpas_hint_field" text="Champ"/>
+        <text name="vtpas_hint_road" text="Hors champ"/>
+        <text name="vtpas_hint_soil" text="humidité %d %%"/>
+        <text name="vtpas_hint_frozen" text="sol gelé"/>
+        <text name="vtpas_hint_tiresField" text="pneus champ"/>
+        <text name="vtpas_hint_tiresRoad" text="pneus route"/>
+        <text name="vtpas_hint_slip" text="patinage %d %%"/>
+        <text name="vtpas_gt_StubbleTillage" text="déchaumé"/>
+        <text name="vtpas_gt_Cultivated" text="cultivé"/>
+        <text name="vtpas_gt_Seedbed" text="lit de semence"/>
+        <text name="vtpas_gt_Plowed" text="labouré"/>
+        <text name="vtpas_gt_RolledSeedbed" text="lit de semence roulé"/>
+        <text name="vtpas_gt_Ridge" text="buttes"/>
+        <text name="vtpas_gt_Sown" text="semé"/>
+        <text name="vtpas_gt_DirectSown" text="semis direct"/>
+        <text name="vtpas_gt_Planted" text="planté"/>
+        <text name="vtpas_gt_RidgeSown" text="buttes semées"/>
+        <text name="vtpas_gt_Rollerlines" text="roulé"/>
+        <text name="vtpas_gt_HarvestReady" text="culture"/>
+        <text name="vtpas_gt_HarvestReadyO" text="culture"/>
+        <text name="vtpas_gt_Grass" text="herbe"/>
+        <text name="vtpas_gt_GrassCut" text="herbe fauchée"/>
+        <text name="vtpas_hint_riskShort" text="RISQUE D'ENLISEMENT"/>
+        <text name="vtpas_fieldMax_label" text="Plage de vitesse : maxi en champ"/>
+        <text name="vtpas_fieldMax_tip" text="Vitesse haute maximale de la plage conseillée quand vous travaillez dans un champ. La plage peut descendre en dessous selon l'outil, la boue ou la pression des pneus."/>
+        <text name="vtpas_durDiffs_label" text="Notifications des différentiels : durée"/>
+        <text name="vtpas_durTires_label" text="Notifications des pneus : durée"/>
+        <text name="vtpas_durAlert_label" text="Alerte de patinage : durée d'affichage"/>
+        <text name="vtpas_dur_tip" text="Durée (en secondes) pendant laquelle le message reste affiché à l'écran."/>
+        <text name="vtpas_protectSeed_label" text="Protéger le semis (marche arrière / semoir)"/>
+        <text name="vtpas_protectSeed_tip" text="Empêche Mud System Physics d'effacer la culture sous les roues quand le véhicule recule, et sous les roues d'un semoir ou d'une planteuse. Le reste de la destruction dans la boue est conservé."/>
+        <text name="vtpas_mudPreset_title" text="AutoSwitch - Mud System Physics"/>
+        <text name="vtpas_mudPreset_text" text="Appliquer les paramètres conseillés par AutoSwitch (boue et enlisement réalistes) ?&#10;&#10;Oui : paramètres conseillés pour Mud System Physics + Tractor Terrain Dynamics en « Difficile ».&#10;Non : paramètres d'origine de Mud System Physics + Tractor Terrain Dynamics en « Moyen ».&#10;&#10;Vous pourrez changer ce choix plus tard dans Paramètres &gt; Général &gt; AutoSwitch."/>
+        <text name="vtpas_mudPreset_yes" text="Oui (conseillés)"/>
+        <text name="vtpas_mudPreset_no" text="Non (origine)"/>
+        <text name="vtpas_mudPreset_label" text="Mud System Physics : paramètres"/>
+        <text name="vtpas_mudPreset_tip" text="Conseillés = réglages réalistes de AutoSwitch pour Mud System Physics (profils de sol, frein de roue, boue hors champ) et Tractor Terrain Dynamics en « Difficile ». Origine = réglages par défaut de Mud System Physics et TTD en « Moyen »."/>
+        <text name="vtpas_mudPreset_reco" text="Conseillés"/>
+        <text name="vtpas_mudPreset_orig" text="D'origine"/>
+        <text name="vtpas_slipIcon_label" text="Icône de patinage"/>
+        <text name="vtpas_slipIcon_tip" text="Affiche en permanence (dans un véhicule) une icône de roue avec le pourcentage de patinage en dessous, accolée à la plage de vitesse et déplaçable avec elle. Couleur : blanc, jaune dès 10 %, orange au seuil des différentiels, rouge au seuil d'alerte."/>
+        <text name="vtpas_seedCoverFill_label" text="Remplir le semoir couvercle fermé"/>
+        <text name="vtpas_seedCoverFill_tip" text="Permet de remplir les semoirs et planteuses en graines (big bag, palette, remorque, vis, station) même quand le couvercle de la trémie est fermé. Désactivé = comportement du jeu de base."/>
+        <text name="vtpas_wetGrip_label" text="Adhérence en sol humide (MoreRealistic)"/>
+        <text name="vtpas_wetGrip_tip" text="MoreRealistic ignore l'adhérence calculée par Mud System Physics et Tractor Terrain Dynamics. Ce réglage réduit l'adhérence des roues dans les champs selon l'humidité locale (dès 20 %, maximum à 70 %) et le type de sol, et abaisse de 20 % l'adhérence « champ mouillé » de MoreRealistic. À 60 % d'humidité : environ -23 % (faible), -34 % (moyenne), -45 % (forte), -56 % (très forte)."/>
+        <text name="vtpas_wetGrip_low" text="Faible"/>
+        <text name="vtpas_wetGrip_mid" text="Moyenne"/>
+        <text name="vtpas_wetGrip_high" text="Forte"/>
+        <text name="vtpas_directResow_label" text="Semis direct : resemer les zones effacées"/>
+        <text name="vtpas_directResow_tip" text="Permet aux semoirs de semis direct de resemer là où la culture a été effacée (par exemple par Mud System Physics dans la boue), sans repasser un cultivateur. Seuls les endroits sans aucune plante sont concernés ; les cultures existantes ne sont jamais touchées."/>
+        <text name="vtpas_wetGrip_vhigh" text="Très forte"/>
+        <text name="vtpas_turnUnlock_label" text="Différentiels : déblocage en virage"/>
+        <text name="vtpas_turnUnlock_tip" text="Déverrouille automatiquement les différentiels dès que le braquage dépasse environ 15°, comme il faut le faire en vrai pour ne pas casser la transmission. Ils se reverrouillent après le virage si le patinage continue."/>
+        <text name="vtpas_auto4wd_label" text="Transmission : 4x4 champ / 4x2 route"/>
+        <text name="vtpas_auto4wd_tip" text="Passe automatiquement en 4 roues motrices en entrant dans un champ et en 2 roues motrices sur la route (Enhanced Vehicle). En 2 roues motrices, si l'essieu arrière patine au-delà du seuil, le 4x4 s'enclenche d'abord, puis les différentiels se bloquent si ça patine encore ; sur route, retour en 4x2 quand l'adhérence revient. Un réglage manuel reste respecté jusqu'au prochain passage champ/route."/>
+        <text name="vtpas_diffBonus_label" text="Différentiels bloqués : bonus d'adhérence"/>
+        <text name="vtpas_diffBonus_tip" text="Ajoute un petit bonus d'adhérence tant que les différentiels sont bloqués (Enhanced Vehicle), en plus de l'effet physique du blocage : +2 % sur les roues avant (différentiel avant bloqué) et +3 % sur les roues arrière (différentiel arrière bloqué)."/>
+        <text name="input_AS_DUAL_SWITCH" text="Monter / démonter les jumelées"/>
+        <text name="as_dual_store_function" text="À pied près de la palette, tracteur arrêté à côté : Ctrl droit + I. Palette pleine = montage des jumelées, palette vide = démontage. 1 h de travail, un pneu toutes les 15 min."/>
+        <text name="as_dual_mounting" text="Montage des jumelées commencé : prêt à %s"/>
+        <text name="as_dual_unmounting" text="Démontage des jumelées commencé : prêt à %s"/>
+        <text name="as_dual_done_on" text="Roues jumelées montées"/>
+        <text name="as_dual_done_off" text="Roues simples remontées"/>
+        <text name="as_dual_none" text="Pas de jumelées disponibles pour ce tracteur"/>
+        <text name="as_dual_nosingle" text="Aucune configuration en roues simples trouvée"/>
+        <text name="as_dual_norack" text="Aucune palette de pneus à proximité"/>
+        <text name="as_dual_stop" text="Arrêtez le tracteur pour changer les roues"/>
+        <text name="as_dual_money" text="Fonds insuffisants (%s)"/>
+        <text name="as_dual_cancel" text="Tracteur déplacé : changement de roues annulé"/>
+        <text name="as_dual_failed" text="Changement de roues impossible"/>
+        <text name="as_dual_mp" text="Changement de roues disponible en solo uniquement"/>
+        <text name="as_dual_notractor" text="Aucun tracteur à jumelées garé près de la palette"/>
+        <text name="as_dual_alreadytwin" text="Ce tracteur est déjà équipé de jumelées : la palette ne fournit que des jumelées"/>
+        <text name="as_dual_running" text="Changement de roues déjà en cours : prêt à %s"/>
+        <text name="as_dual_rackempty" text="Cette palette est vide (ou incomplète).&#10;&#10;Ses pneus sont montés sur un autre tracteur : démontez-les d'abord de ce tracteur, ou utilisez une palette pleine."/>
+        <text name="as_dual_rackfull" text="Cette palette n'est pas vide : elle ne peut pas recevoir les pneus démontés.&#10;&#10;Utilisez une palette vide."/>
+        <text name="as_dual_rackbusy" text="Cette palette est déjà utilisée pour un autre changement de roues en cours."/>
+        <text name="as_dual_store_function_ar" text="2 pneus BKT Agrimax V-Flecto 650/65R42 sur jantes. À pied près de la palette, tracteur arrêté à côté : Ctrl droit + I. Seule = jumelées arrière ; avec la palette AV = jumelées avant + arrière. 30 min de montage (15 min par pneu)."/>
+        <text name="as_dual_store_function_av" text="2 pneus BKT Agrimax V-Flecto 540/65R30 sur jantes. S'utilise avec la palette AR pour monter des jumelées avant + arrière (Ctrl droit + I, à pied près des palettes)."/>
+        <text name="as_dual_needar" text="Aucune palette de jumelées AR pleine près de ce tracteur.&#10;&#10;Une palette vide veut dire que ses pneus sont déjà montés sur un autre tracteur : démontez-les d'abord de ce tracteur, ou achetez une nouvelle palette."/>
+        <text name="as_dual_needav" text="Ce tracteur n'existe qu'en jumelées avant + arrière.&#10;&#10;Ajoutez une palette de jumelées AV pleine près du tracteur."/>
+        <text name="as_dual_needar_empty" text="Pour démonter les jumelées, il faut une palette AR vide près du tracteur pour y poser les pneus.&#10;&#10;Une palette encore pleine ne peut pas recevoir d'autres pneus."/>
+        <text name="as_dual_needav_empty" text="Ce tracteur a aussi des jumelées à l'avant : il faut en plus une palette AV vide près du tracteur pour les déposer."/>
+        <text name="as_dual_confirm_title" text="Changement de roues"/>
+        <text name="as_dual_confirm_on" text="Montage des jumelées : %d pneus, %d min de travail (prêt vers %s).&#10;&#10;Le tracteur sera immobilisé pendant le changement : impossible d'y monter ou de lancer un ouvrier. S'il est déplacé, le changement sera annulé.&#10;&#10;Commencer le montage ?"/>
+        <text name="as_dual_confirm_off" text="Démontage des jumelées : %d pneus, %d min de travail (prêt vers %s).&#10;&#10;Le tracteur sera immobilisé pendant le changement : impossible d'y monter ou de lancer un ouvrier. S'il est déplacé, le changement sera annulé.&#10;&#10;Commencer le démontage ?"/>
+        <text name="as_dual_brand" text="Pas de jumelées %s pour ce tracteur : changez de marque de pneus à l'atelier (disponibles : %s)"/>
+        <text name="as_dual_locked" text="Tracteur immobilisé : changement de roues en cours (prêt à %s)"/>
+        <text name="as_dual_zone" text="Placez le tracteur dans la zone de montage (rectangle au sol à côté de la palette)"/>
+        <text name="as_dual_marker" text="Placez-vous ici"/>
+        <text name="as_dual_marker_on" text="Ctrl droit + I : changer les roues"/>
+        <text name="as_dual_timer_title" text="Changement de roues"/>
+        <text name="as_dual_timer_on" text="%s : montage jumelées - %d min (prêt à %s) - pneu %d/%d"/>
+        <text name="as_dual_timer_off" text="%s : démontage jumelées - %d min (prêt à %s) - pneu %d/%d"/>
+    </texts>
+</l10n>

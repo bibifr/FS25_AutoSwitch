@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<vehicle type="pallet" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+    <annotation>Copyright (C) GIANTS Software GmbH, All Rights Reserved.</annotation>
+
+    <storeData>
+        <name>
+            <en>Dual wheels front BKT 540/65R30</en>
+            <fr>Jumelées avant BKT 540/65R30</fr>
+            <de>Zwillingsräder vorne BKT 540/65R30</de>
+        </name>
+        <image>objects/tireRackAV/store_tireRackAV.dds</image>
+        <price>3500</price>
+        <allowLeasing>false</allowLeasing>
+        <showInStore>true</showInStore>
+        <canBeSold>true</canBeSold>
+        <rotation>0</rotation>
+        <brand>LIZARD</brand>
+        <functions>
+            <function>$l10n_as_dual_store_function_av</function>
+        </functions>
+        <category>pallets</category>
+        <financeCategory>OTHER</financeCategory>
+
+        <!--storeIconRendering>
+            <settings cameraXRot="-15" cameraYRot="35" />
+        </storeIconRendering>
+        <audioMemoryUsage>0</audioMemoryUsage-->
+    </storeData>
+
+    <base>
+        <typeDesc>$l10n_typeDesc_pallet</typeDesc>
+        <filename>objects/tireRackAV/tireRackAV.i3d</filename>
+        <size width="2.1" length="1.5" height="1.8" />
+        <canBeReset>false</canBeReset>
+		<supportsPickUp>true</supportsPickUp>
+        <components>
+            <component centerOfMass="0 0.1 0" solverIterationCount="10" mass="700"/>
+        </components>
+        <showInVehicleMenu>false</showInVehicleMenu>
+        <mapHotspot available="false" />
+    </base>
+
+	
+    <pallet node="euroPallet_vis">
+        <texture diffuse="$data/objects/pallets/shared/euroPallet/euroPalletNew_diffuse.dds"/>
+        <texture diffuse="$data/objects/pallets/shared/euroPallet/euroPalletMiddle_diffuse.dds"/>
+        <texture diffuse="$data/objects/pallets/shared/euroPallet/euroPalletOld_diffuse.dds"/>
+        <!--content>
+            <object node="1" />
+            <object node="2" />
+            <object node="3" />
+            <object node="4" />
+            <object node="5" />
+            <object node="6" />
+            <object node="7" />
+            <object node="8" />
+        </content-->
+    </pallet>
+	
+    <dischargeable requiresTipOcclusionArea="false"/>
+	
+	<tensionBeltObject supportsTensionBelts="true">
+		<meshNodes>
+			<meshNode node="euroPallet_vis"/>
+		</meshNodes>
+	</tensionBeltObject>
+	
+    <tensionBelts>
+        <tensionBeltsConfigurations>
+            <tensionBeltsConfiguration>
+                <tensionBelts linkNode="tensionBelts" jointNode="0>" width="0.075" maxEdgeLength="0.1" geometryBias="0.01" ratchetPosition="0.2" defaultOffset="0.1" defaultOffsetSide="0.1" defaultHeight="2.5" activationTrigger="beltActivationTrigger">
+                    <tensionBelt startNode="tensionBeltStart01" endNode="tensionBeltEnd01" >
+						<intersectionNode node="tensionBelt1Intersection1"/>
+						<intersectionNode node="tensionBelt1Intersection2"/>
+					</tensionBelt>
+                    <tensionBelt startNode="tensionBeltStart02" endNode="tensionBeltEnd02" >
+						<intersectionNode node="tensionBelt2Intersection1"/>
+						<intersectionNode node="tensionBelt2Intersection2"/>
+					</tensionBelt>
+					<sounds>
+                        <addBelt template="beltOpen" />
+                        <removeBelt template="beltClose" />
+                    </sounds>
+                </tensionBelts>    
+            </tensionBeltsConfiguration>
+        </tensionBeltsConfigurations>
+    </tensionBelts>
+
+<i3dMappings>
+  <i3dMapping id="emptyPallet_component1" node="0>" />
+  <i3dMapping id="euroPallet_vis" node="0>0" />
+  <i3dMapping id="collisions" node="0>0|0" />
+  <i3dMapping id="floorCollision01" node="0>0|0|0" />
+  <i3dMapping id="floorCollision02" node="0>0|0|1" />
+  <i3dMapping id="tensionBelts" node="0>0|1" />
+  <i3dMapping id="tensionBeltStart01" node="0>0|1|0" />
+  <i3dMapping id="tensionBeltEnd01" node="0>0|1|0|0" />
+  <i3dMapping id="tensionBelt1Intersection1" node="0>0|1|0|1" />
+  <i3dMapping id="tensionBelt1Intersection2" node="0>0|1|0|2" />
+  <i3dMapping id="tensionBeltStart02" node="0>0|1|1" />
+  <i3dMapping id="tensionBeltEnd02" node="0>0|1|1|0" />
+  <i3dMapping id="tensionBelt2Intersection1" node="0>0|1|1|1" />
+  <i3dMapping id="tensionBelt2Intersection2" node="0>0|1|1|2" />
+  <i3dMapping id="beltActivationTrigger" node="0>0|1|2" />
+</i3dMappings>
+</vehicle>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <texts>
+        <text name="vtpas_on" text="Ein"/>
+        <text name="vtpas_off" text="Aus"/>
+        <text name="vtpas_auto" text="Automatisch"/>
+        <text name="vtpas_manual" text="Manuell"/>
+        <text name="vtpas_slip_label" text="Radschlupf für Differenzialsperre"/>
+        <text name="vtpas_slip_tip" text="Radschlupf (%), ab dem die Differenzialsperren automatisch einrasten (Enhanced Vehicle). Aus = nie."/>
+        <text name="vtpas_diff_label" text="Differenziale (manuelles Fahren)"/>
+        <text name="vtpas_diff_tip" text="Mit AutoDrive oder Courseplay ist die Sperre immer automatisch. Diese Einstellung gilt, wenn Sie selbst fahren: Automatisch = sperrt, sobald der Radschlupf den Schwellenwert überschreitet; Manuell = Sie bedienen die Differenziale selbst."/>
+        <text name="vtpas_tire_label" text="Reifendruck (manuelles Fahren)"/>
+        <text name="vtpas_tire_tip" text="Mit AutoDrive oder Courseplay werden die Reifen immer automatisch aufgepumpt und entlüftet. Diese Einstellung gilt, wenn Sie selbst fahren: Automatisch = auf der Straße aufgepumpt, im Feld abgelassen; Manuell = Sie verwenden die Taste des Mods."/>
+        <text name="vtpas_notifDiff_label" text="Differenzial-Benachrichtigungen"/>
+        <text name="vtpas_notifDiff_tip" text="Zeigt eine Benachrichtigung an, wenn ein Fahrzeug seine Differenzialsperren ein- oder ausschaltet."/>
+        <text name="vtpas_notifTires_label" text="Reifen-Benachrichtigungen"/>
+        <text name="vtpas_notifTires_tip" text="Zeigt eine Benachrichtigung an, wenn ein Fahrzeug seine Reifen aufpumpt oder Luft ablässt."/>
+        <text name="vtpas_notif_diffLocked" text="%s: Differenzialsperren eingerastet (Schlupf %.0f %%)"/>
+        <text name="vtpas_notif_diffUnlocked" text="%s: Differenzialsperren gelöst"/>
+        <text name="vtpas_notif_tiresInflated" text="%s: Reifen aufgepumpt (Straßendruck)"/>
+        <text name="vtpas_notif_tiresDeflated" text="%s: Reifendruck abgelassen (Felddruck)"/>
+        <text name="vtpas_alert_pct_label" text="Schlupfwarnung: Schwellenwert"/>
+        <text name="vtpas_alert_pct_tip" text="Zeigt eine rote Meldung an, wenn der Radschlupf eines Fahrzeugs für die eingestellte Dauer über diesem Prozentwert liegt. Aus = keine Warnung."/>
+        <text name="vtpas_alert_sec_label" text="Schlupfwarnung: Dauer"/>
+        <text name="vtpas_alert_sec_tip" text="Zeit (in Sekunden), die der Schlupf über dem Schwellenwert liegen muss, bevor die Warnung erscheint."/>
+        <text name="vtpas_alert_slip" text="%s: übermäßiger Radschlupf (%.0f %%) seit mehr als %d s!"/>
+        <text name="vtpas_diffdelay_label" text="Differenziale: Verzögerung vor Sperre"/>
+        <text name="vtpas_diffdelay_tip" text="Zeit (in Sekunden), die der Radschlupf über dem Schwellenwert liegen muss, bevor die Differenzialsperren automatisch einrasten."/>
+        <text name="vtpas_decimal" text=","/>
+        <text name="vtpas_tiredelay_label" text="Reifen: Verzögerung zwischen zwei Wechseln"/>
+        <text name="vtpas_tiredelay_tip" text="Mindestzeit (in Sekunden) zwischen zwei Druckwechseln (Aufpumpen / Ablassen), um schnelles Hin und Her zu vermeiden. Aus = keine Verzögerung."/>
+        <text name="vtpas_hintShow_label" text="Empfohlener Geschwindigkeitsbereich (auf dem Feld)"/>
+        <text name="vtpas_hintShow_tip" text="Zeigt über dem Tacho den empfohlenen Geschwindigkeitsbereich, laufend berechnet aus Zone (Feld / Straße), Reifendruck, Bodenart, Bodenfeuchte und Schlupf."/>
+        <text name="vtpas_hintPos_label" text="Geschwindigkeitsbereich: Höhe vom unteren Rand"/>
+        <text name="vtpas_hintPos_tip" text="Standardposition: Abstand (in cm, 24- bis 27-Zoll-Bildschirm) zwischen unterem Bildschirmrand und Anzeige. Mit der Maus verschiebbar: Mauszeiger einblenden (Rechtsklick von Courseplay), dann Linksklick auf dem Rahmen gedrückt halten. Eine Änderung dieser Einstellung stellt die Standardposition wieder her."/>
+        <text name="vtpas_hint_range" text="Empfohlen: %d - %d km/h"/>
+        <text name="vtpas_hint_min" text="Empfohlen: mind. %d km/h"/>
+        <text name="vtpas_hint_max" text="Empfohlen: max. %d km/h"/>
+        <text name="vtpas_hint_free" text="Freie Geschwindigkeit"/>
+        <text name="vtpas_hint_risk" text="Festfahrgefahr: mind. %d km/h, nicht anhalten"/>
+        <text name="vtpas_hint_field" text="Feld"/>
+        <text name="vtpas_hint_road" text="Außerhalb Feld"/>
+        <text name="vtpas_hint_soil" text="Feuchte %d %%"/>
+        <text name="vtpas_hint_frozen" text="gefrorener Boden"/>
+        <text name="vtpas_hint_tiresField" text="Felddruck"/>
+        <text name="vtpas_hint_tiresRoad" text="Straßendruck"/>
+        <text name="vtpas_hint_slip" text="Schlupf %d %%"/>
+        <text name="vtpas_gt_StubbleTillage" text="Stoppelbearbeitung"/>
+        <text name="vtpas_gt_Cultivated" text="gegrubbert"/>
+        <text name="vtpas_gt_Seedbed" text="Saatbett"/>
+        <text name="vtpas_gt_Plowed" text="gepflügt"/>
+        <text name="vtpas_gt_RolledSeedbed" text="gewalztes Saatbett"/>
+        <text name="vtpas_gt_Ridge" text="Dämme"/>
+        <text name="vtpas_gt_Sown" text="gesät"/>
+        <text name="vtpas_gt_DirectSown" text="Direktsaat"/>
+        <text name="vtpas_gt_Planted" text="gepflanzt"/>
+        <text name="vtpas_gt_RidgeSown" text="Dämme gesät"/>
+        <text name="vtpas_gt_Rollerlines" text="gewalzt"/>
+        <text name="vtpas_gt_HarvestReady" text="Bestand"/>
+        <text name="vtpas_gt_HarvestReadyO" text="Bestand"/>
+        <text name="vtpas_gt_Grass" text="Gras"/>
+        <text name="vtpas_gt_GrassCut" text="gemähtes Gras"/>
+        <text name="vtpas_hint_riskShort" text="FESTFAHRGEFAHR"/>
+        <text name="vtpas_fieldMax_label" text="Geschwindigkeitsbereich: Feld-Maximum"/>
+        <text name="vtpas_fieldMax_tip" text="Maximale obere Geschwindigkeit des empfohlenen Bereichs bei der Feldarbeit. Je nach Gerät, Schlamm oder Reifendruck kann der Bereich niedriger liegen."/>
+        <text name="vtpas_durDiffs_label" text="Differenzial-Meldungen: Dauer"/>
+        <text name="vtpas_durTires_label" text="Reifen-Meldungen: Dauer"/>
+        <text name="vtpas_durAlert_label" text="Schlupfwarnung: Anzeigedauer"/>
+        <text name="vtpas_dur_tip" text="Wie lange (in Sekunden) die Meldung auf dem Bildschirm bleibt."/>
+        <text name="vtpas_protectSeed_label" text="Saat schützen (Rückwärts / Sämaschine)"/>
+        <text name="vtpas_protectSeed_tip" text="Verhindert, dass Mud System Physics die Saat unter den Rädern löscht, wenn das Fahrzeug rückwärts fährt, sowie unter den Rädern einer Sämaschine oder Legemaschine. Andere Schäden im Schlamm bleiben erhalten."/>
+        <text name="vtpas_mudPreset_title" text="AutoSwitch - Mud System Physics"/>
+        <text name="vtpas_mudPreset_text" text="Die von AutoSwitch empfohlenen Einstellungen anwenden (realistischer Schlamm)?&#10;&#10;Ja: empfohlene Einstellungen für Mud System Physics + Tractor Terrain Dynamics auf 'Schwer'.&#10;Nein: Originaleinstellungen von Mud System Physics + Tractor Terrain Dynamics auf 'Mittel'.&#10;&#10;Dies kann später unter Einstellungen &gt; Allgemein &gt; AutoSwitch geändert werden."/>
+        <text name="vtpas_mudPreset_yes" text="Ja (empfohlen)"/>
+        <text name="vtpas_mudPreset_no" text="Nein (Original)"/>
+        <text name="vtpas_mudPreset_label" text="Mud System Physics: Einstellungen"/>
+        <text name="vtpas_mudPreset_tip" text="Empfohlen = realistische Einstellungen von AutoSwitch für Mud System Physics (Bodenprofile, Radwiderstand, Schlamm außerhalb des Feldes) und Tractor Terrain Dynamics auf 'Schwer'. Original = Standardwerte von Mud System Physics und TTD auf 'Mittel'."/>
+        <text name="vtpas_mudPreset_reco" text="Empfohlen"/>
+        <text name="vtpas_mudPreset_orig" text="Original"/>
+        <text name="vtpas_slipIcon_label" text="Schlupf-Symbol"/>
+        <text name="vtpas_slipIcon_tip" text="Zeigt (im Fahrzeug) dauerhaft ein Radsymbol mit dem Schlupf in Prozent darunter, an den Geschwindigkeitsbereich angehängt und mit ihm verschiebbar. Farbe: weiß, gelb ab 10 %, orange an der Differenzialschwelle, rot an der Warnschwelle."/>
+        <text name="vtpas_seedCoverFill_label" text="Sämaschine mit geschlossener Abdeckung befüllen"/>
+        <text name="vtpas_seedCoverFill_tip" text="Erlaubt das Befüllen von Sämaschinen und Legemaschinen mit Saatgut (Big Bag, Palette, Anhänger, Schnecke, Station) auch bei geschlossener Behälterabdeckung. Aus = Verhalten des Basisspiels."/>
+        <text name="vtpas_wetGrip_label" text="Haftung bei nassem Boden (MoreRealistic)"/>
+        <text name="vtpas_wetGrip_tip" text="MoreRealistic ignoriert die von Mud System Physics und Tractor Terrain Dynamics berechnete Haftung. Diese Einstellung verringert die Radhaftung auf dem Feld je nach lokaler Feuchte (ab 20 %, maximal bei 70 %) und Bodenart und senkt die Haftung 'nasses Feld' von MoreRealistic um 20 %. Bei 60 % Feuchte: etwa -23 % (gering), -34 % (mittel), -45 % (stark), -56 % (sehr stark)."/>
+        <text name="vtpas_wetGrip_low" text="Gering"/>
+        <text name="vtpas_wetGrip_mid" text="Mittel"/>
+        <text name="vtpas_wetGrip_high" text="Stark"/>
+        <text name="vtpas_directResow_label" text="Direktsaat: gelöschte Stellen neu säen"/>
+        <text name="vtpas_directResow_tip" text="Erlaubt Direktsämaschinen, dort neu zu säen, wo die Kultur gelöscht wurde (z. B. durch Mud System Physics im Schlamm), ohne vorher zu grubbern. Nur Stellen ganz ohne Pflanzen sind betroffen; bestehende Kulturen werden nie verändert."/>
+        <text name="vtpas_wetGrip_vhigh" text="Sehr stark"/>
+        <text name="vtpas_turnUnlock_label" text="Differenziale: in Kurven lösen"/>
+        <text name="vtpas_turnUnlock_tip" text="Löst die Differenzialsperren automatisch, sobald der Lenkeinschlag etwa 15° überschreitet, wie in der Realität zum Schutz des Antriebsstrangs. Nach der Kurve wird wieder gesperrt, wenn der Schlupf anhält."/>
+        <text name="vtpas_auto4wd_label" text="Antrieb: Allrad auf dem Feld / 2WD auf der Straße"/>
+        <text name="vtpas_auto4wd_tip" text="Schaltet beim Einfahren ins Feld automatisch auf Allrad und auf der Straße auf Zweiradantrieb (Enhanced Vehicle). Im Zweiradantrieb wird bei Schlupf der Hinterachse über der Schwelle zuerst Allrad zugeschaltet, danach werden bei anhaltendem Schlupf die Differenziale gesperrt; auf der Straße geht es zurück auf 2WD, sobald die Haftung zurück ist. Eine manuelle Änderung bleibt bis zum nächsten Wechsel Feld/Straße erhalten."/>
+        <text name="vtpas_diffBonus_label" text="Gesperrte Differenziale: Haftungsbonus"/>
+        <text name="vtpas_diffBonus_tip" text="Fügt einen kleinen Haftungsbonus hinzu, solange die Differenziale gesperrt sind (Enhanced Vehicle), zusätzlich zur physikalischen Wirkung der Sperre: +2 % an den Vorderrädern (Vorderachse gesperrt) und +3 % an den Hinterrädern (Hinterachse gesperrt)."/>
+        <text name="input_AS_DUAL_SWITCH" text="Zwillingsräder montieren / abbauen"/>
+        <text name="as_dual_store_function" text="Zu Fuß neben der Palette, Traktor daneben angehalten: Strg rechts + I. Volle Palette = Zwillingsräder montieren, leere Palette = abbauen. 1 Std. Arbeit, alle 15 Min. ein Reifen."/>
+        <text name="as_dual_mounting" text="Montage der Zwillingsräder begonnen: fertig um %s"/>
+        <text name="as_dual_unmounting" text="Abbau der Zwillingsräder begonnen: fertig um %s"/>
+        <text name="as_dual_done_on" text="Zwillingsräder montiert"/>
+        <text name="as_dual_done_off" text="Einzelräder montiert"/>
+        <text name="as_dual_none" text="Keine Zwillingsräder für diesen Traktor verfügbar"/>
+        <text name="as_dual_nosingle" text="Keine Einzelrad-Konfiguration gefunden"/>
+        <text name="as_dual_norack" text="Keine Reifenpalette in der Nähe"/>
+        <text name="as_dual_stop" text="Traktor anhalten, um die Räder zu wechseln"/>
+        <text name="as_dual_money" text="Nicht genug Geld (%s)"/>
+        <text name="as_dual_cancel" text="Traktor bewegt: Radwechsel abgebrochen"/>
+        <text name="as_dual_failed" text="Radwechsel fehlgeschlagen"/>
+        <text name="as_dual_mp" text="Radwechsel nur im Einzelspieler verfügbar"/>
+        <text name="as_dual_notractor" text="Kein Traktor neben der Reifenpalette geparkt"/>
+        <text name="as_dual_alreadytwin" text="Dieser Traktor hat bereits Zwillingsräder: die Palette liefert nur Zwillingsräder"/>
+        <text name="as_dual_running" text="Radwechsel läuft bereits: fertig um %s"/>
+        <text name="as_dual_rackempty" text="Diese Palette ist leer (oder unvollständig).&#10;&#10;Ihre Reifen sind an einem anderen Traktor montiert: zuerst dort abbauen oder eine volle Palette verwenden."/>
+        <text name="as_dual_rackfull" text="Diese Palette ist nicht leer und kann die abgebauten Reifen nicht aufnehmen.&#10;&#10;Eine leere Palette verwenden."/>
+        <text name="as_dual_rackbusy" text="Diese Palette wird bereits für einen anderen laufenden Radwechsel verwendet."/>
+        <text name="as_dual_store_function_ar" text="2 BKT Agrimax V-Flecto 650/65R42 Reifen auf Felgen. Zu Fuß neben der Palette, Traktor daneben angehalten: Strg rechts + I. Allein = Zwillingsräder hinten; mit der Vorderpalette = vorne + hinten. 30 Min. Montage (15 Min. pro Reifen)."/>
+        <text name="as_dual_store_function_av" text="2 BKT Agrimax V-Flecto 540/65R30 Reifen auf Felgen. Zusammen mit der Hinterpalette für Zwillingsräder vorne + hinten (Strg rechts + I, zu Fuß neben den Paletten)."/>
+        <text name="as_dual_needar" text="Keine volle hintere Zwillingsradpalette neben diesem Traktor.&#10;&#10;Eine leere Palette bedeutet, dass ihre Reifen bereits an einem anderen Traktor montiert sind: zuerst dort abbauen oder eine neue Palette kaufen."/>
+        <text name="as_dual_needav" text="Diesen Traktor gibt es nur mit Zwillingsrädern vorne + hinten.&#10;&#10;Eine volle vordere Zwillingsradpalette neben den Traktor stellen."/>
+        <text name="as_dual_needar_empty" text="Zum Abbau wird eine leere hintere Palette neben dem Traktor benötigt, um die Reifen abzulegen.&#10;&#10;Eine volle Palette kann keine weiteren Reifen aufnehmen."/>
+        <text name="as_dual_needav_empty" text="Dieser Traktor hat auch vorne Zwillingsräder: zusätzlich wird eine leere vordere Palette benötigt."/>
+        <text name="as_dual_confirm_title" text="Radwechsel"/>
+        <text name="as_dual_confirm_on" text="Montage der Zwillingsräder: %d Reifen, %d Min. Arbeit (fertig gegen %s).&#10;&#10;Der Traktor ist während des Wechsels gesperrt: Einsteigen und Helfer nicht möglich. Wird er bewegt, wird der Wechsel abgebrochen.&#10;&#10;Montage starten?"/>
+        <text name="as_dual_confirm_off" text="Abbau der Zwillingsräder: %d Reifen, %d Min. Arbeit (fertig gegen %s).&#10;&#10;Der Traktor ist während des Wechsels gesperrt: Einsteigen und Helfer nicht möglich. Wird er bewegt, wird der Wechsel abgebrochen.&#10;&#10;Abbau starten?"/>
+        <text name="as_dual_brand" text="Keine %s-Zwillingsräder für diesen Traktor: Reifenmarke in der Werkstatt wechseln (verfügbar: %s)"/>
+        <text name="as_dual_locked" text="Traktor stillgelegt: Radwechsel läuft (fertig um %s)"/>
+        <text name="as_dual_zone" text="Traktor im Montagebereich abstellen (Rechteck am Boden neben der Palette)"/>
+        <text name="as_dual_marker" text="Hier hinstellen"/>
+        <text name="as_dual_marker_on" text="Strg rechts + I: Räder wechseln"/>
+        <text name="as_dual_timer_title" text="Radwechsel"/>
+        <text name="as_dual_timer_on" text="%s: Montage Zwillingsräder - %d Min. (fertig um %s) - Reifen %d/%d"/>
+        <text name="as_dual_timer_off" text="%s: Abbau Zwillingsräder - %d Min. (fertig um %s) - Reifen %d/%d"/>
+    </texts>
+</l10n>

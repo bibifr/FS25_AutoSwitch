@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<modDesc descVersion="106">
+    <author>Fabien</author>
+    <version>3.5.0.0</version>
+    <multiplayer supported="true"/>
+
+    <title>
+        <en>AutoSwitch</en>
+        <fr>AutoSwitch</fr>
+        <de>AutoSwitch</de>
+    </title>
+
+    <description>
+        <en><![CDATA[Companion script for Variable Tire Pressure (does not modify the original mod).
+
+- Tires: with AutoDrive or Courseplay, tires are automatically deflated in fields and inflated on roads. When driving yourself, choose Automatic or Manual in the settings. Adjustable minimum delay between two pressure changes.
+- Differentials (Enhanced Vehicle): automatic locking when wheel slip stays above an adjustable threshold for an adjustable time, unlocking once grip is restored. Always automatic with AutoDrive / Courseplay; Automatic or Manual when driving yourself.
+- Slip alert: red message when a vehicle slips beyond an adjustable percentage for an adjustable time.
+- Separate on-screen notifications (On/Off) for tires and differentials.
+- Recommended speed range (low - high) shown left of the speedometer when working in fields (zone, tire pressure, soil, moisture, slip).
+
+All options are in the game settings menu.]]></en>
+        <fr><![CDATA[Script compagnon pour Variable Tire Pressure (ne modifie pas le mod d'origine).
+
+- Pneus : avec AutoDrive ou Courseplay, dégonflage automatique dans les champs et gonflage sur route. En conduite manuelle, choix Automatique ou Manuel dans les paramètres. Délai minimum réglable entre deux changements de pression.
+- Différentiels (Enhanced Vehicle) : verrouillage automatique quand le patinage dépasse un seuil réglable pendant une durée réglable, déverrouillage quand l'adhérence revient. Toujours automatique avec AutoDrive / Courseplay ; Automatique ou Manuel en conduite manuelle.
+- Alerte de patinage : message rouge quand un véhicule patine au-delà d'un pourcentage réglable pendant une durée réglable.
+- Notifications à l'écran séparées (Activé/Désactivé) pour les pneus et les différentiels.
+- Plage de vitesse conseillée (basse - haute) affichée à gauche du compteur dans les champs (zone, pression des pneus, sol, humidité, patinage).
+
+Toutes les options se trouvent dans le menu Paramètres du jeu.]]></fr>
+        <de><![CDATA[Begleitskript für Variable Tire Pressure (das Original-Mod wird nicht verändert).
+
+- Reifen: Mit AutoDrive oder Courseplay wird auf dem Feld automatisch Luft abgelassen und auf der Straße aufgepumpt. Beim Selbstfahren in den Einstellungen Automatisch oder Manuell wählbar. Einstellbare Mindestzeit zwischen zwei Druckänderungen.
+- Differenziale (Enhanced Vehicle): Automatische Sperre, wenn der Schlupf für eine einstellbare Zeit über einem einstellbaren Wert liegt; Entsperren, sobald die Haftung zurückkehrt. Mit AutoDrive / Courseplay immer automatisch; beim Selbstfahren Automatisch oder Manuell.
+- Schlupfwarnung: Rote Meldung, wenn ein Fahrzeug für eine einstellbare Zeit über einem einstellbaren Prozentsatz durchdreht.
+- Getrennte Bildschirmmeldungen (Ein/Aus) für Reifen und Differenziale.
+- Empfohlener Geschwindigkeitsbereich (min - max) links vom Tacho auf dem Feld (Zone, Reifendruck, Boden, Feuchte, Schlupf).
+
+Alle Optionen befinden sich im Einstellungsmenü des Spiels.]]></de>
+    </description>
+
+    <iconFilename>icon_AutoSwitch.dds</iconFilename>
+
+    <!-- Traductions : l10n/l10n_en.xml, l10n_fr.xml, l10n_de.xml (le jeu ajoute le code de langue) -->
+    <l10n filenamePrefix="l10n/l10n"/>
+
+    <!-- Dépendances obligatoires : ce mod est chargé APRÈS elles -->
+    <dependencies>
+        <dependency>FS25_VariableTirePressure</dependency>
+        <dependency>FS25_AutoDrive</dependency>
+        <dependency>FS25_Courseplay</dependency>
+        <dependency>FS25_EnhancedVehicle</dependency>
+        <dependency>FS25_MudSystemPhysics</dependency>
+        <dependency>FS25_DynamicDrivePro</dependency>
+        <dependency>FS25_TractorTerrainDynamics</dependency>
+        <dependency>MoreRealistic</dependency>
+        <dependency>moreRealisticXmlDatabank</dependency>
+        <dependency>FS25_RealisticHarvesting</dependency>
+        <dependency>FS25_CropDestructionOverhaul</dependency>
+        <dependency>FS25_MoistureSystem</dependency>
+        <dependency>FS25_useYourTyres</dependency>
+    </dependencies>
+
+    <storeItems>
+        <storeItem xmlFilename="objects/tireRackAR/tireRackAR.xml"/>
+        <storeItem xmlFilename="objects/tireRackAV/tireRackAV.xml"/>
+        <storeItem xmlFilename="objects/tireRackAR/tireRackAR_placeable.xml"/>
+        <storeItem xmlFilename="objects/tireRackAV/tireRackAV_placeable.xml"/>
+    </storeItems>
+    <actions>
+        <action name="AS_DUAL_SWITCH" category="ONFOOT"/>
+    </actions>
+    <inputBinding>
+        <actionBinding action="AS_DUAL_SWITCH">
+            <binding device="KB_MOUSE_DEFAULT" input="KEY_rctrl KEY_i"/>
+        </actionBinding>
+    </inputBinding>
+    <extraSourceFiles>
+        <sourceFile filename="AutoSwitch.lua"/>
+    </extraSourceFiles>
+</modDesc>
