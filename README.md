@@ -2,9 +2,11 @@
 
 **Version 3.5.0** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
 
-Mod compagnon qui automatise **la pression des pneus et les différentiels** et rend **la traction réaliste**, en faisant travailler ensemble Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics et Tractor Terrain Dynamics, sans modifier ces mods. Il ajoute aussi des **palettes de roues jumelées** à monter pneu par pneu.
+## French
 
-> English summary below.
+Mod compagnon qui automatise **la pression des pneus et les différentiels** et rend **la traction réaliste**, en faisant travailler ensemble Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics et Tractor Terrain Dynamics, sans modifier ces mods. Il ajoute aussi une palette de pneu pour changement de pneu.
+
+> 🇬🇧 [English version below](#english)
 
 ## Fonctionnalités
 
@@ -49,8 +51,55 @@ AutoSwitch fait partie d'un ensemble réaliste global : tous ces mods sont oblig
 
 ## English
 
-AutoSwitch automates **tire pressure and differential locks** and makes **traction realistic** by making Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics and Tractor Terrain Dynamics work together (none of them is modified). It also adds **dual-wheel racks** (rear BKT 650/65R42, front BKT 540/65R30) mounted tire by tire in game time: park the tractor in the ground area, stand on the yellow marker, press **Right Ctrl + I**. Settings: **Settings > General > AutoSwitch**. Wheel change is single-player only. All 13 listed mods are required.
+**Version 3.5.0** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
 
-## Licence
+Companion mod that automates **tire pressure and differential locks** and makes **traction realistic** by making Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics and Tractor Terrain Dynamics work together, without modifying any of them. It also adds **dual-wheel racks** mounted tire by tire.
 
-[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) : partage et modification autorisés en citant l'auteur, pas d'usage commercial, mêmes conditions pour les dérivés.
+### Features
+
+| Area | What AutoSwitch does |
+| --- | --- |
+| Tire pressure | With AutoDrive / Courseplay: deflate in the field, inflate on the road. Manual driving: Automatic or Manual mode. VTP's automatic re-inflation at 30 km/h is disabled. |
+| Differentials (Enhanced Vehicle) | Front + rear lock when wheel slip exceeds an adjustable threshold, unlock at half the threshold, 4WD in the field / 2WD on the road, unlock when turning, reset on game load. |
+| Grip (MoreRealistic) | Grip loss on wet ground (5 levels), bonus when differentials are locked, Use Your Tyres wear taken into account. |
+| Dual wheels | Real width used by Mud System Physics, better grip on wet ground, VTP fix for tires with brand variants. |
+| Dual-wheel racks | Rear (BKT 650/65R42, €4,500) and front (BKT 540/65R30, €3,500) racks in the shop and the construction menu. Mounting / unmounting tire by tire (15 in-game minutes per tire), parking area on the ground, player marker, timer, tractor locked during the job. |
+| Display | Recommended speed range and slip percentage next to the speedometer, slip warning. |
+| Sowing | Seeding protection, seeder filling with the lid closed, direct re-sowing on crushed strips. |
+| Mud | Recommended Mud System Physics + TTD settings offered on first launch. |
+
+### Using the dual-wheel racks
+
+1. Place the rear rack (and the front rack for the front axle) side by side.
+2. Park the tractor in the ground rectangle (red, then green once correctly positioned).
+3. On foot, stand on the yellow marker and press **Right Ctrl + I**, then confirm.
+4. Unmounting: same procedure with **empty** racks; the original tires are put back.
+
+Dual wheels must exist in the **same tire brand** as the tractor's tires. Wheel change: **single-player only**.
+
+### Required mods
+
+FS25_VariableTirePressure, FS25_EnhancedVehicle, FS25_AutoDrive, FS25_Courseplay, MoreRealistic, moreRealisticXmlDatabank, FS25_MudSystemPhysics, FS25_TractorTerrainDynamics, FS25_DynamicDrivePro, FS25_useYourTyres, FS25_RealisticHarvesting, FS25_CropDestructionOverhaul, FS25_MoistureSystem.
+
+AutoSwitch is part of a global realistic pack: all these mods are required.
+
+### Installation
+
+1. Download `FS25_AutoSwitch.zip` from the **Releases** section.
+2. Copy it **without unzipping** into `Documents/My Games/FarmingSimulator2025/mods`.
+3. Enable it together with its dependencies. Settings: **Settings > General > AutoSwitch**.
+
+### Known limitations
+
+- Wheel change is single-player only; short freeze while the tractor reloads (longer with attached implements).
+- A tractor without a dual-wheel configuration in its file cannot receive dual wheels.
+
+---
+
+## Licence / License
+
+[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+- 🇫🇷 Partage et modification autorisés en citant l'auteur, pas d'usage commercial, mêmes conditions pour les dérivés.
+- 🇬🇧 Sharing and modification allowed with credit to the author, no commercial use, derivatives under the same terms.
+
