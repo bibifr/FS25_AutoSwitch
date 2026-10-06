@@ -1,6 +1,6 @@
 # FS25 AutoSwitch
 
-**Version 3.5.0** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
+**Version 1.0.0.0** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
 
 ## French
 
