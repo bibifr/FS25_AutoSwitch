@@ -5,6 +5,7 @@
 ## French
 
 Mod compagnon qui automatise **la pression des pneus et les différentiels** et rend **la traction réaliste**, en faisant travailler ensemble Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics et Tractor Terrain Dynamics, sans modifier ces mods. Il ajoute aussi une palette de pneu pour changement de pneu.
+Objectif: Rendre le jeux plus realiste et performant
 
 > 🇬🇧 [English version below](#english)
 
@@ -54,6 +55,7 @@ AutoSwitch fait partie d'un ensemble réaliste global : tous ces mods sont oblig
 **Version 3.5.0** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
 
 Companion mod that automates **tire pressure and differential locks** and makes **traction realistic** by making Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics and Tractor Terrain Dynamics work together, without modifying any of them. It also adds **dual-wheel racks** mounted tire by tire.
+Objective: Make game more realistic 
 
 ### Features
 
