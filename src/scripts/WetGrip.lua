@@ -55,6 +55,52 @@ function AS_WetGrip:computeWheelMul(wheel, fg, flw, baseWet)
     return shClamp(1 - loss, self.MIN_MUL, 1.0)
 end
 
+-- (v1.32) usure des pneus de Use Your Tyres (même formule que ce mod)
+function AS_WetGrip:getWearMul(wp)
+    local uyt = UseYourTyres
+    if uyt == nil and type(FS25_useYourTyres) == "table" then uyt = FS25_useYourTyres.UseYourTyres end
+    if uyt == nil or uyt.getWearAmount == nil or wp.wheel == nil or wp.wheel.vehicle == nil
+        or wp.wheel.vehicle.uytHasTyres ~= true then
+        return 1
+    end
+    local okW, wear = pcall(uyt.getWearAmount, wp.wheel)
+    if not okW or type(wear) ~= "number" then return 1 end
+    local w = math.pow(wear, 3) * 0.75
+    local okG, gt = pcall(WheelsUtil.getGroundType, wp.densityType ~= FieldGroundType.NONE,
+        wp.contact ~= WheelContactType.GROUND, wp.groundDepth)
+    if okG and gt == WheelsUtil.GROUND_ROAD then
+        return 1 + w
+    end
+    return math.max(0.1, math.min(1, 1 - w))
+end
+
+-- (v1.0.0.05) blocages ModMixer sur WheelPhysics.updateTireFriction : AutoSwitch respecte
+-- le choix du joueur au lieu de réactiver ce qu'il a bloqué
+AS_WetGrip.mrFrictionVetoed = false
+AS_WetGrip.uytFrictionVetoed = false
+function AS_WetGrip:readModMixerVetoes()
+    local dir = g_modSettingsDirectory or (getUserProfileAppPath() .. "modSettings/")
+    if string.sub(dir, -1) ~= "/" then dir = dir .. "/" end
+    local path = dir .. "FS25_ModMixer/switchboard.xml"
+    if not fileExists(path) then return end
+    local xml = loadXMLFile("asModMixerSwitchboard", path)
+    if xml == nil or xml == 0 then return end
+    local i = 0
+    while true do
+        local key = string.format("switchboard.vetoes.veto(%d)", i)
+        if not hasXMLProperty(xml, key) then break end
+        local mod, target = getXMLString(xml, key .. "#mod"), getXMLString(xml, key .. "#target")
+        if target == "WheelPhysics.updateTireFriction" then
+            if mod == "MoreRealistic" then self.mrFrictionVetoed = true end
+            if mod == "FS25_useYourTyres" then self.uytFrictionVetoed = true end
+        end
+        i = i + 1
+    end
+    delete(xml)
+    vtpInfo(string.format("[AS_WetGrip] ModMixer : MoreRealistic %s, Use Your Tyres %s sur l'adhérence",
+        self.mrFrictionVetoed and "bloqué" or "actif", self.uytFrictionVetoed and "bloqué" or "actif"))
+end
+
 function AS_WetGrip:install()
     if self.installed then return end
     if WheelPhysics == nil or WheelPhysics.updateTireFriction == nil or WheelPhysics.mrUpdateTireFriction == nil then
@@ -63,34 +109,44 @@ function AS_WetGrip:install()
         self.inactive = true
         return
     end
+    self:readModMixerVetoes()
     WheelPhysics.updateTireFriction = Utils.overwrittenFunction(WheelPhysics.updateTireFriction, function(wp, superFunc)
-        superFunc(wp)
-        local mul = wp.__vtpasGripMul
-        if mul ~= nil and math.abs(mul - 1) > 0.001 and wp.vehicle ~= nil and wp.vehicle.isServer and wp.vehicle.isAddedToPhysics
+        local ready = wp.vehicle ~= nil and wp.vehicle.isServer and wp.vehicle.isAddedToPhysics
             and wp.wheelShape ~= nil and wp.wheel ~= nil and wp.wheel.node ~= nil
-            and type(wp.tireGroundFrictionCoeff) == "number" then
-            local dyn = tonumber(wp.mrDynamicFrictionScale) or 1
-            -- (v1.32) garder l'usure des pneus de Use Your Tyres (même formule que ce mod),
-            -- sinon notre réglage l'effaçait
-            local wearMul = 1
-            local uyt = UseYourTyres
-            if uyt == nil and type(FS25_useYourTyres) == "table" then uyt = FS25_useYourTyres.UseYourTyres end
-            if uyt ~= nil and uyt.getWearAmount ~= nil and wp.wheel.vehicle ~= nil and wp.wheel.vehicle.uytHasTyres == true then
-                local okW, wear = pcall(uyt.getWearAmount, wp.wheel)
-                if okW and type(wear) == "number" then
-                    local w = math.pow(wear, 3) * 0.75
-                    local okG, gt = pcall(WheelsUtil.getGroundType, wp.densityType ~= FieldGroundType.NONE,
-                        wp.contact ~= WheelContactType.GROUND, wp.groundDepth)
-                    if okG and gt == WheelsUtil.GROUND_ROAD then
-                        wearMul = 1 + w
-                    else
-                        wearMul = math.max(0.1, math.min(1, 1 - w))
-                    end
-                end
-            end
-            setWheelShapeTireFriction(wp.wheel.node, wp.wheelShape, wp.maxLongStiffness, wp.maxLatStiffness,
-                wp.maxLatStiffnessLoad, wp.tireGroundFrictionCoeff * dyn * mul * wearMul)
+            and type(wp.tireGroundFrictionCoeff) == "number"
+        if not ready then
+            return superFunc(wp)
         end
+        local mul = wp.__vtpasGripMul or 1
+
+        if not AS_WetGrip.mrFrictionVetoed then
+            -- MoreRealistic calcule l'adhérence sans tenir compte des autres mods :
+            -- après lui, on réécrit son adhérence avec notre facteur (et l'usure Use Your Tyres)
+            superFunc(wp)
+            if math.abs(mul - 1) > 0.001 then
+                local dyn = tonumber(wp.mrDynamicFrictionScale) or 1
+                setWheelShapeTireFriction(wp.wheel.node, wp.wheelShape, wp.maxLongStiffness, wp.maxLatStiffness,
+                    wp.maxLatStiffnessLoad, wp.tireGroundFrictionCoeff * dyn * mul * AS_WetGrip:getWearMul(wp))
+            end
+            return
+        end
+
+        -- (v1.0.0.05) MoreRealistic bloqué par ModMixer sur cette fonction : l'adhérence passe
+        -- par frictionScale, que le jeu, Mud System Physics et Variable Tire Pressure
+        -- multiplient chacun. On y ajoute notre facteur (et l'usure Use Your Tyres si ModMixer
+        -- bloque aussi ce mod), sec ou humide : pas de saut quand le sol change.
+        local extra = mul
+        if AS_WetGrip.uytFrictionVetoed then
+            extra = extra * AS_WetGrip:getWearMul(wp)
+        end
+        if math.abs(extra - 1) <= 0.001 then
+            return superFunc(wp)
+        end
+        local old = wp.frictionScale
+        wp.frictionScale = (old or 1) * extra
+        local ok, err = pcall(superFunc, wp)
+        wp.frictionScale = old
+        if not ok then error(err) end
     end)
     self.installed = true
     -- table d'adhérence de MoreRealistic : pneus sur champ mouillé

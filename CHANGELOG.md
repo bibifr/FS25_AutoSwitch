@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.05 | Adhérence : AutoSwitch respecte les blocages ModMixer (MoreRealistic, Use Your Tyres) sur WheelPhysics.updateTireFriction ; facteur sol humide et usure appliqués sec ou humide, sans saut ; crevaison et pression Mud System Physics conservées |
 | 1.0.0.04 | Outils stables à l'arrêt : rayon des roues figé (dételés, ou attelage arrêté sans conducteur), plus de sautillement Mud System Physics + MoreRealistic |
 | 1.0.0.03 | Traces de pneus gardées avec la sauvegarde (savegameX/autoSwitchTireTracks.xml) et redessinées au chargement |
 | 1.0.0.02 | Réglages Mud System Physics repris de la dernière sauvegarde (effacement des cultures et crevaisons activés, pression des pneus MSP désactivée) |
