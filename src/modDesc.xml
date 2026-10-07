@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <modDesc descVersion="106">
     <author>Fabien</author>
-    <version>1.0.0.03</version>
+    <version>1.0.0.04</version>
     <multiplayer supported="true"/>
 
     <title>
@@ -20,6 +20,7 @@
 - Dual-wheel racks: rear (BKT 650/65R42) and front (BKT 540/65R30) racks in the shop and the construction menu. Mounting / unmounting tire by tire (15 in-game minutes per tire). Park the tractor in the ground area, stand on the yellow marker and press Right Ctrl + I. Single-player only.
 - AutoDrive speed set by the ground: 20 km/h in fields, 30 km/h on tracks, no limit on roads (adjustable in the settings).
 - Tire tracks kept with the savegame: they are no longer lost when the game is reloaded.
+- Implements stay still when stopped: no more bouncing caused by Mud System Physics and MoreRealistic.
 - Display: recommended speed range and slip percentage next to the speedometer, slip warning.
 - Sowing: seeding protection, seeder filling with the lid closed, direct re-sowing on crushed strips.
 - Mud: AutoSwitch settings for Mud System Physics + TTD applied automatically.
@@ -36,6 +37,7 @@ Required mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, Mor
 - Palettes de jumelées : palettes AR (BKT 650/65R42) et AV (BKT 540/65R30) en boutique et au menu construction. Montage / démontage pneu par pneu (15 min de jeu par pneu). Garer le tracteur dans la zone au sol, se placer sur le repère jaune et appuyer sur Ctrl droit + I. Solo uniquement.
 - Vitesse d'AutoDrive imposée par le terrain : 20 km/h au champ, 30 km/h sur les chemins, sans limite sur la route (réglable dans les paramètres).
 - Traces de pneus gardées avec la sauvegarde : elles ne disparaissent plus au rechargement.
+- Outils stables à l'arrêt : ils ne sautillent plus à cause de Mud System Physics et MoreRealistic.
 - Affichage : plage de vitesse conseillée et pourcentage de patinage près du compteur, alerte de patinage.
 - Semis : protection du semis, remplissage du semoir couvercle fermé, ressemis direct sur bandes écrasées.
 - Boue : paramètres Mud System Physics + TTD d'AutoSwitch appliqués automatiquement.
@@ -52,6 +54,7 @@ Mods requis : VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, More
 - Zwillingsrad-Paletten: Paletten hinten (BKT 650/65R42) und vorne (BKT 540/65R30) im Shop und im Baumenü. Montage / Demontage Reifen für Reifen (15 Spielminuten pro Reifen). Traktor im Bodenbereich abstellen, auf die gelbe Markierung stellen und Strg rechts + I drücken. Nur Einzelspieler.
 - AutoDrive-Geschwindigkeit nach Untergrund: 20 km/h auf dem Feld, 30 km/h auf Feldwegen, ohne Begrenzung auf der Straße (in den Einstellungen anpassbar).
 - Reifenspuren werden mit dem Spielstand gespeichert und verschwinden beim Neuladen nicht mehr.
+- Geräte bleiben im Stand ruhig: kein Hüpfen mehr durch Mud System Physics und MoreRealistic.
 - Anzeige: empfohlener Geschwindigkeitsbereich und Schlupf in Prozent neben dem Tacho, Schlupfwarnung.
 - Säen: Saatschutz, Befüllen der Sämaschine bei geschlossenem Deckel, Direktnachsaat auf überfahrenen Streifen.
 - Schlamm: AutoSwitch-Einstellungen für Mud System Physics + TTD werden automatisch angewendet.

@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.04 | Outils stables à l'arrêt : rayon des roues figé (dételés, ou attelage arrêté sans conducteur), plus de sautillement Mud System Physics + MoreRealistic |
 | 1.0.0.03 | Traces de pneus gardées avec la sauvegarde (savegameX/autoSwitchTireTracks.xml) et redessinées au chargement |
 | 1.0.0.02 | Réglages Mud System Physics repris de la dernière sauvegarde (effacement des cultures et crevaisons activés, pression des pneus MSP désactivée) |
 | 1.0.0.01 | Vitesse AutoDrive selon le terrain (champ / chemin / route), réglable par tranches de 5 km/h ; réglages Mud System Physics appliqués à chaque chargement et retirés du menu ; ressemis direct permanent ; réglages de position et de maxi de la plage de vitesse retirés du menu |
