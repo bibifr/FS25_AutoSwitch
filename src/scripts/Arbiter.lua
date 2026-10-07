@@ -62,6 +62,10 @@ local function rebuildEnvMap()
 end
 
 local function modOf(fn)
+    -- (v1.0.0.10) même ordre que ModMixer : le mod en cours de chargement d'abord,
+    -- l'environnement de la fonction ensuite. Un crochet posé plus tard depuis un
+    -- véhicule (DDPwheels, grip par roue) n'est donc pas bloqué, comme avec ModMixer.
+    if g_currentModName ~= nil and g_currentModName ~= "" then return g_currentModName end
     if type(getfenv) == "function" and type(fn) == "function" then
         local ok, env = pcall(getfenv, fn)
         if ok and type(env) == "table" then
@@ -74,7 +78,6 @@ local function modOf(fn)
             if name ~= nil then return name end
         end
     end
-    if g_currentModName ~= nil and g_currentModName ~= "" then return g_currentModName end
     return nil
 end
 
@@ -144,7 +147,7 @@ local function intercept(orig, existingFn, newFn)
     if mod ~= nil and AS_Arbiter:isVetoed(mod, target) then
         local key = mod .. " -> " .. target
         if AS_Arbiter.vetoCount[key] == nil then
-            vtpInfo(string.format("[AS_Arbiter] bloqué : %s", key))
+            print(string.format("[AS_Arbiter] bloqué : %s", key))
         end
         AS_Arbiter.vetoCount[key] = (AS_Arbiter.vetoCount[key] or 0) + 1
         return existingFn
@@ -245,6 +248,14 @@ end
 function AS_Arbiter:update(dt)
     if self.flushed then return end
     self.flushed = true
+    if self.active then
+        local n = 0
+        for key, count in pairs(self.vetoCount) do
+            print(string.format("[AS_Arbiter] %s : %d crochet(s) bloqué(s)", key, count))
+            n = n + 1
+        end
+        if n == 0 then print("[AS_Arbiter] aucun crochet bloqué") end
+    end
     for target, st in pairs(orderState) do
         if #st.held > 0 then
             st.released = true
