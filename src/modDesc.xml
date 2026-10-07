@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <modDesc descVersion="106">
     <author>Fabien</author>
-    <version>3.5.0.0</version>
+    <version>1.0.0.02</version>
     <multiplayer supported="true"/>
 
     <title>
@@ -11,33 +11,51 @@
     </title>
 
     <description>
-        <en><![CDATA[Companion script for Variable Tire Pressure (does not modify the original mod).
+        <en><![CDATA[Companion mod that automates tire pressure and differential locks and makes traction realistic, by making Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics and Tractor Terrain Dynamics work together, without modifying any of them.
 
-- Tires: with AutoDrive or Courseplay, tires are automatically deflated in fields and inflated on roads. When driving yourself, choose Automatic or Manual in the settings. Adjustable minimum delay between two pressure changes.
-- Differentials (Enhanced Vehicle): automatic locking when wheel slip stays above an adjustable threshold for an adjustable time, unlocking once grip is restored. Always automatic with AutoDrive / Courseplay; Automatic or Manual when driving yourself.
-- Slip alert: red message when a vehicle slips beyond an adjustable percentage for an adjustable time.
-- Separate on-screen notifications (On/Off) for tires and differentials.
-- Recommended speed range (low - high) shown left of the speedometer when working in fields (zone, tire pressure, soil, moisture, slip).
+- Tire pressure: with AutoDrive / Courseplay, deflate in the field and inflate on the road. Manual driving: Automatic or Manual mode. VTP's automatic re-inflation at 30 km/h is disabled.
+- Differentials (Enhanced Vehicle): front + rear lock when wheel slip exceeds an adjustable threshold, unlock at half the threshold, 4WD in the field / 2WD on the road, unlock when turning, reset on game load.
+- Grip (MoreRealistic): grip loss on wet ground (5 levels), bonus when differentials are locked, Use Your Tyres wear taken into account.
+- Dual wheels: real width used by Mud System Physics, better grip on wet ground, VTP fix for tires with brand variants.
+- Dual-wheel racks: rear (BKT 650/65R42) and front (BKT 540/65R30) racks in the shop and the construction menu. Mounting / unmounting tire by tire (15 in-game minutes per tire). Park the tractor in the ground area, stand on the yellow marker and press Right Ctrl + I. Single-player only.
+- AutoDrive speed set by the ground: 20 km/h in fields, 30 km/h on tracks, no limit on roads (adjustable in the settings).
+- Display: recommended speed range and slip percentage next to the speedometer, slip warning.
+- Sowing: seeding protection, seeder filling with the lid closed, direct re-sowing on crushed strips.
+- Mud: AutoSwitch settings for Mud System Physics + TTD applied automatically.
 
-All options are in the game settings menu.]]></en>
-        <fr><![CDATA[Script compagnon pour Variable Tire Pressure (ne modifie pas le mod d'origine).
+Settings: Settings > General > AutoSwitch.
 
-- Pneus : avec AutoDrive ou Courseplay, dégonflage automatique dans les champs et gonflage sur route. En conduite manuelle, choix Automatique ou Manuel dans les paramètres. Délai minimum réglable entre deux changements de pression.
-- Différentiels (Enhanced Vehicle) : verrouillage automatique quand le patinage dépasse un seuil réglable pendant une durée réglable, déverrouillage quand l'adhérence revient. Toujours automatique avec AutoDrive / Courseplay ; Automatique ou Manuel en conduite manuelle.
-- Alerte de patinage : message rouge quand un véhicule patine au-delà d'un pourcentage réglable pendant une durée réglable.
-- Notifications à l'écran séparées (Activé/Désactivé) pour les pneus et les différentiels.
-- Plage de vitesse conseillée (basse - haute) affichée à gauche du compteur dans les champs (zone, pression des pneus, sol, humidité, patinage).
+Required mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, MoreRealistic, moreRealisticXmlDatabank, MudSystemPhysics, TractorTerrainDynamics, DynamicDrivePro, useYourTyres, RealisticHarvesting, CropDestructionOverhaul, MoistureSystem.]]></en>
+        <fr><![CDATA[Mod compagnon qui automatise la pression des pneus et les différentiels et rend la traction réaliste, en faisant travailler ensemble Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics et Tractor Terrain Dynamics, sans modifier ces mods.
 
-Toutes les options se trouvent dans le menu Paramètres du jeu.]]></fr>
-        <de><![CDATA[Begleitskript für Variable Tire Pressure (das Original-Mod wird nicht verändert).
+- Pression des pneus : avec AutoDrive / Courseplay, dégonflage au champ et gonflage sur route. En conduite manuelle : Automatique ou Manuel. Le regonflage automatique de VTP à 30 km/h est désactivé.
+- Différentiels (Enhanced Vehicle) : blocage AV + AR quand le patinage dépasse un seuil réglable, déblocage à la moitié du seuil, 4x4 au champ / 4x2 sur route, déblocage en virage, remise à zéro au chargement.
+- Adhérence (MoreRealistic) : perte d'adhérence en sol humide (5 niveaux), bonus quand les différentiels sont bloqués, usure Use Your Tyres prise en compte.
+- Roues jumelées : largeur réelle prise en compte par Mud System Physics, meilleure adhérence en sol humide, correctif VTP pour les pneus à variantes de marques.
+- Palettes de jumelées : palettes AR (BKT 650/65R42) et AV (BKT 540/65R30) en boutique et au menu construction. Montage / démontage pneu par pneu (15 min de jeu par pneu). Garer le tracteur dans la zone au sol, se placer sur le repère jaune et appuyer sur Ctrl droit + I. Solo uniquement.
+- Vitesse d'AutoDrive imposée par le terrain : 20 km/h au champ, 30 km/h sur les chemins, sans limite sur la route (réglable dans les paramètres).
+- Affichage : plage de vitesse conseillée et pourcentage de patinage près du compteur, alerte de patinage.
+- Semis : protection du semis, remplissage du semoir couvercle fermé, ressemis direct sur bandes écrasées.
+- Boue : paramètres Mud System Physics + TTD d'AutoSwitch appliqués automatiquement.
 
-- Reifen: Mit AutoDrive oder Courseplay wird auf dem Feld automatisch Luft abgelassen und auf der Straße aufgepumpt. Beim Selbstfahren in den Einstellungen Automatisch oder Manuell wählbar. Einstellbare Mindestzeit zwischen zwei Druckänderungen.
-- Differenziale (Enhanced Vehicle): Automatische Sperre, wenn der Schlupf für eine einstellbare Zeit über einem einstellbaren Wert liegt; Entsperren, sobald die Haftung zurückkehrt. Mit AutoDrive / Courseplay immer automatisch; beim Selbstfahren Automatisch oder Manuell.
-- Schlupfwarnung: Rote Meldung, wenn ein Fahrzeug für eine einstellbare Zeit über einem einstellbaren Prozentsatz durchdreht.
-- Getrennte Bildschirmmeldungen (Ein/Aus) für Reifen und Differenziale.
-- Empfohlener Geschwindigkeitsbereich (min - max) links vom Tacho auf dem Feld (Zone, Reifendruck, Boden, Feuchte, Schlupf).
+Réglages : Paramètres > Général > AutoSwitch.
 
-Alle Optionen befinden sich im Einstellungsmenü des Spiels.]]></de>
+Mods requis : VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, MoreRealistic, moreRealisticXmlDatabank, MudSystemPhysics, TractorTerrainDynamics, DynamicDrivePro, useYourTyres, RealisticHarvesting, CropDestructionOverhaul, MoistureSystem.]]></fr>
+        <de><![CDATA[Begleit-Mod, der Reifendruck und Differenzialsperren automatisiert und die Traktion realistisch macht, indem er Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics und Tractor Terrain Dynamics zusammenarbeiten lässt, ohne diese Mods zu verändern.
+
+- Reifendruck: mit AutoDrive / Courseplay Luft ablassen auf dem Feld, aufpumpen auf der Straße. Beim Selbstfahren: Automatisch oder Manuell. Das automatische Aufpumpen von VTP bei 30 km/h ist deaktiviert.
+- Differenziale (Enhanced Vehicle): Sperre vorne + hinten, wenn der Schlupf einen einstellbaren Wert überschreitet, Entsperren bei der Hälfte des Werts, Allrad auf dem Feld / Zweirad auf der Straße, Entsperren in Kurven, Zurücksetzen beim Laden.
+- Haftung (MoreRealistic): Haftungsverlust auf nassem Boden (5 Stufen), Bonus bei gesperrten Differenzialen, Reifenverschleiß von Use Your Tyres berücksichtigt.
+- Zwillingsräder: tatsächliche Breite für Mud System Physics, bessere Haftung auf nassem Boden, VTP-Korrektur für Reifen mit Markenvarianten.
+- Zwillingsrad-Paletten: Paletten hinten (BKT 650/65R42) und vorne (BKT 540/65R30) im Shop und im Baumenü. Montage / Demontage Reifen für Reifen (15 Spielminuten pro Reifen). Traktor im Bodenbereich abstellen, auf die gelbe Markierung stellen und Strg rechts + I drücken. Nur Einzelspieler.
+- AutoDrive-Geschwindigkeit nach Untergrund: 20 km/h auf dem Feld, 30 km/h auf Feldwegen, ohne Begrenzung auf der Straße (in den Einstellungen anpassbar).
+- Anzeige: empfohlener Geschwindigkeitsbereich und Schlupf in Prozent neben dem Tacho, Schlupfwarnung.
+- Säen: Saatschutz, Befüllen der Sämaschine bei geschlossenem Deckel, Direktnachsaat auf überfahrenen Streifen.
+- Schlamm: AutoSwitch-Einstellungen für Mud System Physics + TTD werden automatisch angewendet.
+
+Einstellungen: Einstellungen > Allgemein > AutoSwitch.
+
+Benötigte Mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, MoreRealistic, moreRealisticXmlDatabank, MudSystemPhysics, TractorTerrainDynamics, DynamicDrivePro, useYourTyres, RealisticHarvesting, CropDestructionOverhaul, MoistureSystem.]]></de>
     </description>
 
     <iconFilename>icon_AutoSwitch.dds</iconFilename>

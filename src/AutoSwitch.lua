@@ -16,6 +16,7 @@
 --   DualRack      palette de pneus : simple <-> jumelées (Ctrl droit + I)
 --   DirectResow   semis direct sur zones effacées
 --   MudPreset     paramètres conseillés Mud System Physics / Tractor Terrain Dynamics
+--   AdSpeed       vitesse d'AutoDrive selon le terrain (champ / chemin / route)
 --   Settings      menu Paramètres et sauvegarde des réglages (toujours en dernier)
 -- =============================================================================
 
@@ -35,6 +36,7 @@ local FILES = {
     "scripts/DualRack.lua",
     "scripts/DirectResow.lua",
     "scripts/MudPreset.lua",
+    "scripts/AdSpeed.lua",
     "scripts/Settings.lua",
 }
 

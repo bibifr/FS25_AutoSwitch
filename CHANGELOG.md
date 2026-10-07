@@ -2,6 +2,9 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.02 | Réglages Mud System Physics repris de la dernière sauvegarde (effacement des cultures et crevaisons activés, pression des pneus MSP désactivée) |
+| 1.0.0.01 | Vitesse AutoDrive selon le terrain (champ / chemin / route), réglable par tranches de 5 km/h ; réglages Mud System Physics appliqués à chaque chargement et retirés du menu ; ressemis direct permanent ; réglages de position et de maxi de la plage de vitesse retirés du menu |
+| 1.0.0.0 | Première version publique (KingMods) |
 | 3.5.0 | Regonflage automatique de VTP à 30 km/h désactivé (les pneus restent dégonflés au champ) |
 | 3.4.0 | Marqueur jaune du jeu (icône atelier) à la place du poteau sur le repère joueur |
 | 3.3.1 | Minuteur plus petit ; jumelées cachées dès leur création ; fin de démontage synchronisée avec la palette |

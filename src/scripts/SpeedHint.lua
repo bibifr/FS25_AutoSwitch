@@ -20,7 +20,7 @@ AS_SpeedHint.BOTTOM_CM  = 1.5     -- hauteur du bas de l'affichage au-dessus du 
 AS_SpeedHint.SCREEN_HEIGHT_CM = 31.5  -- hauteur visible supposée de l'écran (≈ écran 24 à 27 pouces 16:9)
 AS_SpeedHint.FIELD_MIN_KPH = 3   -- vitesse basse minimale affichée dans un champ
 AS_SpeedHint.SLIP_ICON = true    -- icône de patinage (roue + flèches, % au centre) affichée en permanence
-AS_SpeedHint.FIELD_MAX_KPH = 18  -- vitesse haute maximale en travail dans un champ (réglable dans le menu)
+AS_SpeedHint.FIELD_MAX_KPH = 18  -- vitesse haute maximale en travail dans un champ
 AS_SpeedHint.POS_X = nil         -- position déplacée à la souris (coin bas-gauche, 0..1) ; nil = position par défaut
 AS_SpeedHint.POS_Y = nil
 AS_SpeedHint.dragging = false
@@ -398,7 +398,6 @@ end
 -- Déplacement à la souris
 --   Il suffit que le curseur soit visible (clic droit de Courseplay, mode curseur
 --   de Mud System Physics...) : clic gauche maintenu sur le cadre = déplacer.
---   Retour à la position par défaut : réglage "hauteur depuis le bas" dans le menu.
 -- ---------------------------------------------------------------------------
 function AS_SpeedHint:getCanDrag()
     return (self.ENABLED or self.SLIP_ICON) and g_inputBinding ~= nil and g_inputBinding.getShowMouseCursor ~= nil

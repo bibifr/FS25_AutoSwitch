@@ -31,8 +31,6 @@
         <text name="vtpas_tiredelay_tip" text="Mindestzeit (in Sekunden) zwischen zwei Druckwechseln (Aufpumpen / Ablassen), um schnelles Hin und Her zu vermeiden. Aus = keine Verzögerung."/>
         <text name="vtpas_hintShow_label" text="Empfohlener Geschwindigkeitsbereich (auf dem Feld)"/>
         <text name="vtpas_hintShow_tip" text="Zeigt über dem Tacho den empfohlenen Geschwindigkeitsbereich, laufend berechnet aus Zone (Feld / Straße), Reifendruck, Bodenart, Bodenfeuchte und Schlupf."/>
-        <text name="vtpas_hintPos_label" text="Geschwindigkeitsbereich: Höhe vom unteren Rand"/>
-        <text name="vtpas_hintPos_tip" text="Standardposition: Abstand (in cm, 24- bis 27-Zoll-Bildschirm) zwischen unterem Bildschirmrand und Anzeige. Mit der Maus verschiebbar: Mauszeiger einblenden (Rechtsklick von Courseplay), dann Linksklick auf dem Rahmen gedrückt halten. Eine Änderung dieser Einstellung stellt die Standardposition wieder her."/>
         <text name="vtpas_hint_range" text="Empfohlen: %d - %d km/h"/>
         <text name="vtpas_hint_min" text="Empfohlen: mind. %d km/h"/>
         <text name="vtpas_hint_max" text="Empfohlen: max. %d km/h"/>
@@ -61,22 +59,12 @@
         <text name="vtpas_gt_Grass" text="Gras"/>
         <text name="vtpas_gt_GrassCut" text="gemähtes Gras"/>
         <text name="vtpas_hint_riskShort" text="FESTFAHRGEFAHR"/>
-        <text name="vtpas_fieldMax_label" text="Geschwindigkeitsbereich: Feld-Maximum"/>
-        <text name="vtpas_fieldMax_tip" text="Maximale obere Geschwindigkeit des empfohlenen Bereichs bei der Feldarbeit. Je nach Gerät, Schlamm oder Reifendruck kann der Bereich niedriger liegen."/>
         <text name="vtpas_durDiffs_label" text="Differenzial-Meldungen: Dauer"/>
         <text name="vtpas_durTires_label" text="Reifen-Meldungen: Dauer"/>
         <text name="vtpas_durAlert_label" text="Schlupfwarnung: Anzeigedauer"/>
         <text name="vtpas_dur_tip" text="Wie lange (in Sekunden) die Meldung auf dem Bildschirm bleibt."/>
         <text name="vtpas_protectSeed_label" text="Saat schützen (Rückwärts / Sämaschine)"/>
         <text name="vtpas_protectSeed_tip" text="Verhindert, dass Mud System Physics die Saat unter den Rädern löscht, wenn das Fahrzeug rückwärts fährt, sowie unter den Rädern einer Sämaschine oder Legemaschine. Andere Schäden im Schlamm bleiben erhalten."/>
-        <text name="vtpas_mudPreset_title" text="AutoSwitch - Mud System Physics"/>
-        <text name="vtpas_mudPreset_text" text="Die von AutoSwitch empfohlenen Einstellungen anwenden (realistischer Schlamm)?&#10;&#10;Ja: empfohlene Einstellungen für Mud System Physics + Tractor Terrain Dynamics auf 'Schwer'.&#10;Nein: Originaleinstellungen von Mud System Physics + Tractor Terrain Dynamics auf 'Mittel'.&#10;&#10;Dies kann später unter Einstellungen &gt; Allgemein &gt; AutoSwitch geändert werden."/>
-        <text name="vtpas_mudPreset_yes" text="Ja (empfohlen)"/>
-        <text name="vtpas_mudPreset_no" text="Nein (Original)"/>
-        <text name="vtpas_mudPreset_label" text="Mud System Physics: Einstellungen"/>
-        <text name="vtpas_mudPreset_tip" text="Empfohlen = realistische Einstellungen von AutoSwitch für Mud System Physics (Bodenprofile, Radwiderstand, Schlamm außerhalb des Feldes) und Tractor Terrain Dynamics auf 'Schwer'. Original = Standardwerte von Mud System Physics und TTD auf 'Mittel'."/>
-        <text name="vtpas_mudPreset_reco" text="Empfohlen"/>
-        <text name="vtpas_mudPreset_orig" text="Original"/>
         <text name="vtpas_slipIcon_label" text="Schlupf-Symbol"/>
         <text name="vtpas_slipIcon_tip" text="Zeigt (im Fahrzeug) dauerhaft ein Radsymbol mit dem Schlupf in Prozent darunter, an den Geschwindigkeitsbereich angehängt und mit ihm verschiebbar. Farbe: weiß, gelb ab 10 %, orange an der Differenzialschwelle, rot an der Warnschwelle."/>
         <text name="vtpas_seedCoverFill_label" text="Sämaschine mit geschlossener Abdeckung befüllen"/>
@@ -86,8 +74,6 @@
         <text name="vtpas_wetGrip_low" text="Gering"/>
         <text name="vtpas_wetGrip_mid" text="Mittel"/>
         <text name="vtpas_wetGrip_high" text="Stark"/>
-        <text name="vtpas_directResow_label" text="Direktsaat: gelöschte Stellen neu säen"/>
-        <text name="vtpas_directResow_tip" text="Erlaubt Direktsämaschinen, dort neu zu säen, wo die Kultur gelöscht wurde (z. B. durch Mud System Physics im Schlamm), ohne vorher zu grubbern. Nur Stellen ganz ohne Pflanzen sind betroffen; bestehende Kulturen werden nie verändert."/>
         <text name="vtpas_wetGrip_vhigh" text="Sehr stark"/>
         <text name="vtpas_turnUnlock_label" text="Differenziale: in Kurven lösen"/>
         <text name="vtpas_turnUnlock_tip" text="Löst die Differenzialsperren automatisch, sobald der Lenkeinschlag etwa 15° überschreitet, wie in der Realität zum Schutz des Antriebsstrangs. Nach der Kurve wird wieder gesperrt, wenn der Schlupf anhält."/>
@@ -132,5 +118,12 @@
         <text name="as_dual_timer_title" text="Radwechsel"/>
         <text name="as_dual_timer_on" text="%s: Montage Zwillingsräder - %d Min. (fertig um %s) - Reifen %d/%d"/>
         <text name="as_dual_timer_off" text="%s: Abbau Zwillingsräder - %d Min. (fertig um %s) - Reifen %d/%d"/>
+        <text name="vtpas_adField_label" text="AutoDrive: Geschwindigkeit auf dem Feld"/>
+        <text name="vtpas_adField_tip" text="Geschwindigkeit für AutoDrive auf dem Feld, statt seiner eigenen Einstellung. AutoDrive bremst weiterhin in Kurven und bei der Ankunft."/>
+        <text name="vtpas_adPath_label" text="AutoDrive: Geschwindigkeit auf Feldwegen"/>
+        <text name="vtpas_adPath_tip" text="Geschwindigkeit für AutoDrive auf Feldwegen (Schotter, Erde, Gras)."/>
+        <text name="vtpas_adRoad_label" text="AutoDrive: Geschwindigkeit auf der Straße"/>
+        <text name="vtpas_adRoad_tip" text="Geschwindigkeit für AutoDrive auf asphaltierten Straßen. Ohne Begrenzung: Höchstgeschwindigkeit des Traktors."/>
+        <text name="vtpas_adNoLimit" text="Ohne Begrenzung"/>
     </texts>
 </l10n>

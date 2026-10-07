@@ -36,22 +36,21 @@ end
 AS_Settings.tireDelay = 4          -- pneus : délai minimum entre deux changements (secondes, 0 = aucun)
 AS_Settings.TIRE_DELAY_LIST = { 0, 1, 2, 3, 4, 5, 6, 8, 10, 15, 20, 30 }
 AS_Settings.speedHint = true        -- affichage de la vitesse conseillée au-dessus du compteur
-AS_Settings.speedHintBottom = 1.5   -- hauteur de cet affichage au-dessus du bas de l'écran (cm)
-AS_Settings.HINT_BOTTOM_LIST = { 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 5, 6, 8 }
-AS_Settings.fieldMaxKph = 18         -- vitesse haute maxi de la plage dans un champ
-AS_Settings.FIELD_MAX_LIST = { 10, 12, 14, 15, 16, 18, 20, 22, 25 }
+AS_Settings.adFieldKph = 20        -- vitesse AutoDrive au champ (km/h)
+AS_Settings.adPathKph = 30         -- vitesse AutoDrive sur les chemins (km/h)
+AS_Settings.adRoadKph = 0          -- vitesse AutoDrive sur la route (km/h, 0 = sans limite)
+AS_Settings.AD_FIELD_LIST = { 5, 10, 15, 20, 25, 30 }
+AS_Settings.AD_PATH_LIST = { 10, 15, 20, 25, 30, 35, 40, 45, 50 }
+AS_Settings.AD_ROAD_LIST = { 0, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80 }
 AS_Settings.durTires = 4   -- durée d'affichage des notifications (secondes)
 AS_Settings.durDiffs = 4
 AS_Settings.durAlert = 5
 AS_Settings.DURATION_LIST = { 2, 3, 4, 5, 6, 8, 10, 15, 20 }
 AS_Settings.protectSeed = true   -- protection du semis (Mud System Physics)
-AS_Settings.mudVersions = {}  -- [ "sg<index>" ] = version des paramètres conseillés appliqués
-AS_Settings.mudChoices = {}   -- [ "sg<index>" ] = "recommended" / "original"
 AS_Settings.slipIcon = true      -- icône de patinage permanente
 AS_Settings.seedCoverFill = true  -- remplir le semoir couvercle fermé
 AS_Settings.wetGrip = 3   -- perte d'adhérence sol humide : 1 désactivée, 2 faible, 3 moyenne, 4 forte, 5 très forte
 AS_Settings.WETGRIP_LEVELS = { 0, 0.30, 0.45, 0.60, 0.75 }
-AS_Settings.directResow = true   -- semis direct : resemer les zones effacées
 AS_Settings.auto4wd = true     -- 4x4 champ / 4x2 route
 AS_Settings.turnUnlock = true  -- déverrouillage en virage
 AS_Settings.diffBonus = true   -- bonus différentiels bloqués (+2 % avant, +3 % arrière)
@@ -85,9 +84,10 @@ function AS_Settings:save()
             setXMLInt(xml, "vtpAutoSwitch.slipAlert#seconds", self.alertSeconds)
             setXMLFloat(xml, "vtpAutoSwitch.diffLock#delaySeconds", self.diffDelay)
             setXMLInt(xml, "vtpAutoSwitch.tireMode#delaySeconds", self.tireDelay)
+            setXMLInt(xml, "vtpAutoSwitch.adSpeed#fieldKph", self.adFieldKph)
+            setXMLInt(xml, "vtpAutoSwitch.adSpeed#pathKph", self.adPathKph)
+            setXMLInt(xml, "vtpAutoSwitch.adSpeed#roadKph", self.adRoadKph)
             setXMLBool(xml, "vtpAutoSwitch.speedHint#enabled", self.speedHint)
-            setXMLFloat(xml, "vtpAutoSwitch.speedHint#bottomCm", self.speedHintBottom)
-            setXMLInt(xml, "vtpAutoSwitch.speedHint#fieldMaxKph", self.fieldMaxKph)
             setXMLInt(xml, "vtpAutoSwitch.notifDuration#tires", self.durTires)
             setXMLBool(xml, "vtpAutoSwitch.seedProtect#enabled", self.protectSeed)
             setXMLBool(xml, "vtpAutoSwitch.slipIcon#enabled", self.slipIcon)
@@ -95,17 +95,7 @@ function AS_Settings:save()
             setXMLBool(xml, "vtpAutoSwitch.drive#auto4wd", self.auto4wd)
             setXMLBool(xml, "vtpAutoSwitch.drive#diffBonusOn", self.diffBonus)
             setXMLBool(xml, "vtpAutoSwitch.drive#turnUnlock", self.turnUnlock)
-            setXMLBool(xml, "vtpAutoSwitch.directResow#enabled", self.directResow)
             setXMLBool(xml, "vtpAutoSwitch.seedCoverFill#enabled", self.seedCoverFill)
-            local mi = 0
-            for sgKey, choice in pairs(self.mudChoices or {}) do
-                local base = string.format("vtpAutoSwitch.mudPreset.savegame(%d)", mi)
-                setXMLString(xml, base .. "#key", sgKey)
-                setXMLString(xml, base .. "#choice", choice)
-                local ver = self.mudVersions ~= nil and self.mudVersions[sgKey] or nil
-                if ver ~= nil then setXMLInt(xml, base .. "#version", ver) end
-                mi = mi + 1
-            end
             setXMLInt(xml, "vtpAutoSwitch.notifDuration#diffs", self.durDiffs)
             setXMLInt(xml, "vtpAutoSwitch.notifDuration#alert", self.durAlert)
             if self.hintPosX ~= nil and self.hintPosY ~= nil then
@@ -143,28 +133,16 @@ function AS_Settings:load()
                 if dd ~= nil then self.diffDelay = math.max(1, math.min(10, dd)) end
                 local td = getXMLInt(xml, "vtpAutoSwitch.tireMode#delaySeconds")
                 if td ~= nil then self.tireDelay = math.max(0, math.min(60, td)) end
+                local af = getXMLInt(xml, "vtpAutoSwitch.adSpeed#fieldKph")
+                if af ~= nil then self.adFieldKph = math.max(5, math.min(30, af)) end
+                local ap2 = getXMLInt(xml, "vtpAutoSwitch.adSpeed#pathKph")
+                if ap2 ~= nil then self.adPathKph = math.max(10, math.min(50, ap2)) end
+                local ar = getXMLInt(xml, "vtpAutoSwitch.adSpeed#roadKph")
+                if ar ~= nil then self.adRoadKph = math.max(0, math.min(80, ar)) end
                 local sh = getXMLBool(xml, "vtpAutoSwitch.speedHint#enabled")
                 if sh ~= nil then self.speedHint = sh end
-                local sb = getXMLFloat(xml, "vtpAutoSwitch.speedHint#bottomCm")
-                if sb ~= nil then self.speedHintBottom = math.max(0, math.min(20, sb)) end
-                local fm = getXMLInt(xml, "vtpAutoSwitch.speedHint#fieldMaxKph")
-                if fm ~= nil then self.fieldMaxKph = math.max(5, math.min(60, fm)) end
-                self.mudChoices = {}
-                self.mudVersions = {}
-                local mi = 0
-                while true do
-                    local base = string.format("vtpAutoSwitch.mudPreset.savegame(%d)", mi)
-                    local sgKey = getXMLString(xml, base .. "#key")
-                    if sgKey == nil then break end
-                    self.mudChoices[sgKey] = getXMLString(xml, base .. "#choice")
-                    self.mudVersions = self.mudVersions or {}
-                    self.mudVersions[sgKey] = getXMLInt(xml, base .. "#version")
-                    mi = mi + 1
-                end
                 local scf = getXMLBool(xml, "vtpAutoSwitch.seedCoverFill#enabled")
                 if scf ~= nil then self.seedCoverFill = scf end
-                local dr = getXMLBool(xml, "vtpAutoSwitch.directResow#enabled")
-                if dr ~= nil then self.directResow = dr end
                 local db = getXMLBool(xml, "vtpAutoSwitch.drive#diffBonusOn")
                 if db ~= nil then self.diffBonus = db end
                 local a4 = getXMLBool(xml, "vtpAutoSwitch.drive#auto4wd")
@@ -214,14 +192,14 @@ function AS_Settings:apply()
     AS_SlipAlert.ALERT_SECONDS = self.alertSeconds
     AS_Diff.SLIP_ON_MS     = math.floor(self.diffDelay * 1000)
     AS_Tires.MIN_SWITCH_MS = math.floor(self.tireDelay * 1000)
+    AS_AdSpeed.FIELD_KPH   = self.adFieldKph
+    AS_AdSpeed.PATH_KPH    = self.adPathKph
+    AS_AdSpeed.ROAD_KPH    = self.adRoadKph
     AS_SpeedHint.ENABLED   = self.speedHint
-    AS_SpeedHint.BOTTOM_CM = self.speedHintBottom
-    AS_SpeedHint.FIELD_MAX_KPH = self.fieldMaxKph
     AS_NotifyDuration.tires = self.durTires * 1000
     AS_SeedProtect.ENABLED = self.protectSeed
     AS_SpeedHint.SLIP_ICON = self.slipIcon
     AS_WetGrip.LEVEL = self.WETGRIP_LEVELS[self.wetGrip] or 0.45
-    AS_DirectResow.ENABLED = self.directResow
     AS_Diff.AUTO_4WD = self.auto4wd
     AS_WetGrip.DIFF_BONUS = self.diffBonus
     AS_Diff.TURN_UNLOCK = self.turnUnlock
@@ -273,6 +251,36 @@ function AS_Settings:getIndex(list, v)
         if d < bestDiff then best, bestDiff = i, d end
     end
     return best
+end
+
+function AS_Settings:onAdFieldChanged(state, element)
+    local v = self.AD_FIELD_LIST[state]
+    if v ~= nil then
+        self.adFieldKph = v
+        self:apply()
+        self:save()
+        sprint("AutoDrive : %d km/h au champ", v)
+    end
+end
+
+function AS_Settings:onAdPathChanged(state, element)
+    local v = self.AD_PATH_LIST[state]
+    if v ~= nil then
+        self.adPathKph = v
+        self:apply()
+        self:save()
+        sprint("AutoDrive : %d km/h sur les chemins", v)
+    end
+end
+
+function AS_Settings:onAdRoadChanged(state, element)
+    local v = self.AD_ROAD_LIST[state]
+    if v ~= nil then
+        self.adRoadKph = v
+        self:apply()
+        self:save()
+        sprint("AutoDrive : route %s", v == 0 and "sans limite" or (v .. " km/h"))
+    end
 end
 
 function AS_Settings:onTireDelayChanged(state, element)
@@ -374,13 +382,6 @@ function AS_Settings:onTurnUnlockChanged(state, element)
     self:save()
 end
 
-function AS_Settings:onDirectResowChanged(state, element)
-    self.directResow = (state == 2)
-    self:apply()
-    self:save()
-    sprint("semis direct sur zones effacées : %s", self.directResow and "activé" or "désactivé")
-end
-
 function AS_Settings:onWetGripChanged(state, element)
     self.wetGrip = math.max(1, math.min(5, state))
     self:apply()
@@ -400,39 +401,6 @@ function AS_Settings:onProtectSeedChanged(state, element)
     self:apply()
     self:save()
     sprint("protection du semis : %s", self.protectSeed and "activée" or "désactivée")
-end
-
-function AS_Settings:onMudPresetChanged(state, element)
-    local choice = (state == 1) and "recommended" or "original"
-    if AS_MudPreset ~= nil and AS_MudPreset:apply(choice) then
-        AS_MudPreset:remember(choice)
-    end
-end
-
-function AS_Settings:getMudPresetState()
-    local c = AS_MudPreset ~= nil and AS_MudPreset:getChoice() or nil
-    return (c == "original") and 2 or 1
-end
-
-function AS_Settings:onFieldMaxChanged(state, element)
-    local v = self.FIELD_MAX_LIST[state]
-    if v ~= nil then
-        self.fieldMaxKph = v
-        self:apply()
-        self:save()
-        sprint("plage de vitesse : maxi en champ %d km/h", v)
-    end
-end
-
-function AS_Settings:onSpeedHintOffsetChanged(state, element)
-    local v = self.HINT_BOTTOM_LIST[state]
-    if v ~= nil then
-        self.speedHintBottom = v
-        self.hintPosX, self.hintPosY = nil, nil   -- retour à la position par défaut à cette hauteur
-        self:apply()
-        self:save()
-        sprint("vitesse conseillée : hauteur %.1f cm", v)
-    end
 end
 
 local function findFirst(el, pred)
@@ -667,6 +635,35 @@ function AS_Settings:buildUI(frame)
         callback = AS_Settings.onDurAlertChanged,
     })
 
+    local function kphTexts(list)
+        local t = {}
+        for i, v in ipairs(list) do
+            t[i] = (v == 0) and L("vtpas_adNoLimit") or (v .. " km/h")
+        end
+        return t
+    end
+    self.options.adField = self:addRow(layout, template, {
+        label = L("vtpas_adField_label"),
+        tip = L("vtpas_adField_tip"),
+        texts = kphTexts(self.AD_FIELD_LIST),
+        state = self:getIndex(self.AD_FIELD_LIST, self.adFieldKph),
+        callback = AS_Settings.onAdFieldChanged,
+    })
+    self.options.adPath = self:addRow(layout, template, {
+        label = L("vtpas_adPath_label"),
+        tip = L("vtpas_adPath_tip"),
+        texts = kphTexts(self.AD_PATH_LIST),
+        state = self:getIndex(self.AD_PATH_LIST, self.adPathKph),
+        callback = AS_Settings.onAdPathChanged,
+    })
+    self.options.adRoad = self:addRow(layout, template, {
+        label = L("vtpas_adRoad_label"),
+        tip = L("vtpas_adRoad_tip"),
+        texts = kphTexts(self.AD_ROAD_LIST),
+        state = self:getIndex(self.AD_ROAD_LIST, self.adRoadKph),
+        callback = AS_Settings.onAdRoadChanged,
+    })
+
     self.options.speedHint = self:addRow(layout, template, {
         label = L("vtpas_hintShow_label"),
         tip = L("vtpas_hintShow_tip"),
@@ -681,46 +678,6 @@ function AS_Settings:buildUI(frame)
         texts = onOff,
         state = self.slipIcon and 2 or 1,
         callback = AS_Settings.onSlipIconChanged,
-    })
-
-    local fieldMaxTexts = {}
-    for i, v in ipairs(self.FIELD_MAX_LIST) do
-        fieldMaxTexts[i] = v .. " km/h"
-    end
-    self.options.fieldMax = self:addRow(layout, template, {
-        label = L("vtpas_fieldMax_label"),
-        tip = L("vtpas_fieldMax_tip"),
-        texts = fieldMaxTexts,
-        state = self:getIndex(self.FIELD_MAX_LIST, self.fieldMaxKph),
-        callback = AS_Settings.onFieldMaxChanged,
-    })
-
-    local hintOffTexts = {}
-    for i, v in ipairs(self.HINT_BOTTOM_LIST) do
-        hintOffTexts[i] = (string.format("%.1f", v):gsub("%.", sep)) .. " cm"
-    end
-    self.options.speedHintOffset = self:addRow(layout, template, {
-        label = L("vtpas_hintPos_label"),
-        tip = L("vtpas_hintPos_tip"),
-        texts = hintOffTexts,
-        state = self:getIndex(self.HINT_BOTTOM_LIST, self.speedHintBottom),
-        callback = AS_Settings.onSpeedHintOffsetChanged,
-    })
-
-    self.options.mudPreset = self:addRow(layout, template, {
-        label = L("vtpas_mudPreset_label"),
-        tip = L("vtpas_mudPreset_tip"),
-        texts = { L("vtpas_mudPreset_reco"), L("vtpas_mudPreset_orig") },
-        state = self:getMudPresetState(),
-        callback = AS_Settings.onMudPresetChanged,
-    })
-
-    self.options.directResow = self:addRow(layout, template, {
-        label = L("vtpas_directResow_label"),
-        tip = L("vtpas_directResow_tip"),
-        texts = onOff,
-        state = self.directResow and 2 or 1,
-        callback = AS_Settings.onDirectResowChanged,
     })
 
     self.options.wetGrip = self:addRow(layout, template, {
@@ -759,15 +716,16 @@ function AS_Settings:refreshStates()
     if o.diffMode ~= nil then o.diffMode:setState(self.helperOnly and 2 or 1) end
     if o.tireMode ~= nil then o.tireMode:setState(self.tiresUserAuto and 1 or 2) end
     if o.tireDelay ~= nil then o.tireDelay:setState(self:getIndex(self.TIRE_DELAY_LIST, self.tireDelay)) end
+    if o.adField ~= nil then o.adField:setState(self:getIndex(self.AD_FIELD_LIST, self.adFieldKph)) end
+    if o.adPath ~= nil then o.adPath:setState(self:getIndex(self.AD_PATH_LIST, self.adPathKph)) end
+    if o.adRoad ~= nil then o.adRoad:setState(self:getIndex(self.AD_ROAD_LIST, self.adRoadKph)) end
     if o.notifyDiff ~= nil then o.notifyDiff:setState(self.notifyDiff and 2 or 1) end
     if o.notifyTires ~= nil then o.notifyTires:setState(self.notifyTires and 2 or 1) end
     if o.alertPercent ~= nil then o.alertPercent:setState(self:getIndex(self.ALERT_PERCENTS, self.alertPercent)) end
     if o.alertSeconds ~= nil then o.alertSeconds:setState(self:getIndex(self.ALERT_SECONDS_LIST, self.alertSeconds)) end
-    if o.mudPreset ~= nil then o.mudPreset:setState(self:getMudPresetState()) end
     if o.turnUnlock ~= nil then o.turnUnlock:setState(self.turnUnlock and 2 or 1) end
     if o.diffBonus ~= nil then o.diffBonus:setState(self.diffBonus and 2 or 1) end
     if o.auto4wd ~= nil then o.auto4wd:setState(self.auto4wd and 2 or 1) end
-    if o.directResow ~= nil then o.directResow:setState(self.directResow and 2 or 1) end
     if o.wetGrip ~= nil then o.wetGrip:setState(self.wetGrip) end
     if o.seedCoverFill ~= nil then o.seedCoverFill:setState(self.seedCoverFill and 2 or 1) end
     if o.slipIcon ~= nil then o.slipIcon:setState(self.slipIcon and 2 or 1) end
@@ -775,9 +733,7 @@ function AS_Settings:refreshStates()
     if o.durTires ~= nil then o.durTires:setState(self:getIndex(self.DURATION_LIST, self.durTires)) end
     if o.durDiffs ~= nil then o.durDiffs:setState(self:getIndex(self.DURATION_LIST, self.durDiffs)) end
     if o.durAlert ~= nil then o.durAlert:setState(self:getIndex(self.DURATION_LIST, self.durAlert)) end
-    if o.fieldMax ~= nil then o.fieldMax:setState(self:getIndex(self.FIELD_MAX_LIST, self.fieldMaxKph)) end
     if o.speedHint ~= nil then o.speedHint:setState(self.speedHint and 2 or 1) end
-    if o.speedHintOffset ~= nil then o.speedHintOffset:setState(self:getIndex(self.HINT_BOTTOM_LIST, self.speedHintBottom)) end
 end
 
 function AS_Settings:onSettingsFrameOpen(frame)

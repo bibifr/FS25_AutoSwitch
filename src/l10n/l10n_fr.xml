@@ -31,8 +31,6 @@
         <text name="vtpas_tiredelay_tip" text="Durée minimale (en secondes) entre deux changements de pression (gonflage / dégonflage), pour éviter les allers-retours trop rapides. Désactivé = aucun délai."/>
         <text name="vtpas_hintShow_label" text="Plage de vitesse conseillée (dans les champs)"/>
         <text name="vtpas_hintShow_tip" text="Affiche au-dessus du compteur la plage de vitesse conseillée, recalculée en continu selon la zone (champ / route), la pression des pneus, le sol, son humidité et le patinage."/>
-        <text name="vtpas_hintPos_label" text="Plage de vitesse : hauteur depuis le bas"/>
-        <text name="vtpas_hintPos_tip" text="Position par défaut : distance (en cm, écran 24 à 27 pouces) entre le bas de l'écran et l'affichage. Vous pouvez aussi le déplacer à la souris : affichez le curseur (clic droit de Courseplay) puis clic gauche maintenu sur le cadre. Changer ce réglage remet la position par défaut."/>
         <text name="vtpas_hint_range" text="Plage conseillée : %d - %d km/h"/>
         <text name="vtpas_hint_min" text="Vitesse conseillée : %d km/h mini"/>
         <text name="vtpas_hint_max" text="Vitesse conseillée : %d km/h maxi"/>
@@ -61,22 +59,12 @@
         <text name="vtpas_gt_Grass" text="herbe"/>
         <text name="vtpas_gt_GrassCut" text="herbe fauchée"/>
         <text name="vtpas_hint_riskShort" text="RISQUE D'ENLISEMENT"/>
-        <text name="vtpas_fieldMax_label" text="Plage de vitesse : maxi en champ"/>
-        <text name="vtpas_fieldMax_tip" text="Vitesse haute maximale de la plage conseillée quand vous travaillez dans un champ. La plage peut descendre en dessous selon l'outil, la boue ou la pression des pneus."/>
         <text name="vtpas_durDiffs_label" text="Notifications des différentiels : durée"/>
         <text name="vtpas_durTires_label" text="Notifications des pneus : durée"/>
         <text name="vtpas_durAlert_label" text="Alerte de patinage : durée d'affichage"/>
         <text name="vtpas_dur_tip" text="Durée (en secondes) pendant laquelle le message reste affiché à l'écran."/>
         <text name="vtpas_protectSeed_label" text="Protéger le semis (marche arrière / semoir)"/>
         <text name="vtpas_protectSeed_tip" text="Empêche Mud System Physics d'effacer la culture sous les roues quand le véhicule recule, et sous les roues d'un semoir ou d'une planteuse. Le reste de la destruction dans la boue est conservé."/>
-        <text name="vtpas_mudPreset_title" text="AutoSwitch - Mud System Physics"/>
-        <text name="vtpas_mudPreset_text" text="Appliquer les paramètres conseillés par AutoSwitch (boue et enlisement réalistes) ?&#10;&#10;Oui : paramètres conseillés pour Mud System Physics + Tractor Terrain Dynamics en « Difficile ».&#10;Non : paramètres d'origine de Mud System Physics + Tractor Terrain Dynamics en « Moyen ».&#10;&#10;Vous pourrez changer ce choix plus tard dans Paramètres &gt; Général &gt; AutoSwitch."/>
-        <text name="vtpas_mudPreset_yes" text="Oui (conseillés)"/>
-        <text name="vtpas_mudPreset_no" text="Non (origine)"/>
-        <text name="vtpas_mudPreset_label" text="Mud System Physics : paramètres"/>
-        <text name="vtpas_mudPreset_tip" text="Conseillés = réglages réalistes de AutoSwitch pour Mud System Physics (profils de sol, frein de roue, boue hors champ) et Tractor Terrain Dynamics en « Difficile ». Origine = réglages par défaut de Mud System Physics et TTD en « Moyen »."/>
-        <text name="vtpas_mudPreset_reco" text="Conseillés"/>
-        <text name="vtpas_mudPreset_orig" text="D'origine"/>
         <text name="vtpas_slipIcon_label" text="Icône de patinage"/>
         <text name="vtpas_slipIcon_tip" text="Affiche en permanence (dans un véhicule) une icône de roue avec le pourcentage de patinage en dessous, accolée à la plage de vitesse et déplaçable avec elle. Couleur : blanc, jaune dès 10 %, orange au seuil des différentiels, rouge au seuil d'alerte."/>
         <text name="vtpas_seedCoverFill_label" text="Remplir le semoir couvercle fermé"/>
@@ -86,8 +74,6 @@
         <text name="vtpas_wetGrip_low" text="Faible"/>
         <text name="vtpas_wetGrip_mid" text="Moyenne"/>
         <text name="vtpas_wetGrip_high" text="Forte"/>
-        <text name="vtpas_directResow_label" text="Semis direct : resemer les zones effacées"/>
-        <text name="vtpas_directResow_tip" text="Permet aux semoirs de semis direct de resemer là où la culture a été effacée (par exemple par Mud System Physics dans la boue), sans repasser un cultivateur. Seuls les endroits sans aucune plante sont concernés ; les cultures existantes ne sont jamais touchées."/>
         <text name="vtpas_wetGrip_vhigh" text="Très forte"/>
         <text name="vtpas_turnUnlock_label" text="Différentiels : déblocage en virage"/>
         <text name="vtpas_turnUnlock_tip" text="Déverrouille automatiquement les différentiels dès que le braquage dépasse environ 15°, comme il faut le faire en vrai pour ne pas casser la transmission. Ils se reverrouillent après le virage si le patinage continue."/>
@@ -132,5 +118,12 @@
         <text name="as_dual_timer_title" text="Changement de roues"/>
         <text name="as_dual_timer_on" text="%s : montage jumelées - %d min (prêt à %s) - pneu %d/%d"/>
         <text name="as_dual_timer_off" text="%s : démontage jumelées - %d min (prêt à %s) - pneu %d/%d"/>
+        <text name="vtpas_adField_label" text="AutoDrive : vitesse au champ"/>
+        <text name="vtpas_adField_tip" text="Vitesse imposée à AutoDrive dans un champ, à la place de son propre réglage. AutoDrive ralentit toujours dans les virages et aux arrivées."/>
+        <text name="vtpas_adPath_label" text="AutoDrive : vitesse sur les chemins"/>
+        <text name="vtpas_adPath_tip" text="Vitesse imposée à AutoDrive sur les chemins (gravier, terre, herbe)."/>
+        <text name="vtpas_adRoad_label" text="AutoDrive : vitesse sur la route"/>
+        <text name="vtpas_adRoad_tip" text="Vitesse imposée à AutoDrive sur la route goudronnée. Sans limite : vitesse maximale du tracteur."/>
+        <text name="vtpas_adNoLimit" text="Sans limite"/>
     </texts>
 </l10n>

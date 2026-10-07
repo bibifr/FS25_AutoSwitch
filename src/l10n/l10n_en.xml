@@ -31,8 +31,6 @@
         <text name="vtpas_tiredelay_tip" text="Minimum time (in seconds) between two pressure changes (inflate / deflate) to avoid rapid back-and-forth. Off = no delay."/>
         <text name="vtpas_hintShow_label" text="Recommended speed range (in fields)"/>
         <text name="vtpas_hintShow_tip" text="Shows the recommended speed range above the speedometer, updated continuously from the zone (field / road), tire pressure, soil type, soil moisture and wheel slip."/>
-        <text name="vtpas_hintPos_label" text="Speed range: height from bottom"/>
-        <text name="vtpas_hintPos_tip" text="Default position: distance (in cm, 24 to 27 inch screen) between the bottom of the screen and the display. You can also drag it with the mouse: show the cursor (Courseplay right click), then hold left click on the box. Changing this setting restores the default position."/>
         <text name="vtpas_hint_range" text="Recommended range: %d - %d km/h"/>
         <text name="vtpas_hint_min" text="Recommended speed: min %d km/h"/>
         <text name="vtpas_hint_max" text="Recommended speed: max %d km/h"/>
@@ -61,22 +59,12 @@
         <text name="vtpas_gt_Grass" text="grass"/>
         <text name="vtpas_gt_GrassCut" text="cut grass"/>
         <text name="vtpas_hint_riskShort" text="RISK OF GETTING STUCK"/>
-        <text name="vtpas_fieldMax_label" text="Speed range: field maximum"/>
-        <text name="vtpas_fieldMax_tip" text="Maximum upper speed of the recommended range when working in a field. The range can go lower depending on the implement, mud or tire pressure."/>
         <text name="vtpas_durDiffs_label" text="Differential notifications: duration"/>
         <text name="vtpas_durTires_label" text="Tire notifications: duration"/>
         <text name="vtpas_durAlert_label" text="Slip alert: display duration"/>
         <text name="vtpas_dur_tip" text="How long (in seconds) the message stays on screen."/>
         <text name="vtpas_protectSeed_label" text="Protect sown crops (reverse / seeder)"/>
         <text name="vtpas_protectSeed_tip" text="Prevents Mud System Physics from erasing crops under the wheels when the vehicle reverses, and under the wheels of a seeder or planter. Other mud crop damage is kept."/>
-        <text name="vtpas_mudPreset_title" text="AutoSwitch - Mud System Physics"/>
-        <text name="vtpas_mudPreset_text" text="Apply the settings recommended by AutoSwitch (realistic mud and bogging)?&#10;&#10;Yes: recommended Mud System Physics settings + Tractor Terrain Dynamics on 'Hard'.&#10;No: original Mud System Physics settings + Tractor Terrain Dynamics on 'Medium'.&#10;&#10;You can change this later in Settings &gt; General &gt; AutoSwitch."/>
-        <text name="vtpas_mudPreset_yes" text="Yes (recommended)"/>
-        <text name="vtpas_mudPreset_no" text="No (original)"/>
-        <text name="vtpas_mudPreset_label" text="Mud System Physics: settings"/>
-        <text name="vtpas_mudPreset_tip" text="Recommended = realistic AutoSwitch settings for Mud System Physics (soil profiles, wheel drag, off-field mud) and Tractor Terrain Dynamics on 'Hard'. Original = Mud System Physics defaults and TTD on 'Medium'."/>
-        <text name="vtpas_mudPreset_reco" text="Recommended"/>
-        <text name="vtpas_mudPreset_orig" text="Original"/>
         <text name="vtpas_slipIcon_label" text="Slip icon"/>
         <text name="vtpas_slipIcon_tip" text="Always shows (in a vehicle) a wheel icon with the slip percentage below it, attached to the speed range and moved with it. Colour: white, yellow from 10 %, orange at the differential threshold, red at the alert threshold."/>
         <text name="vtpas_seedCoverFill_label" text="Fill seeder with closed cover"/>
@@ -86,8 +74,6 @@
         <text name="vtpas_wetGrip_low" text="Low"/>
         <text name="vtpas_wetGrip_mid" text="Medium"/>
         <text name="vtpas_wetGrip_high" text="High"/>
-        <text name="vtpas_directResow_label" text="Direct seeding: resow erased areas"/>
-        <text name="vtpas_directResow_tip" text="Lets direct seeders resow where the crop was erased (for example by Mud System Physics in mud) without cultivating first. Only spots with no plant at all are affected; existing crops are never touched."/>
         <text name="vtpas_wetGrip_vhigh" text="Very high"/>
         <text name="vtpas_turnUnlock_label" text="Differentials: unlock in turns"/>
         <text name="vtpas_turnUnlock_tip" text="Automatically unlocks the differentials when steering exceeds about 15°, as required in real life to protect the drivetrain. They relock after the turn if slip continues."/>
@@ -132,5 +118,12 @@
         <text name="as_dual_timer_title" text="Wheel change"/>
         <text name="as_dual_timer_on" text="%s: mounting duals - %d min (ready at %s) - tire %d/%d"/>
         <text name="as_dual_timer_off" text="%s: removing duals - %d min (ready at %s) - tire %d/%d"/>
+        <text name="vtpas_adField_label" text="AutoDrive: speed in fields"/>
+        <text name="vtpas_adField_tip" text="Speed imposed on AutoDrive in a field, instead of its own setting. AutoDrive still slows down in turns and on arrival."/>
+        <text name="vtpas_adPath_label" text="AutoDrive: speed on tracks"/>
+        <text name="vtpas_adPath_tip" text="Speed imposed on AutoDrive on tracks (gravel, dirt, grass)."/>
+        <text name="vtpas_adRoad_label" text="AutoDrive: speed on roads"/>
+        <text name="vtpas_adRoad_tip" text="Speed imposed on AutoDrive on paved roads. No limit: the tractor's maximum speed."/>
+        <text name="vtpas_adNoLimit" text="No limit"/>
     </texts>
 </l10n>
