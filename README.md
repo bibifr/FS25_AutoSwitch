@@ -1,4 +1,4 @@
-###Last version https://github.com/bibifr/FS25_AutoSwitch/releases/download/V1.0.0.0/FS25_AutoSwitch.zip
+###Last version https://github.com/bibifr/FS25_AutoSwitch/releases/latest/download/FS25_AutoSwitch.zip
 
 # FS25 AutoSwitch
 
