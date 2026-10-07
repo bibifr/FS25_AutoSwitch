@@ -1,3 +1,5 @@
+###Last version https://github.com/bibifr/FS25_AutoSwitch/releases/download/V1.0.0.0/FS25_AutoSwitch.zip
+
 # FS25 AutoSwitch
 
 **Version 1.0.0.0** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
