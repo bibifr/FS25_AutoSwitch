@@ -16,13 +16,7 @@ local vtpInfo = AS.vtpInfo
 AS_RutsSave = {}
 
 function AS_RutsSave:getDepth()
-    local t = rawget(_G, "g_reaTerrainDepth")
-    if t == nil then
-        local env = rawget(_G, "FS25_DynamicDrivePro")
-        if type(env) == "table" then
-            t = rawget(env, "g_reaTerrainDepth")
-        end
-    end
+    local t = AS.modGlobal("FS25_DynamicDrivePro", "g_reaTerrainDepth")
     if type(t) == "table" and type(t.saveToOwnXMLFile) == "function" then return t end
     return nil
 end
@@ -30,10 +24,16 @@ end
 function AS_RutsSave:save()
     if g_server == nil then return end
     local depth = self:getDepth()
-    if depth == nil then return end
+    if depth == nil then
+        if not self.warned then
+            self.warned = true
+            print("[AS_RutsSave] DynamicDrivePro (g_reaTerrainDepth) introuvable : ornières non sauvegardées")
+        end
+        return
+    end
     local ok, err = pcall(depth.saveToOwnXMLFile, depth)
     if ok then
-        vtpInfo(string.format("[AS_RutsSave] %d points d'ornières sauvegardés", #(depth.tracks or {})))
+        print(string.format("[AS_RutsSave] %d points d'ornières sauvegardés", #(depth.tracks or {})))
     else
         print("[AS_RutsSave] sauvegarde des ornières impossible : " .. tostring(err))
     end

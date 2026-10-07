@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.09 | Correctif : outils stables (1.0.0.04), boue sur roues sans frein (1.0.0.06) et ornières (1.0.0.08) ne trouvaient pas Mud System Physics ni DynamicDrivePro (lecture dans le mauvais environnement Lua) et restaient inactifs |
 | 1.0.0.08 | Ornières de DynamicDrivePro gardées : AutoSwitch fait écrire savegameX/reaTerrainDepth.xml à chaque sauvegarde (DDP ne l'écrivait jamais), DDP recreuse le terrain au chargement |
 | 1.0.0.07 | Arbitrage des mods repris de ModMixer : MoreRealistic bloqué sur updateWheelsPhysics, updateTireFriction et serverUpdate, Use Your Tyres sur updateTireFriction, DynamicDrivePro sur serverUpdate, Highlands Fishing Pack sur updateVehiclePhysics ; pédales Recovery Winch sous Enhanced Vehicle ; garde-fou remorque sans côté de bennage. Inactif tant que ModMixer est installé |
 | 1.0.0.06 | Boue : la résistance de Mud System Physics s'applique aussi aux roues sans frein (remorques, outils) avec MoreRealistic, qui l'ignorait ; le frein du tracteur n'y est jamais transmis |

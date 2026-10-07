@@ -67,7 +67,7 @@ function AS_ImplementStabilizer:isFrozen(vehicle)
 end
 
 function AS_ImplementStabilizer:wrap()
-    local comb = rawget(_G, "__MudRadiusCombiner")
+    local comb = AS.modGlobal("FS25_MudSystemPhysics", "__MudRadiusCombiner")
     if comb == nil or type(comb.apply) ~= "function" or comb.apply == self.wrapper then return end
     local orig = comb.apply
     self.wrapped = orig
@@ -80,7 +80,7 @@ function AS_ImplementStabilizer:wrap()
         return orig(wp, eps, ...)
     end
     comb.apply = self.wrapper
-    vtpInfo("[AS_ImplementStabilizer] rayon des roues figé pour les outils à l'arrêt")
+    print("[AS_ImplementStabilizer] rayon des roues figé pour les outils à l'arrêt")
 end
 
 function AS_ImplementStabilizer:update(dt)

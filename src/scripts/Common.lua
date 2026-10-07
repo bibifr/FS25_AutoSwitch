@@ -217,6 +217,18 @@ local function getMudClass(name)
     return _G[name]
 end
 
+-- (v1.0.0.09) globale publiée par un autre mod : d'abord dans l'environnement du mod,
+-- puis dans les globales du jeu (jamais rawget, voir getMudClass)
+local function modGlobal(modName, name)
+    local ok, v = pcall(function()
+        local env = _G[modName]
+        if type(env) == "table" and env[name] ~= nil then return env[name] end
+        return _G[name]
+    end)
+    if ok then return v end
+    return nil
+end
+
 local function shGetControlledVehicle()
     if g_localPlayer ~= nil and g_localPlayer.getCurrentVehicle ~= nil then
         local ok, v = pcall(g_localPlayer.getCurrentVehicle, g_localPlayer)
@@ -248,4 +260,5 @@ AS.isLockedValue = isLockedValue
 AS.shClamp = shClamp
 AS.shSmootherstep = shSmootherstep
 AS.getMudClass = getMudClass
+AS.modGlobal = modGlobal
 AS.shGetControlledVehicle = shGetControlledVehicle

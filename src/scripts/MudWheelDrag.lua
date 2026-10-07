@@ -22,12 +22,14 @@ AS_MudWheelDrag.installed = false
 local function mudExtra(wp)
     local vehicle = wp.vehicle
     if vehicle == nil then return 0 end
-    local ttd = rawget(_G, "TractorTerrainDynamicsCompatibility")
+    -- même lecture que Mud System Physics (rawget dans son propre environnement)
+    local mspEnv = AS.modGlobal("FS25_MudSystemPhysics", "FS25_MudSystemPhysics")
+    local ttd = type(mspEnv) == "table" and rawget(mspEnv, "TractorTerrainDynamicsCompatibility") or nil
     local ttdHandles = ttd ~= nil and ttd.isHandlingVehicleDynamics ~= nil
         and ttd:isHandlingVehicleDynamics(vehicle)
     local total = 0
 
-    local mp = rawget(_G, "MudPhysics")
+    local mp = AS.modGlobal("FS25_MudSystemPhysics", "MudPhysics")
     if mp ~= nil and mp.enabled and mp.wheelBrakeEnable and not ttdHandles
         and not (mp.isVehicleResetting ~= nil and mp:isVehicleResetting(vehicle))
         and not (mp.isInShopPreview ~= nil and mp:isInShopPreview(vehicle)) then
@@ -38,7 +40,7 @@ local function mudExtra(wp)
         total = total + extra
     end
 
-    local fg = rawget(_G, "FieldGroundMudPhysics")
+    local fg = AS.modGlobal("FS25_MudSystemPhysics", "FieldGroundMudPhysics")
     if fg ~= nil and fg.enabled and fg.wheelBrakeEnable and not ttdHandles
         and not (fg.isVehicleResetting ~= nil and fg:isVehicleResetting(vehicle))
         and not (fg.isInShopPreview ~= nil and fg:isInShopPreview(vehicle)) then
@@ -69,9 +71,10 @@ function AS_MudWheelDrag:update(dt)
     if self.installed then return end
     self.installed = true
     if WheelPhysics == nil or WheelPhysics.updatePhysics == nil then return end
-    if rawget(_G, "MudPhysics") == nil and rawget(_G, "FieldGroundMudPhysics") == nil then return end
+    if AS.modGlobal("FS25_MudSystemPhysics", "MudPhysics") == nil
+        and AS.modGlobal("FS25_MudSystemPhysics", "FieldGroundMudPhysics") == nil then return end
     WheelPhysics.updatePhysics = Utils.overwrittenFunction(WheelPhysics.updatePhysics, updatePhysics)
-    vtpInfo("[AS_MudWheelDrag] résistance de boue appliquée aussi aux roues sans frein")
+    print("[AS_MudWheelDrag] résistance de boue appliquée aussi aux roues sans frein")
 end
 
 addModEventListener(AS_MudWheelDrag)
