@@ -79,6 +79,14 @@ end
 AS_WetGrip.mrFrictionVetoed = false
 AS_WetGrip.uytFrictionVetoed = false
 function AS_WetGrip:readModMixerVetoes()
+    -- (v1.0.0.07) sans ModMixer, ce sont les blocages d'AutoSwitch (Arbiter.lua)
+    if AS_Arbiter ~= nil and AS_Arbiter.active then
+        self.mrFrictionVetoed = AS_Arbiter:isVetoed("MoreRealistic", "WheelPhysics.updateTireFriction")
+        self.uytFrictionVetoed = AS_Arbiter:isVetoed("FS25_useYourTyres", "WheelPhysics.updateTireFriction")
+        vtpInfo(string.format("[AS_WetGrip] AutoSwitch : MoreRealistic %s, Use Your Tyres %s sur l'adhérence",
+            self.mrFrictionVetoed and "bloqué" or "actif", self.uytFrictionVetoed and "bloqué" or "actif"))
+        return
+    end
     local dir = g_modSettingsDirectory or (getUserProfileAppPath() .. "modSettings/")
     if string.sub(dir, -1) ~= "/" then dir = dir .. "/" end
     local path = dir .. "FS25_ModMixer/switchboard.xml"

@@ -4,6 +4,7 @@
 --
 -- Charge chaque partie du mod, dans l'ordre :
 --   Common        fonctions communes (textes, champ, patinage, notifications...)
+--   Arbiter       arbitrage entre les mods (blocages, ordre des crochets) à la place de ModMixer
 --   Tires         gonflage / dégonflage automatique (Variable Tire Pressure)
 --   Diff          différentiels, 4x4 / 4x2, déblocage en virage (Enhanced Vehicle)
 --   SlipAlert     alerte rouge de patinage
@@ -19,6 +20,7 @@
 --   AdSpeed       vitesse d'AutoDrive selon le terrain (champ / chemin / route)
 --   TireTracksSave traces de pneus gardées avec la partie
 --   ImplementStabilizer outils stables à l'arrêt (rayon des roues figé)
+--   MudWheelDrag  résistance de boue sur les roues sans frein
 --   Settings      menu Paramètres et sauvegarde des réglages (toujours en dernier)
 -- =============================================================================
 
@@ -26,6 +28,7 @@ local modDir = g_currentModDirectory or ""
 
 local FILES = {
     "scripts/Common.lua",
+    "scripts/Arbiter.lua",
     "scripts/Tires.lua",
     "scripts/Diff.lua",
     "scripts/SlipAlert.lua",
