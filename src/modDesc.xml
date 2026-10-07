@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <modDesc descVersion="106">
     <author>Fabien</author>
-    <version>1.0.0.07</version>
+    <version>1.0.0.08</version>
     <multiplayer supported="true"/>
 
     <title>
@@ -20,6 +20,7 @@
 - Dual-wheel racks: rear (BKT 650/65R42) and front (BKT 540/65R30) racks in the shop and the construction menu. Mounting / unmounting tire by tire (15 in-game minutes per tire). Park the tractor in the ground area, stand on the yellow marker and press Right Ctrl + I. Single-player only.
 - AutoDrive speed set by the ground: 20 km/h in fields, 30 km/h on tracks, no limit on roads (adjustable in the settings).
 - Tire tracks kept with the savegame: they are no longer lost when the game is reloaded.
+- Ruts dug by the wheels (DynamicDrivePro) kept with the savegame as well.
 - Implements stay still when stopped: no more bouncing caused by Mud System Physics and MoreRealistic.
 - Mud drag also on unbraked wheels: Mud System Physics mud slows trailers and implements again with MoreRealistic.
 - Mod arbitration: AutoSwitch blocks or orders the conflicting hooks between MoreRealistic, Use Your Tyres, DynamicDrivePro, Enhanced Vehicle and Recovery Winch itself, without disabling any mod (ModMixer is no longer needed).
@@ -39,6 +40,7 @@ Required mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, Mor
 - Palettes de jumelées : palettes AR (BKT 650/65R42) et AV (BKT 540/65R30) en boutique et au menu construction. Montage / démontage pneu par pneu (15 min de jeu par pneu). Garer le tracteur dans la zone au sol, se placer sur le repère jaune et appuyer sur Ctrl droit + I. Solo uniquement.
 - Vitesse d'AutoDrive imposée par le terrain : 20 km/h au champ, 30 km/h sur les chemins, sans limite sur la route (réglable dans les paramètres).
 - Traces de pneus gardées avec la sauvegarde : elles ne disparaissent plus au rechargement.
+- Ornières creusées par les roues (DynamicDrivePro) gardées elles aussi avec la sauvegarde.
 - Outils stables à l'arrêt : ils ne sautillent plus à cause de Mud System Physics et MoreRealistic.
 - Résistance de la boue aussi sur les roues sans frein : la boue de Mud System Physics freine de nouveau remorques et outils avec MoreRealistic.
 - Arbitrage des mods : AutoSwitch bloque ou ordonne lui-même les crochets en conflit entre MoreRealistic, Use Your Tyres, DynamicDrivePro, Enhanced Vehicle et Recovery Winch, sans désactiver aucun mod (ModMixer n'est plus nécessaire).
@@ -58,6 +60,7 @@ Mods requis : VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, More
 - Zwillingsrad-Paletten: Paletten hinten (BKT 650/65R42) und vorne (BKT 540/65R30) im Shop und im Baumenü. Montage / Demontage Reifen für Reifen (15 Spielminuten pro Reifen). Traktor im Bodenbereich abstellen, auf die gelbe Markierung stellen und Strg rechts + I drücken. Nur Einzelspieler.
 - AutoDrive-Geschwindigkeit nach Untergrund: 20 km/h auf dem Feld, 30 km/h auf Feldwegen, ohne Begrenzung auf der Straße (in den Einstellungen anpassbar).
 - Reifenspuren werden mit dem Spielstand gespeichert und verschwinden beim Neuladen nicht mehr.
+- Von den Rädern gegrabene Spurrinnen (DynamicDrivePro) werden ebenfalls mit dem Spielstand gespeichert.
 - Geräte bleiben im Stand ruhig: kein Hüpfen mehr durch Mud System Physics und MoreRealistic.
 - Schlammwiderstand auch an ungebremsten Rädern: der Schlamm von Mud System Physics bremst Anhänger und Geräte mit MoreRealistic wieder.
 - Mod-Schiedsrichter: AutoSwitch blockiert oder ordnet die widersprüchlichen Hooks zwischen MoreRealistic, Use Your Tyres, DynamicDrivePro, Enhanced Vehicle und Recovery Winch selbst, ohne einen Mod zu deaktivieren (ModMixer wird nicht mehr benötigt).

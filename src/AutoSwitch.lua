@@ -19,6 +19,7 @@
 --   MudPreset     paramètres conseillés Mud System Physics / Tractor Terrain Dynamics
 --   AdSpeed       vitesse d'AutoDrive selon le terrain (champ / chemin / route)
 --   TireTracksSave traces de pneus gardées avec la partie
+--   RutsSave      ornières de DynamicDrivePro gardées avec la partie
 --   ImplementStabilizer outils stables à l'arrêt (rayon des roues figé)
 --   MudWheelDrag  résistance de boue sur les roues sans frein
 --   Settings      menu Paramètres et sauvegarde des réglages (toujours en dernier)
@@ -43,6 +44,7 @@ local FILES = {
     "scripts/MudPreset.lua",
     "scripts/AdSpeed.lua",
     "scripts/TireTracksSave.lua",
+    "scripts/RutsSave.lua",
     "scripts/ImplementStabilizer.lua",
     "scripts/MudWheelDrag.lua",
     "scripts/Settings.lua",
