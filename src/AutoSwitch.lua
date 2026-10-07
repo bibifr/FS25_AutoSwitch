@@ -41,6 +41,7 @@ local FILES = {
     "scripts/AdSpeed.lua",
     "scripts/TireTracksSave.lua",
     "scripts/ImplementStabilizer.lua",
+    "scripts/MudWheelDrag.lua",
     "scripts/Settings.lua",
 }
 

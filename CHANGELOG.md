@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.06 | Boue : la résistance de Mud System Physics s'applique aussi aux roues sans frein (remorques, outils) avec MoreRealistic, qui l'ignorait ; le frein du tracteur n'y est jamais transmis |
 | 1.0.0.05 | Adhérence : AutoSwitch respecte les blocages ModMixer (MoreRealistic, Use Your Tyres) sur WheelPhysics.updateTireFriction ; facteur sol humide et usure appliqués sec ou humide, sans saut ; crevaison et pression Mud System Physics conservées |
 | 1.0.0.04 | Outils stables à l'arrêt : rayon des roues figé (dételés, ou attelage arrêté sans conducteur), plus de sautillement Mud System Physics + MoreRealistic |
 | 1.0.0.03 | Traces de pneus gardées avec la sauvegarde (savegameX/autoSwitchTireTracks.xml) et redessinées au chargement |

@@ -2,7 +2,7 @@
 
 # FS25 AutoSwitch
 
-**Version 1.0.0.05** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
+**Version 1.0.0.06** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
 
 ## French
 
@@ -26,6 +26,7 @@ Objectif: Rendre le jeux plus realiste et performant
 | Boue | Réglages Mud System Physics du mod (profils de sol compris) + TTD en « Difficile », appliqués automatiquement à chaque chargement. |
 | Traces de pneus | Gardées avec la sauvegarde et redessinées au chargement (20 000 points les plus récents, solo ou hôte). |
 | Outils stables | Rayon des roues figé sur les outils à l'arrêt : plus de sautillement dû à Mud System Physics + MoreRealistic. |
+| Boue sur roues sans frein | La résistance de boue de Mud System Physics freine aussi les roues sans frein (remorques, outils) avec MoreRealistic. |
 
 ## Utiliser les palettes de jumelées
 
@@ -57,7 +58,7 @@ AutoSwitch fait partie d'un ensemble réaliste global : tous ces mods sont oblig
 
 ## English
 
-**Version 1.0.0.05** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
+**Version 1.0.0.06** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
 
 Companion mod that automates **tire pressure and differential locks** and makes **traction realistic** by making Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics and Tractor Terrain Dynamics work together, without modifying any of them. It also adds **dual-wheel racks** mounted tire by tire.
 Objective: Make game more realistic 
@@ -77,6 +78,7 @@ Objective: Make game more realistic
 | Mud | The mod's Mud System Physics settings (ground profiles included) + TTD on "Hard", applied automatically on every load. |
 | Tire tracks | Kept with the savegame and redrawn on load (latest 20,000 points, single-player or host). |
 | Stable implements | Wheel radius frozen on stopped implements: no more bouncing caused by Mud System Physics + MoreRealistic. |
+| Mud on unbraked wheels | Mud System Physics mud drag also slows unbraked wheels (trailers, implements) with MoreRealistic. |
 
 ### Using the dual-wheel racks
 
