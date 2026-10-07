@@ -17,6 +17,7 @@
 --   DirectResow   semis direct sur zones effacées
 --   MudPreset     paramètres conseillés Mud System Physics / Tractor Terrain Dynamics
 --   AdSpeed       vitesse d'AutoDrive selon le terrain (champ / chemin / route)
+--   TireTracksSave traces de pneus gardées avec la partie
 --   Settings      menu Paramètres et sauvegarde des réglages (toujours en dernier)
 -- =============================================================================
 
@@ -37,6 +38,7 @@ local FILES = {
     "scripts/DirectResow.lua",
     "scripts/MudPreset.lua",
     "scripts/AdSpeed.lua",
+    "scripts/TireTracksSave.lua",
     "scripts/Settings.lua",
 }
 

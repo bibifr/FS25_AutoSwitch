@@ -2,7 +2,7 @@
 
 # FS25 AutoSwitch
 
-**Version 1.0.0.02** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
+**Version 1.0.0.03** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
 
 ## French
 
@@ -24,6 +24,7 @@ Objectif: Rendre le jeux plus realiste et performant
 | Semis | Protection du semis, remplissage du semoir couvercle fermé, ressemis direct sur bandes écrasées. |
 | Vitesse AutoDrive | Vitesse imposée selon le terrain : 20 km/h au champ, 30 km/h sur les chemins, sans limite sur la route. Réglable par tranches de 5 km/h dans les paramètres. |
 | Boue | Réglages Mud System Physics du mod (profils de sol compris) + TTD en « Difficile », appliqués automatiquement à chaque chargement. |
+| Traces de pneus | Gardées avec la sauvegarde et redessinées au chargement (20 000 points les plus récents, solo ou hôte). |
 
 ## Utiliser les palettes de jumelées
 
@@ -55,7 +56,7 @@ AutoSwitch fait partie d'un ensemble réaliste global : tous ces mods sont oblig
 
 ## English
 
-**Version 1.0.0.02** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
+**Version 1.0.0.03** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
 
 Companion mod that automates **tire pressure and differential locks** and makes **traction realistic** by making Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics and Tractor Terrain Dynamics work together, without modifying any of them. It also adds **dual-wheel racks** mounted tire by tire.
 Objective: Make game more realistic 
@@ -73,6 +74,7 @@ Objective: Make game more realistic
 | Sowing | Seeding protection, seeder filling with the lid closed, direct re-sowing on crushed strips. |
 | AutoDrive speed | Speed set by the ground: 20 km/h in fields, 30 km/h on tracks, no limit on roads. Adjustable in 5 km/h steps in the settings. |
 | Mud | The mod's Mud System Physics settings (ground profiles included) + TTD on "Hard", applied automatically on every load. |
+| Tire tracks | Kept with the savegame and redrawn on load (latest 20,000 points, single-player or host). |
 
 ### Using the dual-wheel racks
 
