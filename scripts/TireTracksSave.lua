@@ -13,7 +13,7 @@ local vtpInfo = AS.vtpInfo
 --   dessinées sur la machine qui sauvegarde).
 -------------------------------------------------------------------------------
 AS_TireTracksSave = {}
-AS_TireTracksSave.MAX_POINTS     = 20000
+AS_TireTracksSave.MAX_POINTS     = 60000
 AS_TireTracksSave.MIN_STEP       = 0.5    -- m entre deux points gardés
 AS_TireTracksSave.RESTORE_DELAY  = 3000   -- ms après le chargement
 AS_TireTracksSave.RESTORE_BATCH  = 2000   -- points redessinés par image

@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.12 | Traces de pneus : 60 000 points gardés au lieu de 20 000 ; sauvegarde des ornières DynamicDrivePro retirée (DDP ne creuse jamais le sol, le relief des traces vient du jeu et ne peut pas être gardé) |
 | 1.0.0.11 | Pneus de nouveau salis par la boue : les réglages Mud System Physics imposés à chaque chargement reprennent ceux de la partie avant la 1.0.0.01 (humidité locale des champs réactivée, saleté des profils de sol, difficulté 2, etc.) |
 | 1.0.0.10 | Arbitrage : le mod d'un crochet est reconnu dans le même ordre que ModMixer (mod en cours de chargement d'abord) ; liste des crochets bloqués écrite dans le log |
 | 1.0.0.09 | Correctif : outils stables (1.0.0.04), boue sur roues sans frein (1.0.0.06) et ornières (1.0.0.08) ne trouvaient pas Mud System Physics ni DynamicDrivePro (lecture dans le mauvais environnement Lua) et restaient inactifs |
