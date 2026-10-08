@@ -41,7 +41,19 @@ Les jumelées doivent exister dans la **même marque de pneus** que ceux du trac
 
 ## Mods requis
 
-FS25_VariableTirePressure, FS25_EnhancedVehicle, FS25_AutoDrive, FS25_Courseplay, MoreRealistic, moreRealisticXmlDatabank, FS25_MudSystemPhysics, FS25_TractorTerrainDynamics, FS25_DynamicDrivePro, FS25_useYourTyres, FS25_RealisticHarvesting, FS25_CropDestructionOverhaul, FS25_MoistureSystem.
+- [Variable Tire Pressure](https://www.farming-simulator.com/mod.php?mod_id=347991&title=fs2025)
+- [Enhanced Vehicle](https://github.com/ZhooL/FS25_EnhancedVehicle/releases)
+- [AutoDrive](https://github.com/Stephan-S/FS25_AutoDrive/releases)
+- [Courseplay](https://www.farming-simulator.com/mod.php?mod_id=331515&title=fs2025)
+- [MoreRealistic](https://github.com/quadural/MoreRealistic_FS25)
+- [MoreRealistic XML Databank](https://mrdb.tlg-webservice.de)
+- [Mud System Physics](https://www.kingmods.net/en/fs25/mods/73208/mud-system-physics)
+- [Tractor Terrain Dynamics](https://www.farming-simulator.com/mod.php?mod_id=369531&title=fs2025)
+- [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025)
+- [Use Up Your Tyres](https://www.farming-simulator.com/mod.php?mod_id=321793&title=fs2025)
+- [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases)
+- [Crop Destruction Overhaul](https://www.farming-simulator.com/mod.php?mod_id=356527&title=fs2025)
+- [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025)
 
 AutoSwitch fait partie d'un ensemble réaliste global : tous ces mods sont obligatoires.
 
@@ -95,7 +107,19 @@ Dual wheels must exist in the **same tire brand** as the tractor's tires. Wheel 
 
 ### Required mods
 
-FS25_VariableTirePressure, FS25_EnhancedVehicle, FS25_AutoDrive, FS25_Courseplay, MoreRealistic, moreRealisticXmlDatabank, FS25_MudSystemPhysics, FS25_TractorTerrainDynamics, FS25_DynamicDrivePro, FS25_useYourTyres, FS25_RealisticHarvesting, FS25_CropDestructionOverhaul, FS25_MoistureSystem.
+- [Variable Tire Pressure](https://www.farming-simulator.com/mod.php?mod_id=347991&title=fs2025)
+- [Enhanced Vehicle](https://github.com/ZhooL/FS25_EnhancedVehicle/releases)
+- [AutoDrive](https://github.com/Stephan-S/FS25_AutoDrive/releases)
+- [Courseplay](https://www.farming-simulator.com/mod.php?mod_id=331515&title=fs2025)
+- [MoreRealistic](https://github.com/quadural/MoreRealistic_FS25)
+- [MoreRealistic XML Databank](https://mrdb.tlg-webservice.de)
+- [Mud System Physics](https://www.kingmods.net/en/fs25/mods/73208/mud-system-physics)
+- [Tractor Terrain Dynamics](https://www.farming-simulator.com/mod.php?mod_id=369531&title=fs2025)
+- [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025)
+- [Use Up Your Tyres](https://www.farming-simulator.com/mod.php?mod_id=321793&title=fs2025)
+- [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases)
+- [Crop Destruction Overhaul](https://www.farming-simulator.com/mod.php?mod_id=356527&title=fs2025)
+- [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025)
 
 AutoSwitch is part of a global realistic pack: all these mods are required.
 
