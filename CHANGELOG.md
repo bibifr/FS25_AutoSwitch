@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.13 | Vitesse AutoDrive réglable par tranches de 2 km/h (champ 4 à 30, chemins 10 à 50, route sans limite ou 20 à 80) |
 | 1.0.0.12 | Traces de pneus : 60 000 points gardés au lieu de 20 000 ; sauvegarde des ornières DynamicDrivePro retirée (DDP ne creuse jamais le sol, le relief des traces vient du jeu et ne peut pas être gardé) |
 | 1.0.0.11 | Pneus de nouveau salis par la boue : les réglages Mud System Physics imposés à chaque chargement reprennent ceux de la partie avant la 1.0.0.01 (humidité locale des champs réactivée, saleté des profils de sol, difficulté 2, etc.) |
 | 1.0.0.10 | Arbitrage : le mod d'un crochet est reconnu dans le même ordre que ModMixer (mod en cours de chargement d'abord) ; liste des crochets bloqués écrite dans le log |

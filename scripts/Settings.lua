@@ -39,9 +39,9 @@ AS_Settings.speedHint = true        -- affichage de la vitesse conseillée au-de
 AS_Settings.adFieldKph = 20        -- vitesse AutoDrive au champ (km/h)
 AS_Settings.adPathKph = 30         -- vitesse AutoDrive sur les chemins (km/h)
 AS_Settings.adRoadKph = 0          -- vitesse AutoDrive sur la route (km/h, 0 = sans limite)
-AS_Settings.AD_FIELD_LIST = { 5, 10, 15, 20, 25, 30 }
-AS_Settings.AD_PATH_LIST = { 10, 15, 20, 25, 30, 35, 40, 45, 50 }
-AS_Settings.AD_ROAD_LIST = { 0, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80 }
+AS_Settings.AD_FIELD_LIST = { 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30 }
+AS_Settings.AD_PATH_LIST = { 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50 }
+AS_Settings.AD_ROAD_LIST = { 0, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 72, 74, 76, 78, 80 }
 AS_Settings.durTires = 4   -- durée d'affichage des notifications (secondes)
 AS_Settings.durDiffs = 4
 AS_Settings.durAlert = 5
@@ -134,7 +134,7 @@ function AS_Settings:load()
                 local td = getXMLInt(xml, "vtpAutoSwitch.tireMode#delaySeconds")
                 if td ~= nil then self.tireDelay = math.max(0, math.min(60, td)) end
                 local af = getXMLInt(xml, "vtpAutoSwitch.adSpeed#fieldKph")
-                if af ~= nil then self.adFieldKph = math.max(5, math.min(30, af)) end
+                if af ~= nil then self.adFieldKph = math.max(4, math.min(30, af)) end
                 local ap2 = getXMLInt(xml, "vtpAutoSwitch.adSpeed#pathKph")
                 if ap2 ~= nil then self.adPathKph = math.max(10, math.min(50, ap2)) end
                 local ar = getXMLInt(xml, "vtpAutoSwitch.adSpeed#roadKph")
