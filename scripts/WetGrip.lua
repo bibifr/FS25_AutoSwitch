@@ -178,14 +178,14 @@ function AS_WetGrip:loadMap()
 end
 
 -- (v1.27) DIAGNOSTIC TEMPORAIRE : toutes les 5 s, état de l'adhérence du véhicule conduit
-AS_WetGrip.DIAG = false   -- (v1.29) diagnostic retiré : adhérence validée
+AS_WetGrip.DIAG = true    -- (v1.0.0.22) relevé temporaire dans log.txt (véhicule conduit, toutes les 5 s)
 function AS_WetGrip:diag(fg, flw, baseWet)
     local vehicle = shGetControlledVehicle()
     if vehicle == nil or vehicle.spec_wheels == nil then return end
     local parts = {}
     for i, wheel in ipairs(vehicle.spec_wheels.wheels) do
         local wp = wheel.physics
-        if wp ~= nil and i <= 4 then
+        if wp ~= nil and i <= 8 then
             local _, _, _, prof = pcall(fg.getWheelGroundProfile, fg, wheel)
             local wet = baseWet
             if flw ~= nil and flw.enabled == true and fg.getWheelContactPos ~= nil then
@@ -195,14 +195,22 @@ function AS_WetGrip:diag(fg, flw, baseWet)
                     if ok2 and type(w) == "number" then wet = w end
                 end
             end
-            table.insert(parts, string.format("r%d[sol=%s hum=%.2f mul=%.2f coefMR=%.3f dynMR=%.2f]", i,
-                prof ~= nil and tostring(prof.name) or "-", wet, wp.__vtpasGripMul or 1,
-                tonumber(wp.tireGroundFrictionCoeff) or -1, tonumber(wp.mrDynamicFrictionScale) or -1))
+            -- (v1.0.0.22) + bonus Variable Tire Pressure, jumelées et adhérence totale (AutoSwitch x VTP)
+            local dual = AS_Duals ~= nil and AS_Duals.ENABLED and AS_Duals.getDualWidth ~= nil
+                and AS_Duals.getDualWidth(wp) ~= nil
+            local asMul, vtpMul = wp.__vtpasGripMul or 1, tonumber(wp.__vtpGripMul) or 1
+            table.insert(parts, string.format("r%d[sol=%s hum=%.2f AS=%.2f VTP=%.2f total=%.2f jum=%s fs=%.2f coefMR=%.3f]", i,
+                prof ~= nil and tostring(prof.name) or "-", wet, asMul, vtpMul, asMul * vtpMul,
+                dual and "oui" or "non", tonumber(wp.frictionScale) or 1, tonumber(wp.tireGroundFrictionCoeff) or -1))
         end
     end
     local mrSlip = vehicle.spec_wheels.mrAvgDrivenWheelsSlip
-    print(string.format("[AS_WetGrip][diag] %s humGlobale=%.2f patinageMR=%s %s", vehicle:getName(), baseWet,
-        mrSlip ~= nil and string.format("%.1f%%", mrSlip * 100) or "-", table.concat(parts, " ")))
+    local asSlip = getMaxSlipPercent(vehicle)
+    print(string.format("[AS_WetGrip][diag] %s niveau=%.2f humGlobale=%.2f humLocaleMSP=%s patinageAS=%s patinageMR=%s vitesse=%.1f %s",
+        vehicle:getName(), self.LEVEL, baseWet, (flw ~= nil and flw.enabled == true) and "oui" or "non",
+        asSlip ~= nil and string.format("%.1f%%", asSlip) or "-",
+        mrSlip ~= nil and string.format("%.1f%%", mrSlip * 100) or "-",
+        vehicle.getLastSpeed ~= nil and vehicle:getLastSpeed() or 0, table.concat(parts, " ")))
 end
 
 function AS_WetGrip:update(dt)

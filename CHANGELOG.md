@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.22 | Version de test : relevé d'adhérence dans log.txt toutes les 5 s pour le véhicule conduit (humidité sous chaque roue, facteur AutoSwitch, bonus Variable Tire Pressure, jumelées, patinage) |
 | 1.0.0.21 | Différentiels séparés : l'arrière se bloque à 15 % de patinage, l'avant à 30 % (deux réglages dans le menu), chacun se débloque à la moitié de son seuil. Bonus des blocages fixe, +4 % roues AR et +3 % roues AV (case du menu retirée). Adhérence en sol humide sur 5 niveaux : Débutant, Facile, Normal (ancienne « Très forte », par défaut), Dur, Extrême |
 | 1.0.0.20 | Les blocages ne brident plus le braquage : ils se coupent au-delà de 50 % du braquage (arrière seul), 20 % (avant seul) ou 10 % (les deux), y compris posés à la main, et AutoSwitch ne les remet qu'une fois les roues revenues sous ce seuil. Blocage demandé roues braquées refusé, avec icône rouge clignotante et « Redressez les roues ». Seule la transmission limite le braquage (4x4 90 %) |
 | 1.0.0.19 | Braquage en 4x4 à 90 % (au lieu de 80 %). Les blocages posés par AutoSwitch ne se remettent qu'une fois les roues revenues dans l'angle permis avec les blocages (10 % pour les deux diffs) |
