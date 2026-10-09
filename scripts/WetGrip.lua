@@ -33,9 +33,25 @@ AS_WetGrip.MAX_MUL = 1.03
 AS_WetGrip.timer = 0
 AS_WetGrip.installed = false
 
-function AS_WetGrip:computeWheelMul(wheel, fg, flw, baseWet)
+-- (v1.0.0.23) type de sol sous la roue. Mud System Physics s'arrête au type de sol de la roue :
+-- quand le jeu n'en donne pas (vu sur les roues arrière d'un Fendt 942), on le lit au point de
+-- contact sur le terrain.
+function AS_WetGrip:getWheelProfile(wheel, fg)
     local ok, mud, _gt, prof = pcall(fg.getWheelGroundProfile, fg, wheel)
-    if not ok or prof == nil then return 1.0 end
+    if ok and prof ~= nil then return mud, prof end
+    if fg.getProfileAtWorldPos ~= nil and fg.getWheelContactPos ~= nil then
+        local okP, x, _, z = pcall(fg.getWheelContactPos, fg, wheel)
+        if okP and x ~= nil then
+            local ok2, mud2, _gt2, prof2 = pcall(fg.getProfileAtWorldPos, fg, x, z)
+            if ok2 and prof2 ~= nil then return mud2, prof2 end
+        end
+    end
+    return nil, nil
+end
+
+-- mud / prof : type de sol de la roue (v1.0.0.23 : ou d'une autre roue du véhicule à défaut)
+function AS_WetGrip:computeWheelMul(wheel, fg, flw, baseWet, mud, prof)
+    if prof == nil then return 1.0 end
     local wet = baseWet
     if flw ~= nil and flw.enabled == true and flw.getEffectiveWetnessAt ~= nil and fg.getWheelContactPos ~= nil then
         local x, _, z = fg:getWheelContactPos(wheel)
@@ -53,6 +69,29 @@ function AS_WetGrip:computeWheelMul(wheel, fg, flw, baseWet)
         loss = loss * (1 - AS_Duals.WET_LOSS_REDUCTION)
     end
     return shClamp(1 - loss, self.MIN_MUL, 1.0)
+end
+
+-- (v1.0.0.23) bonus d'adhérence de Variable Tire Pressure en mode champ : x2,5 par défaut
+-- (jusqu'à x5), ce qui annulait toute perte en sol humide. AutoSwitch le ramène à x1,15
+-- (x1,20 en jumelées) sans désactiver VTP. Renvoie le facteur qui compense l'excédent.
+AS_WetGrip.VTP_GRIP_CAP = 1.15
+AS_WetGrip.VTP_GRIP_CAP_DUALS = 1.20
+function AS_WetGrip:getVtpCapMul(wp)
+    local vtpMul = wp.__vtpGripMul
+    if type(vtpMul) ~= "number" or vtpMul <= 1 then return 1 end
+    local v = wp.vehicle
+    local spec = v ~= nil and v.spec_variableTirePressure or nil
+    -- mêmes conditions que VTP pour appliquer son bonus
+    if spec == nil or spec.enableFieldGrip ~= true or spec.isRoadMode == true then return 1 end
+    if v.vtpIsEnabledForCurrentWheelConfig ~= nil then
+        local ok, en = pcall(v.vtpIsEnabledForCurrentWheelConfig, v)
+        if ok and not en then return 1 end
+    end
+    vtpMul = math.min(vtpMul, 5.0)
+    local dual = AS_Duals ~= nil and AS_Duals.getDualWidth ~= nil and AS_Duals.getDualWidth(wp) ~= nil
+    local cap = dual and self.VTP_GRIP_CAP_DUALS or self.VTP_GRIP_CAP
+    if vtpMul <= cap then return 1 end
+    return cap / vtpMul
 end
 
 -- (v1.32) usure des pneus de Use Your Tyres (même formule que ce mod)
@@ -143,7 +182,7 @@ function AS_WetGrip:install()
         -- par frictionScale, que le jeu, Mud System Physics et Variable Tire Pressure
         -- multiplient chacun. On y ajoute notre facteur (et l'usure Use Your Tyres si ModMixer
         -- bloque aussi ce mod), sec ou humide : pas de saut quand le sol change.
-        local extra = mul
+        local extra = mul * AS_WetGrip:getVtpCapMul(wp)
         if AS_WetGrip.uytFrictionVetoed then
             extra = extra * AS_WetGrip:getWearMul(wp)
         end
@@ -178,7 +217,7 @@ function AS_WetGrip:loadMap()
 end
 
 -- (v1.27) DIAGNOSTIC TEMPORAIRE : toutes les 5 s, état de l'adhérence du véhicule conduit
-AS_WetGrip.DIAG = true    -- (v1.0.0.22) relevé temporaire dans log.txt (véhicule conduit, toutes les 5 s)
+AS_WetGrip.DIAG = false   -- (v1.0.0.22) relevé dans log.txt (véhicule conduit, toutes les 5 s) ; coupé en 1.0.0.23
 function AS_WetGrip:diag(fg, flw, baseWet)
     local vehicle = shGetControlledVehicle()
     if vehicle == nil or vehicle.spec_wheels == nil then return end
@@ -262,12 +301,26 @@ function AS_WetGrip:update(dt)
             end
         end
         if wheels ~= nil and vehicle.isAddedToPhysics then
-            for _, wheel in ipairs(wheels) do
+            -- (v1.0.0.23) type de sol de chaque roue ; une roue sans type prend celui d'une
+            -- autre roue du véhicule (sinon elle n'avait aucune perte en sol humide)
+            local muds, profs, fbMud, fbProf = {}, {}, nil, nil
+            if self.LEVEL > 0 and not frozen then
+                for i, wheel in ipairs(wheels) do
+                    local okp, m, p = pcall(self.getWheelProfile, self, wheel, fg)
+                    if okp and p ~= nil then
+                        muds[i], profs[i] = m, p
+                        if fbProf == nil then fbMud, fbProf = m, p end
+                    end
+                end
+            end
+            for i, wheel in ipairs(wheels) do
                 local wp = wheel.physics
                 if wp ~= nil then
                     local mul = 1.0
                     if self.LEVEL > 0 and not frozen and not wp.hasSnowContact then
-                        local ok, m = pcall(self.computeWheelMul, self, wheel, fg, flw, baseWet)
+                        local m0, p0 = muds[i], profs[i]
+                        if p0 == nil then m0, p0 = fbMud, fbProf end
+                        local ok, m = pcall(self.computeWheelMul, self, wheel, fg, flw, baseWet, m0, p0)
                         if ok and type(m) == "number" then mul = m end
                     end
                     if midZ ~= nil and wheel.__vtpasZ ~= nil and not wp.hasSnowContact then
