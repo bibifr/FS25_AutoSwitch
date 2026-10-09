@@ -17,7 +17,7 @@
 -- Vaut pour tous les blocages, y compris ceux posés à la main. Un blocage demandé roues
 -- braquées au-delà de son seuil est refusé, avec une icône et un texte clignotants.
 -- Diff.lua ne rebloque qu'une fois les roues revenues sous le seuil (AS_Steer.fitsLocks).
--- Désactivé avec l'option « Différentiels : déblocage en virage » du menu.
+-- Toujours actif (v1.0.0.25 : ligne « Différentiels : déblocage en virage » retirée du menu).
 
 local getVehicles, isLockedValue, asState, L, showTimedNotification, shGetControlledVehicle
     = AS.getVehicles, AS.isLockedValue, AS.asState, AS.L, AS.showTimedNotification, AS.shGetControlledVehicle

@@ -83,8 +83,6 @@
         <text name="vtpas_wetGrip_normal" text="Normal"/>
         <text name="vtpas_wetGrip_hard" text="Hard"/>
         <text name="vtpas_wetGrip_extreme" text="Extreme"/>
-        <text name="vtpas_turnUnlock_label" text="Differentials: unlock in turns"/>
-        <text name="vtpas_turnUnlock_tip" text="Automatically unlocks the differentials once steering exceeds a threshold: 50 % of full steering with the rear lock only, 20 % with the front lock only, 10 % with both (manual locks included). A lock requested with the wheels turned is refused. They relock only once the wheels are back under that threshold, if slip continues."/>
         <text name="vtpas_auto4wd_label" text="Drive: 4WD in fields / 2WD on road"/>
         <text name="vtpas_auto4wd_tip" text="Automatically switches to four-wheel drive when entering a field and to two-wheel drive on the road (Enhanced Vehicle). In 2WD, if the rear axle slips beyond the threshold, 4WD engages first, then the differentials lock if slip continues; on the road it returns to 2WD once grip is back. A manual change is kept until the next field/road change."/>
         <text name="input_AS_DUAL_SWITCH" text="Mount / remove dual wheels"/>

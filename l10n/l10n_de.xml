@@ -83,8 +83,6 @@
         <text name="vtpas_wetGrip_normal" text="Normal"/>
         <text name="vtpas_wetGrip_hard" text="Schwer"/>
         <text name="vtpas_wetGrip_extreme" text="Extrem"/>
-        <text name="vtpas_turnUnlock_label" text="Differenziale: in Kurven lösen"/>
-        <text name="vtpas_turnUnlock_tip" text="Löst die Differenzialsperren automatisch, sobald der Lenkeinschlag einen Grenzwert überschreitet: 50 % des vollen Einschlags nur mit Sperre hinten, 20 % nur mit Sperre vorne, 10 % mit beiden (auch manuell eingelegte Sperren). Eine Sperre bei eingeschlagenen Rädern wird abgelehnt. Wieder gesperrt wird erst, wenn die Räder unter diesem Grenzwert sind und der Schlupf anhält."/>
         <text name="vtpas_auto4wd_label" text="Antrieb: Allrad auf dem Feld / 2WD auf der Straße"/>
         <text name="vtpas_auto4wd_tip" text="Schaltet beim Einfahren ins Feld automatisch auf Allrad und auf der Straße auf Zweiradantrieb (Enhanced Vehicle). Im Zweiradantrieb wird bei Schlupf der Hinterachse über der Schwelle zuerst Allrad zugeschaltet, danach werden bei anhaltendem Schlupf die Differenziale gesperrt; auf der Straße geht es zurück auf 2WD, sobald die Haftung zurück ist. Eine manuelle Änderung bleibt bis zum nächsten Wechsel Feld/Straße erhalten."/>
         <text name="input_AS_DUAL_SWITCH" text="Zwillingsräder montieren / abbauen"/>

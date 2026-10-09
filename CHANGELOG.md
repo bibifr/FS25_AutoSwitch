@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.25 | Menu : ligne « Différentiels : déblocage en virage » retirée. La coupure des blocages selon le braquage et le refus roues braquées sont toujours actifs |
 | 1.0.0.24 | Nouvelle icône du mod : pneu de tracteur avec « AS » au centre, aux couleurs vert / jaune |
 | 1.0.0.23 | Adhérence : le bonus de Variable Tire Pressure en champ (x2,5 par défaut, jusqu'à x5 en jumelées) est ramené à +15 % (+20 % en jumelées), VTP reste actif. Une roue dont le jeu ne donne pas le type de sol (vu sur les roues arrière d'un Fendt 942) a maintenant aussi sa perte en sol humide. Relevé de la 1.0.0.22 retiré du log |
 | 1.0.0.22 | Version de test : relevé d'adhérence dans log.txt toutes les 5 s pour le véhicule conduit (humidité sous chaque roue, facteur AutoSwitch, bonus Variable Tire Pressure, jumelées, patinage) |

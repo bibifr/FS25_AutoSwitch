@@ -54,7 +54,6 @@ AS_Settings.wetGrip = 3   -- (v1.0.0.21) adhérence sol humide : 1 Débutant, 2 
 AS_Settings.WETGRIP_LEVELS = { 0.45, 0.60, 0.75, 0.90, 1.05 }   -- Normal = ancienne « Très forte »
 AS_Settings.WETGRIP_FROM_OLD = { 1, 1, 1, 2, 3 }   -- ancien réglage (désactivé, faible, moyenne, forte, très forte)
 AS_Settings.auto4wd = true     -- 4x4 champ / 4x2 route
-AS_Settings.turnUnlock = true  -- déverrouillage en virage
 AS_Settings.hintPosX = nil          -- position déplacée à la souris (nil = par défaut)
 AS_Settings.hintPosY = nil
 
@@ -95,7 +94,6 @@ function AS_Settings:save()
             setXMLBool(xml, "vtpAutoSwitch.slipIcon#enabled", self.slipIcon)
             setXMLInt(xml, "vtpAutoSwitch.wetGrip#difficulty", self.wetGrip)
             setXMLBool(xml, "vtpAutoSwitch.drive#auto4wd", self.auto4wd)
-            setXMLBool(xml, "vtpAutoSwitch.drive#turnUnlock", self.turnUnlock)
             setXMLBool(xml, "vtpAutoSwitch.seedCoverFill#enabled", self.seedCoverFill)
             setXMLInt(xml, "vtpAutoSwitch.notifDuration#diffs", self.durDiffs)
             setXMLInt(xml, "vtpAutoSwitch.notifDuration#alert", self.durAlert)
@@ -149,8 +147,6 @@ function AS_Settings:load()
                 if scf ~= nil then self.seedCoverFill = scf end
                 local a4 = getXMLBool(xml, "vtpAutoSwitch.drive#auto4wd")
                 if a4 ~= nil then self.auto4wd = a4 end
-                local tu = getXMLBool(xml, "vtpAutoSwitch.drive#turnUnlock")
-                if tu ~= nil then self.turnUnlock = tu end
                 local wg = getXMLInt(xml, "vtpAutoSwitch.wetGrip#difficulty")
                 if wg ~= nil then
                     self.wetGrip = math.max(1, math.min(5, wg))
@@ -208,7 +204,7 @@ function AS_Settings:apply()
     AS_SpeedHint.SLIP_ICON = self.slipIcon
     AS_WetGrip.LEVEL = self.WETGRIP_LEVELS[self.wetGrip] or 0.75
     AS_Diff.AUTO_4WD = self.auto4wd
-    AS_Diff.TURN_UNLOCK = self.turnUnlock
+    AS_Diff.TURN_UNLOCK = true   -- (v1.0.0.25) toujours actif, ligne retirée du menu
     if AS_SeedCoverFill.ENABLED ~= self.seedCoverFill then AS_SeedCoverFill:setEnabled(self.seedCoverFill) end
     AS_NotifyDuration.diffs = self.durDiffs * 1000
     AS_NotifyDuration.alert = self.durAlert * 1000
@@ -386,12 +382,6 @@ function AS_Settings:onAuto4wdChanged(state, element)
     self:save()
 end
 
-function AS_Settings:onTurnUnlockChanged(state, element)
-    self.turnUnlock = (state == 2)
-    self:apply()
-    self:save()
-end
-
 function AS_Settings:onWetGripChanged(state, element)
     self.wetGrip = math.max(1, math.min(5, state))
     self:apply()
@@ -537,14 +527,6 @@ function AS_Settings:buildUI(frame)
         texts = delayTexts,
         state = self:getIndex(self.DIFF_DELAY_LIST, self.diffDelay),
         callback = AS_Settings.onDiffDelayChanged,
-    })
-
-    self.options.turnUnlock = self:addRow(layout, template, {
-        label = L("vtpas_turnUnlock_label"),
-        tip = L("vtpas_turnUnlock_tip"),
-        texts = onOff,
-        state = self.turnUnlock and 2 or 1,
-        callback = AS_Settings.onTurnUnlockChanged,
     })
 
     self.options.auto4wd = self:addRow(layout, template, {
@@ -734,7 +716,6 @@ function AS_Settings:refreshStates()
     if o.notifyTires ~= nil then o.notifyTires:setState(self.notifyTires and 2 or 1) end
     if o.alertPercent ~= nil then o.alertPercent:setState(self:getIndex(self.ALERT_PERCENTS, self.alertPercent)) end
     if o.alertSeconds ~= nil then o.alertSeconds:setState(self:getIndex(self.ALERT_SECONDS_LIST, self.alertSeconds)) end
-    if o.turnUnlock ~= nil then o.turnUnlock:setState(self.turnUnlock and 2 or 1) end
     if o.auto4wd ~= nil then o.auto4wd:setState(self.auto4wd and 2 or 1) end
     if o.wetGrip ~= nil then o.wetGrip:setState(self.wetGrip) end
     if o.seedCoverFill ~= nil then o.seedCoverFill:setState(self.seedCoverFill and 2 or 1) end

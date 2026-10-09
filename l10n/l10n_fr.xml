@@ -83,8 +83,6 @@
         <text name="vtpas_wetGrip_normal" text="Normal"/>
         <text name="vtpas_wetGrip_hard" text="Dur"/>
         <text name="vtpas_wetGrip_extreme" text="Extrême"/>
-        <text name="vtpas_turnUnlock_label" text="Différentiels : déblocage en virage"/>
-        <text name="vtpas_turnUnlock_tip" text="Déverrouille automatiquement les différentiels dès que le braquage dépasse un seuil : 50 % du braquage maxi avec le blocage arrière seul, 20 % avec l'avant seul, 10 % avec les deux (y compris les blocages posés à la main). Un blocage demandé roues braquées est refusé. Ils ne se reverrouillent qu'une fois les roues revenues sous ce seuil, si le patinage continue."/>
         <text name="vtpas_auto4wd_label" text="Transmission : 4x4 champ / 4x2 route"/>
         <text name="vtpas_auto4wd_tip" text="Passe automatiquement en 4 roues motrices en entrant dans un champ et en 2 roues motrices sur la route (Enhanced Vehicle). En 2 roues motrices, si l'essieu arrière patine au-delà du seuil, le 4x4 s'enclenche d'abord, puis les différentiels se bloquent si ça patine encore ; sur route, retour en 4x2 quand l'adhérence revient. Un réglage manuel reste respecté jusqu'au prochain passage champ/route."/>
         <text name="input_AS_DUAL_SWITCH" text="Monter / démonter les jumelées"/>
