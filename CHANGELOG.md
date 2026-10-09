@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.20 | Les blocages ne brident plus le braquage : ils se coupent au-delà de 50 % du braquage (arrière seul), 20 % (avant seul) ou 10 % (les deux), y compris posés à la main, et AutoSwitch ne les remet qu'une fois les roues revenues sous ce seuil. Blocage demandé roues braquées refusé, avec icône rouge clignotante et « Redressez les roues ». Seule la transmission limite le braquage (4x4 90 %) |
 | 1.0.0.19 | Braquage en 4x4 à 90 % (au lieu de 80 %). Les blocages posés par AutoSwitch ne se remettent qu'une fois les roues revenues dans l'angle permis avec les blocages (10 % pour les deux diffs) |
 | 1.0.0.18 | Braquage limité selon la transmission et les blocages (Enhanced Vehicle) : 4x2 complet, 4x4 80 %, blocage AR seul 50 %, AV seul 20 %, les deux 10 %. Volant en butée sur cette limite = virage : les blocages posés par AutoSwitch sautent comme au-delà de 15° |
 | 1.0.0.17 | Pneus : au moins 1 h de route pour qu'ils se nettoient (1 h à 2 h 10 selon la vitesse) |

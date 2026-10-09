@@ -28,7 +28,7 @@ AS_Diff.HELPER_ONLY               = true   -- conduite manuelle : true = manuel,
 AS_Diff.RELEASE_WHEN_HELPER_STOPS = true   -- relâche les différentiels verrouillés par le script quand l'assistant s'arrête
 AS_Diff.HELPER_RELEASE_DELAY_MS   = 3000   -- délai avant ce relâchement (évite les coupures brèves)
 AS_Diff.TURN_UNLOCK      = true   -- (v1.30) déverrouillage obligatoire en virage
-AS_Diff.TURN_ON_DEG      = 15     -- braquage au-delà duquel on considère un virage
+AS_Diff.TURN_ON_DEG      = 15     -- braquage au-delà duquel on considère un virage (sans SteerLimit.lua)
 AS_Diff.TURN_OFF_DEG     = 8      -- braquage en dessous duquel le virage est terminé
 AS_Diff.AUTO_4WD         = true   -- (v1.30) 4x4 dans les champs, 4x2 sur route (Enhanced Vehicle)
 AS_Diff.ZONE_CHECK_MS    = 1000
@@ -198,13 +198,17 @@ function AS_Diff:update(dt)
 
                 -- (v1.30) virage : déverrouillage obligatoire, pas de verrouillage pendant le virage
                 if self.TURN_UNLOCK then
-                    local steer = getSteerDeg(vehicle)
-                    -- (v1.0.0.18) volant en butée sur le braquage réduit (SteerLimit.lua) : virage aussi
-                    local atLimit = AS_Steer ~= nil and AS_Steer.isAtLimit(vehicle)
-                    if not st.turning and (steer >= self.TURN_ON_DEG or atLimit) then
-                        st.turning = true
-                    elseif st.turning and steer <= self.TURN_OFF_DEG and not atLimit then
-                        st.turning = false
+                    if AS_Steer ~= nil then
+                        -- (v1.0.0.20) virage = braquage au-delà du seuil de coupure des blocages
+                        -- posés par AutoSwitch (10 % du braquage complet pour les deux diffs, SteerLimit.lua)
+                        st.turning = not AS_Steer.fitsLocks(vehicle, self.LOCK_FRONT, self.LOCK_REAR)
+                    else
+                        local steer = getSteerDeg(vehicle)
+                        if not st.turning and steer >= self.TURN_ON_DEG then
+                            st.turning = true
+                        elseif st.turning and steer <= self.TURN_OFF_DEG then
+                            st.turning = false
+                        end
                     end
                     if st.turning then
                         st.onSince = nil
@@ -283,7 +287,7 @@ function AS_Diff:update(dt)
                         st.offSince = nil
                         if not st.engaged and not anyDiffLocked(vehicle) then
                             st.onSince = st.onSince or g_time
-                            -- (v1.0.0.19) roues encore braquées au-delà de l'angle permis une fois bloqué : on attend
+                            -- (v1.0.0.19) roues encore braquées au-delà du seuil de coupure des blocages : on attend
                             local fits = AS_Steer == nil or AS_Steer.fitsLocks(vehicle, self.LOCK_FRONT, self.LOCK_REAR)
                             if fits and (g_time - st.onSince) >= self.SLIP_ON_MS then
                                 if setDiffs(vehicle, true) then

@@ -24,6 +24,7 @@
         <text name="vtpas_alert_sec_label" text="Schlupfwarnung: Dauer"/>
         <text name="vtpas_alert_sec_tip" text="Zeit (in Sekunden), die der Schlupf über dem Schwellenwert liegen muss, bevor die Warnung erscheint."/>
         <text name="vtpas_alert_slip" text="%s: übermäßiger Radschlupf (%.0f %%) seit mehr als %d s!"/>
+        <text name="vtpas_alert_diffSteer" text="Räder geradeaus stellen"/>
         <text name="vtpas_diffdelay_label" text="Differenziale: Verzögerung vor Sperre"/>
         <text name="vtpas_diffdelay_tip" text="Zeit (in Sekunden), die der Radschlupf über dem Schwellenwert liegen muss, bevor die Differenzialsperren automatisch einrasten."/>
         <text name="vtpas_decimal" text=","/>
@@ -76,7 +77,7 @@
         <text name="vtpas_wetGrip_high" text="Stark"/>
         <text name="vtpas_wetGrip_vhigh" text="Sehr stark"/>
         <text name="vtpas_turnUnlock_label" text="Differenziale: in Kurven lösen"/>
-        <text name="vtpas_turnUnlock_tip" text="Löst die Differenzialsperren automatisch, sobald der Lenkeinschlag etwa 15° überschreitet, wie in der Realität zum Schutz des Antriebsstrangs. Nach der Kurve wird wieder gesperrt, wenn der Schlupf anhält."/>
+        <text name="vtpas_turnUnlock_tip" text="Löst die Differenzialsperren automatisch, sobald der Lenkeinschlag einen Grenzwert überschreitet: 50 % des vollen Einschlags nur mit Sperre hinten, 20 % nur mit Sperre vorne, 10 % mit beiden (auch manuell eingelegte Sperren). Eine Sperre bei eingeschlagenen Rädern wird abgelehnt. Wieder gesperrt wird erst, wenn die Räder unter diesem Grenzwert sind und der Schlupf anhält."/>
         <text name="vtpas_auto4wd_label" text="Antrieb: Allrad auf dem Feld / 2WD auf der Straße"/>
         <text name="vtpas_auto4wd_tip" text="Schaltet beim Einfahren ins Feld automatisch auf Allrad und auf der Straße auf Zweiradantrieb (Enhanced Vehicle). Im Zweiradantrieb wird bei Schlupf der Hinterachse über der Schwelle zuerst Allrad zugeschaltet, danach werden bei anhaltendem Schlupf die Differenziale gesperrt; auf der Straße geht es zurück auf 2WD, sobald die Haftung zurück ist. Eine manuelle Änderung bleibt bis zum nächsten Wechsel Feld/Straße erhalten."/>
         <text name="vtpas_diffBonus_label" text="Gesperrte Differenziale: Haftungsbonus"/>
