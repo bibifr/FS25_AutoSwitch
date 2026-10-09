@@ -199,9 +199,11 @@ function AS_Diff:update(dt)
                 -- (v1.30) virage : déverrouillage obligatoire, pas de verrouillage pendant le virage
                 if self.TURN_UNLOCK then
                     local steer = getSteerDeg(vehicle)
-                    if not st.turning and steer >= self.TURN_ON_DEG then
+                    -- (v1.0.0.18) volant en butée sur le braquage réduit (SteerLimit.lua) : virage aussi
+                    local atLimit = AS_Steer ~= nil and AS_Steer.isAtLimit(vehicle)
+                    if not st.turning and (steer >= self.TURN_ON_DEG or atLimit) then
                         st.turning = true
-                    elseif st.turning and steer <= self.TURN_OFF_DEG then
+                    elseif st.turning and steer <= self.TURN_OFF_DEG and not atLimit then
                         st.turning = false
                     end
                     if st.turning then

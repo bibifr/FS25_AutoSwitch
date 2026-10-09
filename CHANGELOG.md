@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.18 | Braquage limité selon la transmission et les blocages (Enhanced Vehicle) : 4x2 complet, 4x4 80 %, blocage AR seul 50 %, AV seul 20 %, les deux 10 %. Volant en butée sur cette limite = virage : les blocages posés par AutoSwitch sautent comme au-delà de 15° |
 | 1.0.0.17 | Pneus : au moins 1 h de route pour qu'ils se nettoient (1 h à 2 h 10 selon la vitesse) |
 | 1.0.0.16 | Pneus : environ 1 h de route pour qu'ils se nettoient (35 à 70 minutes selon la vitesse) |
 | 1.0.0.15 | Pneus : nettoyage en roulant encore 4 fois plus long (40 fois moins vite que Mud System Physics d'origine, 8 à 17 minutes de route) |

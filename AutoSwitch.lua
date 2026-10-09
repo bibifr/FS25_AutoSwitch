@@ -7,6 +7,7 @@
 --   Arbiter       arbitrage entre les mods (blocages, ordre des crochets) à la place de ModMixer
 --   Tires         gonflage / dégonflage automatique (Variable Tire Pressure)
 --   Diff          différentiels, 4x4 / 4x2, déblocage en virage (Enhanced Vehicle)
+--   SteerLimit    braquage limité selon 4x2 / 4x4 et blocages de différentiel
 --   SlipAlert     alerte rouge de patinage
 --   SpeedHint     plage de vitesse conseillée + icône de patinage
 --   SeedProtect   protection du semis (Mud System Physics)
@@ -32,6 +33,7 @@ local FILES = {
     "scripts/Arbiter.lua",
     "scripts/Tires.lua",
     "scripts/Diff.lua",
+    "scripts/SteerLimit.lua",
     "scripts/SlipAlert.lua",
     "scripts/SpeedHint.lua",
     "scripts/SeedProtect.lua",
