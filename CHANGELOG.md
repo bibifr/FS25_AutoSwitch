@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.17 | Pneus : au moins 1 h de route pour qu'ils se nettoient (1 h à 2 h 10 selon la vitesse) |
 | 1.0.0.16 | Pneus : environ 1 h de route pour qu'ils se nettoient (35 à 70 minutes selon la vitesse) |
 | 1.0.0.15 | Pneus : nettoyage en roulant encore 4 fois plus long (40 fois moins vite que Mud System Physics d'origine, 8 à 17 minutes de route) |
 | 1.0.0.14 | Pneus : la saleté part 10 fois moins vite en roulant. Mud System Physics nettoyait un pneu en 12 à 26 s dès qu'il quittait la boue (pneus à 10-30 % dans la sauvegarde pour une carrosserie à 100 %) ; il faut maintenant 2 à 4 minutes. L'eau, la pluie et le lavage nettoient normalement |
