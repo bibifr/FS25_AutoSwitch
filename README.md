@@ -2,7 +2,7 @@
 
 # FS25 AutoSwitch
 
-**Version 1.0.0.13** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
+**Version 1.0.0.14** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
 
 ## French
 
@@ -25,6 +25,7 @@ Objectif: Rendre le jeux plus realiste et performant
 | Vitesse AutoDrive | Vitesse imposée selon le terrain : 20 km/h au champ, 30 km/h sur les chemins, sans limite sur la route. Réglable par tranches de 2 km/h dans les paramètres. |
 | Boue | Réglages Mud System Physics du mod (profils de sol compris) + TTD en « Difficile », appliqués automatiquement à chaque chargement. |
 | Traces de pneus | Gardées avec la sauvegarde et redessinées au chargement (60 000 points les plus récents, solo ou hôte). |
+| Saleté des pneus | Les pneus salis par la boue se nettoient 10 fois moins vite en roulant (2 à 4 minutes) ; l'eau, la pluie et le lavage les nettoient normalement. |
 | Outils stables | Rayon des roues figé sur les outils à l'arrêt : plus de sautillement dû à Mud System Physics + MoreRealistic. |
 | Boue sur roues sans frein | La résistance de boue de Mud System Physics freine aussi les roues sans frein (remorques, outils) avec MoreRealistic. |
 | Arbitrage des mods | AutoSwitch bloque ou ordonne lui-même les crochets en conflit (MoreRealistic, Use Your Tyres, DynamicDrivePro, Enhanced Vehicle, Recovery Winch), sans désactiver aucun mod. ModMixer n'est plus nécessaire. |
@@ -71,7 +72,7 @@ AutoSwitch fait partie d'un ensemble réaliste global : tous ces mods sont oblig
 
 ## English
 
-**Version 1.0.0.13** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
+**Version 1.0.0.14** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
 
 Companion mod that automates **tire pressure and differential locks** and makes **traction realistic** by making Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics and Tractor Terrain Dynamics work together, without modifying any of them. It also adds **dual-wheel racks** mounted tire by tire.
 Objective: Make game more realistic 
@@ -90,6 +91,7 @@ Objective: Make game more realistic
 | AutoDrive speed | Speed set by the ground: 20 km/h in fields, 30 km/h on tracks, no limit on roads. Adjustable in 2 km/h steps in the settings. |
 | Mud | The mod's Mud System Physics settings (ground profiles included) + TTD on "Hard", applied automatically on every load. |
 | Tire tracks | Kept with the savegame and redrawn on load (latest 60,000 points, single-player or host). |
+| Tire dirt | Muddy tires clean 10 times slower while driving (2 to 4 minutes); water, rain and washing clean them normally. |
 | Stable implements | Wheel radius frozen on stopped implements: no more bouncing caused by Mud System Physics + MoreRealistic. |
 | Mud on unbraked wheels | Mud System Physics mud drag also slows unbraked wheels (trailers, implements) with MoreRealistic. |
 | Mod arbitration | AutoSwitch blocks or orders the conflicting hooks itself (MoreRealistic, Use Your Tyres, DynamicDrivePro, Enhanced Vehicle, Recovery Winch), without disabling any mod. ModMixer is no longer needed. |

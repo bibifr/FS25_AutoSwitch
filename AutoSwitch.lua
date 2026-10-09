@@ -21,6 +21,7 @@
 --   TireTracksSave traces de pneus gardées avec la partie
 --   ImplementStabilizer outils stables à l'arrêt (rayon des roues figé)
 --   MudWheelDrag  résistance de boue sur les roues sans frein
+--   TireDirtKeep  la saleté des pneus part moins vite en roulant
 --   Settings      menu Paramètres et sauvegarde des réglages (toujours en dernier)
 -- =============================================================================
 
@@ -45,6 +46,7 @@ local FILES = {
     "scripts/TireTracksSave.lua",
     "scripts/ImplementStabilizer.lua",
     "scripts/MudWheelDrag.lua",
+    "scripts/TireDirtKeep.lua",
     "scripts/Settings.lua",
 }
 
