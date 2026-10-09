@@ -3,7 +3,7 @@
 -- Fichier chargé par AutoSwitch.lua (après Diff.lua).
 --
 --   4x2                          braquage complet
---   4x4                          80 %
+--   4x4                          90 %  (v1.0.0.19, 80 % en 1.0.0.18)
 --   blocage de diff arrière seul 50 %
 --   blocage de diff avant seul   20 %
 --   blocage des deux diffs       10 %
@@ -12,14 +12,15 @@
 -- vehicle.maxRotTime / vehicle.minRotTime ; on réduit ces deux bornes et on remet les
 -- valeurs d'origine dès que le braquage complet est de nouveau permis.
 -- Le déblocage en virage de Diff.lua s'enclenche aussi quand le volant est en butée
--- sur cette limite (voir AS_Steer.isAtLimit).
+-- sur cette limite (voir AS_Steer.isAtLimit), et ne rebloque qu'une fois les roues revenues
+-- dans l'angle permis avec les blocages (voir AS_Steer.fitsLocks).
 
 local getVehicles, isLockedValue = AS.getVehicles, AS.isLockedValue
 
 AS_Steer = {}
 AS_Steer.ENABLED       = true
 AS_Steer.FACTOR_4X2    = 1.00
-AS_Steer.FACTOR_4X4    = 0.80
+AS_Steer.FACTOR_4X4    = 0.90
 AS_Steer.FACTOR_REAR   = 0.50
 AS_Steer.FACTOR_FRONT  = 0.20
 AS_Steer.FACTOR_BOTH   = 0.10
@@ -63,6 +64,23 @@ function AS_Steer.isAtLimit(vehicle)
         return st.minSet ~= nil and st.minSet < 0 and rt <= st.minSet * AS_Steer.AT_LIMIT
     end
     return false
+end
+
+-- (v1.0.0.19) Vrai si les roues sont déjà dans l'angle permis avec ces blocages :
+-- AutoSwitch ne (re)bloque pas les diffs tant que les roues sont braquées au-delà.
+function AS_Steer.fitsLocks(vehicle, front, rear)
+    if not AS_Steer.ENABLED or type(vehicle.maxRotTime) ~= "number" or type(vehicle.minRotTime) ~= "number" then
+        return true
+    end
+    local factor = AS_Steer.FACTOR_4X2
+    if front and rear then factor = AS_Steer.FACTOR_BOTH
+    elseif front then factor = AS_Steer.FACTOR_FRONT
+    elseif rear then factor = AS_Steer.FACTOR_REAR end
+    local st = AS_Steer.state[vehicle]
+    local baseMax = (st ~= nil and st.baseMax) or vehicle.maxRotTime
+    local baseMin = (st ~= nil and st.baseMin) or vehicle.minRotTime
+    local rt = vehicle.rotatedTime or 0
+    return rt <= baseMax * factor and rt >= baseMin * factor
 end
 
 local function apply(vehicle, st, factor)

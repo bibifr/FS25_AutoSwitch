@@ -283,7 +283,9 @@ function AS_Diff:update(dt)
                         st.offSince = nil
                         if not st.engaged and not anyDiffLocked(vehicle) then
                             st.onSince = st.onSince or g_time
-                            if (g_time - st.onSince) >= self.SLIP_ON_MS then
+                            -- (v1.0.0.19) roues encore braquées au-delà de l'angle permis une fois bloqué : on attend
+                            local fits = AS_Steer == nil or AS_Steer.fitsLocks(vehicle, self.LOCK_FRONT, self.LOCK_REAR)
+                            if fits and (g_time - st.onSince) >= self.SLIP_ON_MS then
                                 if setDiffs(vehicle, true) then
                                     st.engaged, st.engagedAt = true, g_time
                                     dlog("%s : patinage %.0f%% -> différentiels VERROUILLÉS", vehicle:getName(), slip)
