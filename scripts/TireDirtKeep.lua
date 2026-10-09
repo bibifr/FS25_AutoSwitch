@@ -10,7 +10,8 @@ local getVehicles = AS.getVehicles
 --   la ferme avec des pneus presque propres (10 à 30 % dans la sauvegarde, pour
 --   une carrosserie à 100 %), et on les retrouvait propres au chargement.
 --   Ici, ce nettoyage en roulant est gardé mais CLEAN_SCALE fois moins rapide
---   (0.1 : 2 à 4 minutes au lieu de 12 à 26 secondes). Nettoyage normal pour :
+--   (v1.0.0.15 : 0.025, soit 8 à 17 minutes au lieu de 12 à 26 secondes).
+--   Nettoyage normal pour :
 --     - roue dans l'eau ;
 --     - pluie (quand le véhicule accepte d'être lavé par la pluie) ;
 --     - lavage (nettoyeur haute pression, station de lavage) : il ne passe pas
@@ -20,7 +21,7 @@ local getVehicles = AS.getVehicles
 -------------------------------------------------------------------------------
 AS_TireDirtKeep = {}
 AS_TireDirtKeep.ENABLED   = true
-AS_TireDirtKeep.CLEAN_SCALE = 0.10 -- part du nettoyage en roulant gardée (1 = Mud System Physics d'origine)
+AS_TireDirtKeep.CLEAN_SCALE = 0.025 -- part du nettoyage en roulant gardée (1 = Mud System Physics d'origine)
 AS_TireDirtKeep.RAIN_MIN  = 0.10   -- pluie à partir de laquelle les pneus peuvent se laver
 AS_TireDirtKeep.SCAN_MS   = 2000   -- recherche des nouveaux véhicules
 AS_TireDirtKeep.timer     = AS_TireDirtKeep.SCAN_MS
