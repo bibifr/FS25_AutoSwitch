@@ -5,8 +5,10 @@
         <text name="vtpas_off" text="Off"/>
         <text name="vtpas_auto" text="Automatic"/>
         <text name="vtpas_manual" text="Manual"/>
-        <text name="vtpas_slip_label" text="Wheel slip for diff lock"/>
-        <text name="vtpas_slip_tip" text="Wheel slip (%) above which differentials lock automatically (Enhanced Vehicle). Off = never."/>
+        <text name="vtpas_slip_label" text="Wheel slip for rear diff lock"/>
+        <text name="vtpas_slip_tip" text="Wheel slip (%) above which the rear differential locks automatically (Enhanced Vehicle). It unlocks at half this threshold. Off = never."/>
+        <text name="vtpas_slipFront_label" text="Wheel slip for front diff lock"/>
+        <text name="vtpas_slipFront_tip" text="Wheel slip (%) above which the front differential locks automatically (Enhanced Vehicle). It unlocks at half this threshold. Off = never."/>
         <text name="vtpas_diff_label" text="Differentials (manual driving)"/>
         <text name="vtpas_diff_tip" text="With AutoDrive or Courseplay the lock is always automatic. This setting applies when you drive yourself: Automatic = locks when slip exceeds the threshold; Manual = you control the differentials yourself."/>
         <text name="vtpas_tire_label" text="Tire pressure (manual driving)"/>
@@ -17,6 +19,10 @@
         <text name="vtpas_notifTires_tip" text="Shows a notification when a vehicle inflates or deflates its tires."/>
         <text name="vtpas_notif_diffLocked" text="%s: differentials locked (slip %.0f%%)"/>
         <text name="vtpas_notif_diffUnlocked" text="%s: differentials unlocked"/>
+        <text name="vtpas_notif_diffRearLocked" text="%s: rear differential locked (slip %.0f%%)"/>
+        <text name="vtpas_notif_diffRearUnlocked" text="%s: rear differential unlocked"/>
+        <text name="vtpas_notif_diffFrontLocked" text="%s: front differential locked (slip %.0f%%)"/>
+        <text name="vtpas_notif_diffFrontUnlocked" text="%s: front differential unlocked"/>
         <text name="vtpas_notif_tiresInflated" text="%s: tires inflated (road pressure)"/>
         <text name="vtpas_notif_tiresDeflated" text="%s: tires deflated (field pressure)"/>
         <text name="vtpas_alert_pct_label" text="Slip alert: threshold"/>
@@ -71,17 +77,16 @@
         <text name="vtpas_seedCoverFill_label" text="Fill seeder with closed cover"/>
         <text name="vtpas_seedCoverFill_tip" text="Allows seeders and planters to be filled with seeds (big bag, pallet, trailer, auger, station) even when the hopper cover is closed. Off = base game behaviour."/>
         <text name="vtpas_wetGrip_label" text="Wet ground grip (MoreRealistic)"/>
-        <text name="vtpas_wetGrip_tip" text="MoreRealistic ignores the grip computed by Mud System Physics and Tractor Terrain Dynamics. This setting reduces wheel grip in fields depending on local moisture (from 20 %, maximum at 70 %) and soil type, and lowers MoreRealistic's 'wet field' grip by 20 %. At 60 % moisture: about -23 % (low), -34 % (medium), -45 % (high), -56 % (very high)."/>
-        <text name="vtpas_wetGrip_low" text="Low"/>
-        <text name="vtpas_wetGrip_mid" text="Medium"/>
-        <text name="vtpas_wetGrip_high" text="High"/>
-        <text name="vtpas_wetGrip_vhigh" text="Very high"/>
+        <text name="vtpas_wetGrip_tip" text="MoreRealistic ignores the grip computed by Mud System Physics and Tractor Terrain Dynamics. This setting reduces wheel grip in fields depending on local moisture (from 20 %, maximum at 70 %) and soil type, and lowers MoreRealistic's 'wet field' grip by 20 %. At 60 % moisture: about -34 % (Beginner), -45 % (Easy), -56 % (Normal), -67 % (Hard), -78 % (Extreme)."/>
+        <text name="vtpas_wetGrip_beginner" text="Beginner"/>
+        <text name="vtpas_wetGrip_easy" text="Easy"/>
+        <text name="vtpas_wetGrip_normal" text="Normal"/>
+        <text name="vtpas_wetGrip_hard" text="Hard"/>
+        <text name="vtpas_wetGrip_extreme" text="Extreme"/>
         <text name="vtpas_turnUnlock_label" text="Differentials: unlock in turns"/>
         <text name="vtpas_turnUnlock_tip" text="Automatically unlocks the differentials once steering exceeds a threshold: 50 % of full steering with the rear lock only, 20 % with the front lock only, 10 % with both (manual locks included). A lock requested with the wheels turned is refused. They relock only once the wheels are back under that threshold, if slip continues."/>
         <text name="vtpas_auto4wd_label" text="Drive: 4WD in fields / 2WD on road"/>
         <text name="vtpas_auto4wd_tip" text="Automatically switches to four-wheel drive when entering a field and to two-wheel drive on the road (Enhanced Vehicle). In 2WD, if the rear axle slips beyond the threshold, 4WD engages first, then the differentials lock if slip continues; on the road it returns to 2WD once grip is back. A manual change is kept until the next field/road change."/>
-        <text name="vtpas_diffBonus_label" text="Locked differentials: grip bonus"/>
-        <text name="vtpas_diffBonus_tip" text="Adds a small grip bonus while the differentials are locked (Enhanced Vehicle), on top of the physical effect of locking: +2 % on the front wheels (front differential locked) and +3 % on the rear wheels (rear differential locked)."/>
         <text name="input_AS_DUAL_SWITCH" text="Mount / remove dual wheels"/>
         <text name="as_dual_store_function" text="On foot next to the rack, with a stopped tractor nearby: Right Ctrl + I. Full rack = mount dual wheels, empty rack = remove them. 30 min of work (15 min per tire), one tire every 15 min."/>
         <text name="as_dual_mounting" text="Dual wheel mounting started: ready at %s"/>

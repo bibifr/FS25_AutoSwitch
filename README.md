@@ -2,7 +2,7 @@
 
 # FS25 AutoSwitch
 
-**Version 1.0.0.20** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
+**Version 1.0.0.21** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
 
 ## French
 
@@ -16,8 +16,8 @@ Objectif: Rendre le jeux plus realiste et performant
 | Domaine | Ce que fait AutoSwitch |
 | --- | --- |
 | Pression des pneus | Avec AutoDrive / Courseplay : dégonflage au champ, gonflage sur route. En conduite manuelle : Automatique ou Manuel. Le regonflage automatique de VTP à 30 km/h est désactivé. |
-| Différentiels (Enhanced Vehicle) | Blocage AV + AR quand le patinage dépasse un seuil réglable, déblocage à la moitié du seuil, 4x4 au champ / 4x2 sur route, braquage 90 % en 4x4, blocages coupés au-delà de 50 % du braquage (AR seul), 20 % (AV seul) ou 10 % (les deux) et refusés roues braquées, remise à zéro au chargement. |
-| Adhérence (MoreRealistic) | Perte d'adhérence en sol humide (5 niveaux), bonus quand les différentiels sont bloqués, usure Use Your Tyres prise en compte. |
+| Différentiels (Enhanced Vehicle) | Blocage AR puis AV selon le patinage (seuils réglables, 15 % et 30 % par défaut), déblocage à la moitié du seuil, 4x4 au champ / 4x2 sur route, braquage 90 % en 4x4, blocages coupés au-delà de 50 % du braquage (AR seul), 20 % (AV seul) ou 10 % (les deux) et refusés roues braquées, remise à zéro au chargement. |
+| Adhérence (MoreRealistic) | Perte d'adhérence en sol humide (Débutant, Facile, Normal, Dur, Extrême), bonus fixe quand les différentiels sont bloqués (+4 % roues AR, +3 % roues AV), usure Use Your Tyres prise en compte. |
 | Roues jumelées | Largeur réelle prise en compte par Mud System Physics, meilleure adhérence en sol humide, correctif VTP pour les pneus à variantes de marques. |
 | Palettes de jumelées | Palettes AR (BKT 650/65R42, 4 500 €) et AV (BKT 540/65R30, 3 500 €) en boutique et au menu construction. Montage / démontage pneu par pneu (15 min de jeu par pneu), zone de stationnement au sol, repère joueur, minuteur, tracteur verrouillé pendant le chantier. |
 | Affichage | Plage de vitesse conseillée (déplaçable à la souris) et pourcentage de patinage près du compteur, alerte de patinage. |
@@ -72,7 +72,7 @@ AutoSwitch fait partie d'un ensemble réaliste global : tous ces mods sont oblig
 
 ## English
 
-**Version 1.0.0.20** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
+**Version 1.0.0.21** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
 
 Companion mod that automates **tire pressure and differential locks** and makes **traction realistic** by making Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics and Tractor Terrain Dynamics work together, without modifying any of them. It also adds **dual-wheel racks** mounted tire by tire.
 Objective: Make game more realistic 
@@ -82,8 +82,8 @@ Objective: Make game more realistic
 | Area | What AutoSwitch does |
 | --- | --- |
 | Tire pressure | With AutoDrive / Courseplay: deflate in the field, inflate on the road. Manual driving: Automatic or Manual mode. VTP's automatic re-inflation at 30 km/h is disabled. |
-| Differentials (Enhanced Vehicle) | Front + rear lock when wheel slip exceeds an adjustable threshold, unlock at half the threshold, 4WD in the field / 2WD on the road, 90 % steering in 4WD, locks released beyond 50 % of full steering (rear only), 20 % (front only) or 10 % (both) and refused with the wheels turned, reset on game load. |
-| Grip (MoreRealistic) | Grip loss on wet ground (5 levels), bonus when differentials are locked, Use Your Tyres wear taken into account. |
+| Differentials (Enhanced Vehicle) | Rear then front lock depending on wheel slip (adjustable thresholds, 15 % and 30 % by default), unlock at half the threshold, 4WD in the field / 2WD on the road, 90 % steering in 4WD, locks released beyond 50 % of full steering (rear only), 20 % (front only) or 10 % (both) and refused with the wheels turned, reset on game load. |
+| Grip (MoreRealistic) | Grip loss on wet ground (Beginner, Easy, Normal, Hard, Extreme), fixed bonus when differentials are locked (+4 % rear wheels, +3 % front wheels), Use Your Tyres wear taken into account. |
 | Dual wheels | Real width used by Mud System Physics, better grip on wet ground, VTP fix for tires with brand variants. |
 | Dual-wheel racks | Rear (BKT 650/65R42, €4,500) and front (BKT 540/65R30, €3,500) racks in the shop and the construction menu. Mounting / unmounting tire by tire (15 in-game minutes per tire), parking area on the ground, player marker, timer, tractor locked during the job. |
 | Display | Recommended speed range (movable with the mouse) and slip percentage next to the speedometer, slip warning. |

@@ -5,8 +5,10 @@
         <text name="vtpas_off" text="Désactivé"/>
         <text name="vtpas_auto" text="Automatique"/>
         <text name="vtpas_manual" text="Manuel"/>
-        <text name="vtpas_slip_label" text="Patinage pour blocage des différentiels"/>
-        <text name="vtpas_slip_tip" text="Patinage (%) au-delà duquel les différentiels se verrouillent automatiquement (Enhanced Vehicle). Désactivé = jamais."/>
+        <text name="vtpas_slip_label" text="Patinage pour blocage du diff arrière"/>
+        <text name="vtpas_slip_tip" text="Patinage (%) au-delà duquel le différentiel arrière se verrouille automatiquement (Enhanced Vehicle). Il se déverrouille à la moitié de ce seuil. Désactivé = jamais."/>
+        <text name="vtpas_slipFront_label" text="Patinage pour blocage du diff avant"/>
+        <text name="vtpas_slipFront_tip" text="Patinage (%) au-delà duquel le différentiel avant se verrouille automatiquement (Enhanced Vehicle). Il se déverrouille à la moitié de ce seuil. Désactivé = jamais."/>
         <text name="vtpas_diff_label" text="Différentiels (conduite manuelle)"/>
         <text name="vtpas_diff_tip" text="Avec AutoDrive ou Courseplay, le blocage est toujours automatique. Ce réglage s'applique lorsque vous conduisez vous-même : Automatique = blocage dès que le patinage dépasse le seuil ; Manuel = vous gérez les différentiels vous-même."/>
         <text name="vtpas_tire_label" text="Pression des pneus (conduite manuelle)"/>
@@ -17,6 +19,10 @@
         <text name="vtpas_notifTires_tip" text="Affiche une notification quand un véhicule gonfle ou dégonfle ses pneus."/>
         <text name="vtpas_notif_diffLocked" text="%s : différentiels verrouillés (patinage %.0f %%)"/>
         <text name="vtpas_notif_diffUnlocked" text="%s : différentiels déverrouillés"/>
+        <text name="vtpas_notif_diffRearLocked" text="%s : différentiel arrière verrouillé (patinage %.0f %%)"/>
+        <text name="vtpas_notif_diffRearUnlocked" text="%s : différentiel arrière déverrouillé"/>
+        <text name="vtpas_notif_diffFrontLocked" text="%s : différentiel avant verrouillé (patinage %.0f %%)"/>
+        <text name="vtpas_notif_diffFrontUnlocked" text="%s : différentiel avant déverrouillé"/>
         <text name="vtpas_notif_tiresInflated" text="%s : pneus gonflés (pression route)"/>
         <text name="vtpas_notif_tiresDeflated" text="%s : pneus dégonflés (pression champ)"/>
         <text name="vtpas_alert_pct_label" text="Alerte de patinage : seuil"/>
@@ -71,17 +77,16 @@
         <text name="vtpas_seedCoverFill_label" text="Remplir le semoir couvercle fermé"/>
         <text name="vtpas_seedCoverFill_tip" text="Permet de remplir les semoirs et planteuses en graines (big bag, palette, remorque, vis, station) même quand le couvercle de la trémie est fermé. Désactivé = comportement du jeu de base."/>
         <text name="vtpas_wetGrip_label" text="Adhérence en sol humide (MoreRealistic)"/>
-        <text name="vtpas_wetGrip_tip" text="MoreRealistic ignore l'adhérence calculée par Mud System Physics et Tractor Terrain Dynamics. Ce réglage réduit l'adhérence des roues dans les champs selon l'humidité locale (dès 20 %, maximum à 70 %) et le type de sol, et abaisse de 20 % l'adhérence « champ mouillé » de MoreRealistic. À 60 % d'humidité : environ -23 % (faible), -34 % (moyenne), -45 % (forte), -56 % (très forte)."/>
-        <text name="vtpas_wetGrip_low" text="Faible"/>
-        <text name="vtpas_wetGrip_mid" text="Moyenne"/>
-        <text name="vtpas_wetGrip_high" text="Forte"/>
-        <text name="vtpas_wetGrip_vhigh" text="Très forte"/>
+        <text name="vtpas_wetGrip_tip" text="MoreRealistic ignore l'adhérence calculée par Mud System Physics et Tractor Terrain Dynamics. Ce réglage réduit l'adhérence des roues dans les champs selon l'humidité locale (dès 20 %, maximum à 70 %) et le type de sol, et abaisse de 20 % l'adhérence « champ mouillé » de MoreRealistic. À 60 % d'humidité : environ -34 % (Débutant), -45 % (Facile), -56 % (Normal), -67 % (Dur), -78 % (Extrême)."/>
+        <text name="vtpas_wetGrip_beginner" text="Débutant"/>
+        <text name="vtpas_wetGrip_easy" text="Facile"/>
+        <text name="vtpas_wetGrip_normal" text="Normal"/>
+        <text name="vtpas_wetGrip_hard" text="Dur"/>
+        <text name="vtpas_wetGrip_extreme" text="Extrême"/>
         <text name="vtpas_turnUnlock_label" text="Différentiels : déblocage en virage"/>
         <text name="vtpas_turnUnlock_tip" text="Déverrouille automatiquement les différentiels dès que le braquage dépasse un seuil : 50 % du braquage maxi avec le blocage arrière seul, 20 % avec l'avant seul, 10 % avec les deux (y compris les blocages posés à la main). Un blocage demandé roues braquées est refusé. Ils ne se reverrouillent qu'une fois les roues revenues sous ce seuil, si le patinage continue."/>
         <text name="vtpas_auto4wd_label" text="Transmission : 4x4 champ / 4x2 route"/>
         <text name="vtpas_auto4wd_tip" text="Passe automatiquement en 4 roues motrices en entrant dans un champ et en 2 roues motrices sur la route (Enhanced Vehicle). En 2 roues motrices, si l'essieu arrière patine au-delà du seuil, le 4x4 s'enclenche d'abord, puis les différentiels se bloquent si ça patine encore ; sur route, retour en 4x2 quand l'adhérence revient. Un réglage manuel reste respecté jusqu'au prochain passage champ/route."/>
-        <text name="vtpas_diffBonus_label" text="Différentiels bloqués : bonus d'adhérence"/>
-        <text name="vtpas_diffBonus_tip" text="Ajoute un petit bonus d'adhérence tant que les différentiels sont bloqués (Enhanced Vehicle), en plus de l'effet physique du blocage : +2 % sur les roues avant (différentiel avant bloqué) et +3 % sur les roues arrière (différentiel arrière bloqué)."/>
         <text name="input_AS_DUAL_SWITCH" text="Monter / démonter les jumelées"/>
         <text name="as_dual_store_function" text="À pied près de la palette, tracteur arrêté à côté : Ctrl droit + I. Palette pleine = montage des jumelées, palette vide = démontage. 1 h de travail, un pneu toutes les 15 min."/>
         <text name="as_dual_mounting" text="Montage des jumelées commencé : prêt à %s"/>

@@ -5,8 +5,10 @@
         <text name="vtpas_off" text="Aus"/>
         <text name="vtpas_auto" text="Automatisch"/>
         <text name="vtpas_manual" text="Manuell"/>
-        <text name="vtpas_slip_label" text="Radschlupf für Differenzialsperre"/>
-        <text name="vtpas_slip_tip" text="Radschlupf (%), ab dem die Differenzialsperren automatisch einrasten (Enhanced Vehicle). Aus = nie."/>
+        <text name="vtpas_slip_label" text="Radschlupf für Sperre hinten"/>
+        <text name="vtpas_slip_tip" text="Radschlupf (%), ab dem die hintere Differenzialsperre automatisch einrastet (Enhanced Vehicle). Gelöst wird bei der Hälfte dieses Werts. Aus = nie."/>
+        <text name="vtpas_slipFront_label" text="Radschlupf für Sperre vorne"/>
+        <text name="vtpas_slipFront_tip" text="Radschlupf (%), ab dem die vordere Differenzialsperre automatisch einrastet (Enhanced Vehicle). Gelöst wird bei der Hälfte dieses Werts. Aus = nie."/>
         <text name="vtpas_diff_label" text="Differenziale (manuelles Fahren)"/>
         <text name="vtpas_diff_tip" text="Mit AutoDrive oder Courseplay ist die Sperre immer automatisch. Diese Einstellung gilt, wenn Sie selbst fahren: Automatisch = sperrt, sobald der Radschlupf den Schwellenwert überschreitet; Manuell = Sie bedienen die Differenziale selbst."/>
         <text name="vtpas_tire_label" text="Reifendruck (manuelles Fahren)"/>
@@ -17,6 +19,10 @@
         <text name="vtpas_notifTires_tip" text="Zeigt eine Benachrichtigung an, wenn ein Fahrzeug seine Reifen aufpumpt oder Luft ablässt."/>
         <text name="vtpas_notif_diffLocked" text="%s: Differenzialsperren eingerastet (Schlupf %.0f %%)"/>
         <text name="vtpas_notif_diffUnlocked" text="%s: Differenzialsperren gelöst"/>
+        <text name="vtpas_notif_diffRearLocked" text="%s: Differenzialsperre hinten eingerastet (Schlupf %.0f %%)"/>
+        <text name="vtpas_notif_diffRearUnlocked" text="%s: Differenzialsperre hinten gelöst"/>
+        <text name="vtpas_notif_diffFrontLocked" text="%s: Differenzialsperre vorne eingerastet (Schlupf %.0f %%)"/>
+        <text name="vtpas_notif_diffFrontUnlocked" text="%s: Differenzialsperre vorne gelöst"/>
         <text name="vtpas_notif_tiresInflated" text="%s: Reifen aufgepumpt (Straßendruck)"/>
         <text name="vtpas_notif_tiresDeflated" text="%s: Reifendruck abgelassen (Felddruck)"/>
         <text name="vtpas_alert_pct_label" text="Schlupfwarnung: Schwellenwert"/>
@@ -71,17 +77,16 @@
         <text name="vtpas_seedCoverFill_label" text="Sämaschine mit geschlossener Abdeckung befüllen"/>
         <text name="vtpas_seedCoverFill_tip" text="Erlaubt das Befüllen von Sämaschinen und Legemaschinen mit Saatgut (Big Bag, Palette, Anhänger, Schnecke, Station) auch bei geschlossener Behälterabdeckung. Aus = Verhalten des Basisspiels."/>
         <text name="vtpas_wetGrip_label" text="Haftung bei nassem Boden (MoreRealistic)"/>
-        <text name="vtpas_wetGrip_tip" text="MoreRealistic ignoriert die von Mud System Physics und Tractor Terrain Dynamics berechnete Haftung. Diese Einstellung verringert die Radhaftung auf dem Feld je nach lokaler Feuchte (ab 20 %, maximal bei 70 %) und Bodenart und senkt die Haftung 'nasses Feld' von MoreRealistic um 20 %. Bei 60 % Feuchte: etwa -23 % (gering), -34 % (mittel), -45 % (stark), -56 % (sehr stark)."/>
-        <text name="vtpas_wetGrip_low" text="Gering"/>
-        <text name="vtpas_wetGrip_mid" text="Mittel"/>
-        <text name="vtpas_wetGrip_high" text="Stark"/>
-        <text name="vtpas_wetGrip_vhigh" text="Sehr stark"/>
+        <text name="vtpas_wetGrip_tip" text="MoreRealistic ignoriert die von Mud System Physics und Tractor Terrain Dynamics berechnete Haftung. Diese Einstellung verringert die Radhaftung auf dem Feld je nach lokaler Feuchte (ab 20 %, maximal bei 70 %) und Bodenart und senkt die Haftung 'nasses Feld' von MoreRealistic um 20 %. Bei 60 % Feuchte: etwa -34 % (Anfänger), -45 % (Leicht), -56 % (Normal), -67 % (Schwer), -78 % (Extrem)."/>
+        <text name="vtpas_wetGrip_beginner" text="Anfänger"/>
+        <text name="vtpas_wetGrip_easy" text="Leicht"/>
+        <text name="vtpas_wetGrip_normal" text="Normal"/>
+        <text name="vtpas_wetGrip_hard" text="Schwer"/>
+        <text name="vtpas_wetGrip_extreme" text="Extrem"/>
         <text name="vtpas_turnUnlock_label" text="Differenziale: in Kurven lösen"/>
         <text name="vtpas_turnUnlock_tip" text="Löst die Differenzialsperren automatisch, sobald der Lenkeinschlag einen Grenzwert überschreitet: 50 % des vollen Einschlags nur mit Sperre hinten, 20 % nur mit Sperre vorne, 10 % mit beiden (auch manuell eingelegte Sperren). Eine Sperre bei eingeschlagenen Rädern wird abgelehnt. Wieder gesperrt wird erst, wenn die Räder unter diesem Grenzwert sind und der Schlupf anhält."/>
         <text name="vtpas_auto4wd_label" text="Antrieb: Allrad auf dem Feld / 2WD auf der Straße"/>
         <text name="vtpas_auto4wd_tip" text="Schaltet beim Einfahren ins Feld automatisch auf Allrad und auf der Straße auf Zweiradantrieb (Enhanced Vehicle). Im Zweiradantrieb wird bei Schlupf der Hinterachse über der Schwelle zuerst Allrad zugeschaltet, danach werden bei anhaltendem Schlupf die Differenziale gesperrt; auf der Straße geht es zurück auf 2WD, sobald die Haftung zurück ist. Eine manuelle Änderung bleibt bis zum nächsten Wechsel Feld/Straße erhalten."/>
-        <text name="vtpas_diffBonus_label" text="Gesperrte Differenziale: Haftungsbonus"/>
-        <text name="vtpas_diffBonus_tip" text="Fügt einen kleinen Haftungsbonus hinzu, solange die Differenziale gesperrt sind (Enhanced Vehicle), zusätzlich zur physikalischen Wirkung der Sperre: +2 % an den Vorderrädern (Vorderachse gesperrt) und +3 % an den Hinterrädern (Hinterachse gesperrt)."/>
         <text name="input_AS_DUAL_SWITCH" text="Zwillingsräder montieren / abbauen"/>
         <text name="as_dual_store_function" text="Zu Fuß neben der Palette, Traktor daneben angehalten: Strg rechts + I. Volle Palette = Zwillingsräder montieren, leere Palette = abbauen. 1 Std. Arbeit, alle 15 Min. ein Reifen."/>
         <text name="as_dual_mounting" text="Montage der Zwillingsräder begonnen: fertig um %s"/>

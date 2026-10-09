@@ -17,7 +17,8 @@ local vtpInfo, L, showTimedNotification, getVtpClass, isAutoDriveActive, isCours
 AS_Settings = {}
 AS_Settings.MOD_DIR_NAME = g_currentModName or "FS25_AutoSwitch"   -- = nom du dossier / zip du mod
 AS_Settings.VALUES = { 0, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80 }  -- 0 = désactivé
-AS_Settings.slip        = 20
+AS_Settings.slip        = 15     -- (v1.0.0.21) seuil du diff ARRIÈRE
+AS_Settings.slipFront   = 30     -- (v1.0.0.21) seuil du diff AVANT
 AS_Settings.notifyDiff  = true
 AS_Settings.notifyTires = true
 AS_Settings.helperOnly  = true   -- différentiels, conduite manuelle : true = manuel, false = automatique
@@ -49,11 +50,11 @@ AS_Settings.DURATION_LIST = { 2, 3, 4, 5, 6, 8, 10, 15, 20 }
 AS_Settings.protectSeed = true   -- protection du semis (Mud System Physics)
 AS_Settings.slipIcon = true      -- icône de patinage permanente
 AS_Settings.seedCoverFill = true  -- remplir le semoir couvercle fermé
-AS_Settings.wetGrip = 3   -- perte d'adhérence sol humide : 1 désactivée, 2 faible, 3 moyenne, 4 forte, 5 très forte
-AS_Settings.WETGRIP_LEVELS = { 0, 0.30, 0.45, 0.60, 0.75 }
+AS_Settings.wetGrip = 3   -- (v1.0.0.21) adhérence sol humide : 1 Débutant, 2 Facile, 3 Normal, 4 Dur, 5 Extrême
+AS_Settings.WETGRIP_LEVELS = { 0.45, 0.60, 0.75, 0.90, 1.05 }   -- Normal = ancienne « Très forte »
+AS_Settings.WETGRIP_FROM_OLD = { 1, 1, 1, 2, 3 }   -- ancien réglage (désactivé, faible, moyenne, forte, très forte)
 AS_Settings.auto4wd = true     -- 4x4 champ / 4x2 route
 AS_Settings.turnUnlock = true  -- déverrouillage en virage
-AS_Settings.diffBonus = true   -- bonus différentiels bloqués (+2 % avant, +3 % arrière)
 AS_Settings.hintPosX = nil          -- position déplacée à la souris (nil = par défaut)
 AS_Settings.hintPosY = nil
 
@@ -75,7 +76,8 @@ function AS_Settings:save()
         createFolder(getSettingsDir())
         local xml = createXMLFile("vtpAutoSwitchSettings", getSettingsDir() .. "settings.xml", "vtpAutoSwitch")
         if xml ~= nil and xml ~= 0 then
-            setXMLInt(xml, "vtpAutoSwitch.slip#percent", self.slip)
+            setXMLInt(xml, "vtpAutoSwitch.diffLock#rearPercent", self.slip)
+            setXMLInt(xml, "vtpAutoSwitch.diffLock#frontPercent", self.slipFront)
             setXMLBool(xml, "vtpAutoSwitch.notifications#diffs", self.notifyDiff)
             setXMLBool(xml, "vtpAutoSwitch.notifications#tires", self.notifyTires)
             setXMLBool(xml, "vtpAutoSwitch.diffMode#helperOnly", self.helperOnly)
@@ -91,9 +93,8 @@ function AS_Settings:save()
             setXMLInt(xml, "vtpAutoSwitch.notifDuration#tires", self.durTires)
             setXMLBool(xml, "vtpAutoSwitch.seedProtect#enabled", self.protectSeed)
             setXMLBool(xml, "vtpAutoSwitch.slipIcon#enabled", self.slipIcon)
-            setXMLInt(xml, "vtpAutoSwitch.wetGrip#level", self.wetGrip)
+            setXMLInt(xml, "vtpAutoSwitch.wetGrip#difficulty", self.wetGrip)
             setXMLBool(xml, "vtpAutoSwitch.drive#auto4wd", self.auto4wd)
-            setXMLBool(xml, "vtpAutoSwitch.drive#diffBonusOn", self.diffBonus)
             setXMLBool(xml, "vtpAutoSwitch.drive#turnUnlock", self.turnUnlock)
             setXMLBool(xml, "vtpAutoSwitch.seedCoverFill#enabled", self.seedCoverFill)
             setXMLInt(xml, "vtpAutoSwitch.notifDuration#diffs", self.durDiffs)
@@ -115,8 +116,11 @@ function AS_Settings:load()
         if fileExists(path) then
             local xml = loadXMLFile("vtpAutoSwitchSettings", path)
             if xml ~= nil and xml ~= 0 then
-                local v = getXMLInt(xml, "vtpAutoSwitch.slip#percent")
+                -- (v1.0.0.21) seuils séparés ; l'ancien seuil commun (slip#percent) est abandonné
+                local v = getXMLInt(xml, "vtpAutoSwitch.diffLock#rearPercent")
                 if v ~= nil then self.slip = math.max(0, math.min(100, v)) end
+                local vf = getXMLInt(xml, "vtpAutoSwitch.diffLock#frontPercent")
+                if vf ~= nil then self.slipFront = math.max(0, math.min(100, vf)) end
                 local nd = getXMLBool(xml, "vtpAutoSwitch.notifications#diffs")
                 if nd ~= nil then self.notifyDiff = nd end
                 local nt = getXMLBool(xml, "vtpAutoSwitch.notifications#tires")
@@ -143,14 +147,18 @@ function AS_Settings:load()
                 if sh ~= nil then self.speedHint = sh end
                 local scf = getXMLBool(xml, "vtpAutoSwitch.seedCoverFill#enabled")
                 if scf ~= nil then self.seedCoverFill = scf end
-                local db = getXMLBool(xml, "vtpAutoSwitch.drive#diffBonusOn")
-                if db ~= nil then self.diffBonus = db end
                 local a4 = getXMLBool(xml, "vtpAutoSwitch.drive#auto4wd")
                 if a4 ~= nil then self.auto4wd = a4 end
                 local tu = getXMLBool(xml, "vtpAutoSwitch.drive#turnUnlock")
                 if tu ~= nil then self.turnUnlock = tu end
-                local wg = getXMLInt(xml, "vtpAutoSwitch.wetGrip#level")
-                if wg ~= nil then self.wetGrip = math.max(1, math.min(5, wg)) end
+                local wg = getXMLInt(xml, "vtpAutoSwitch.wetGrip#difficulty")
+                if wg ~= nil then
+                    self.wetGrip = math.max(1, math.min(5, wg))
+                else
+                    -- (v1.0.0.21) ancien réglage : même perte, nouveau nom (Très forte -> Normal)
+                    local old = getXMLInt(xml, "vtpAutoSwitch.wetGrip#level")
+                    if old ~= nil then self.wetGrip = self.WETGRIP_FROM_OLD[math.max(1, math.min(5, old))] end
+                end
                 local si = getXMLBool(xml, "vtpAutoSwitch.slipIcon#enabled")
                 if si ~= nil then self.slipIcon = si end
                 local ps = getXMLBool(xml, "vtpAutoSwitch.seedProtect#enabled")
@@ -175,14 +183,13 @@ end
 
 -- Applique les réglages aux modules pneus et différentiels.
 function AS_Settings:apply()
-    local v = self.slip
-    if v <= 0 then
-        AS_Diff.ENABLED = false
-    else
-        AS_Diff.ENABLED = true
-        AS_Diff.SLIP_ON_PERCENT  = v
-        AS_Diff.SLIP_OFF_PERCENT = math.max(3, v * 0.5)   -- (v1.30) moitié du seuil
-    end
+    -- (v1.0.0.21) un seuil par différentiel, déblocage à la moitié du seuil ; 0 = jamais
+    local v, vf = self.slip, self.slipFront
+    AS_Diff.ENABLED = v > 0 or vf > 0
+    AS_Diff.SLIP_ON_PERCENT  = v
+    AS_Diff.SLIP_OFF_PERCENT = math.max(3, v * 0.5)
+    AS_Diff.SLIP_ON_FRONT    = vf
+    AS_Diff.SLIP_OFF_FRONT   = math.max(3, vf * 0.5)
     AS_Diff.NOTIFY   = self.notifyDiff
     AS_Tires.NOTIFY = self.notifyTires
     AS_Diff.HELPER_ONLY = self.helperOnly
@@ -199,9 +206,8 @@ function AS_Settings:apply()
     AS_NotifyDuration.tires = self.durTires * 1000
     AS_SeedProtect.ENABLED = self.protectSeed
     AS_SpeedHint.SLIP_ICON = self.slipIcon
-    AS_WetGrip.LEVEL = self.WETGRIP_LEVELS[self.wetGrip] or 0.45
+    AS_WetGrip.LEVEL = self.WETGRIP_LEVELS[self.wetGrip] or 0.75
     AS_Diff.AUTO_4WD = self.auto4wd
-    AS_WetGrip.DIFF_BONUS = self.diffBonus
     AS_Diff.TURN_UNLOCK = self.turnUnlock
     if AS_SeedCoverFill.ENABLED ~= self.seedCoverFill then AS_SeedCoverFill:setEnabled(self.seedCoverFill) end
     AS_NotifyDuration.diffs = self.durDiffs * 1000
@@ -225,7 +231,17 @@ function AS_Settings:onSlipChanged(state, element)
         self.slip = v
         self:apply()
         self:save()
-        sprint("seuil de patinage réglé sur %s", v == 0 and "désactivé" or (v .. " %"))
+        sprint("seuil de patinage du diff arrière réglé sur %s", v == 0 and "désactivé" or (v .. " %"))
+    end
+end
+
+function AS_Settings:onSlipFrontChanged(state, element)
+    local v = self.VALUES[state]
+    if v ~= nil then
+        self.slipFront = v
+        self:apply()
+        self:save()
+        sprint("seuil de patinage du diff avant réglé sur %s", v == 0 and "désactivé" or (v .. " %"))
     end
 end
 
@@ -364,12 +380,6 @@ function AS_Settings:onSeedCoverFillChanged(state, element)
     sprint("remplissage semoir couvercle fermé : %s", self.seedCoverFill and "autorisé" or "bloqué (jeu de base)")
 end
 
-function AS_Settings:onDiffBonusChanged(state, element)
-    self.diffBonus = (state == 2)
-    self:apply()
-    self:save()
-end
-
 function AS_Settings:onAuto4wdChanged(state, element)
     self.auto4wd = (state == 2)
     self:apply()
@@ -386,7 +396,7 @@ function AS_Settings:onWetGripChanged(state, element)
     self.wetGrip = math.max(1, math.min(5, state))
     self:apply()
     self:save()
-    sprint("perte d'adhérence sol humide : niveau %d", self.wetGrip)
+    sprint("adhérence sol humide : niveau %d", self.wetGrip)
 end
 
 function AS_Settings:onSlipIconChanged(state, element)
@@ -506,6 +516,14 @@ function AS_Settings:buildUI(frame)
     })
     if self.options.slip == nil then return end
 
+    self.options.slipFront = self:addRow(layout, template, {
+        label = L("vtpas_slipFront_label"),
+        tip = L("vtpas_slipFront_tip"),
+        texts = slipTexts,
+        state = self:getStateForValue(self.slipFront),
+        callback = AS_Settings.onSlipFrontChanged,
+    })
+
     local sep = L("vtpas_decimal")
     if #sep ~= 1 then sep = "." end
     local delayTexts = {}
@@ -527,14 +545,6 @@ function AS_Settings:buildUI(frame)
         texts = onOff,
         state = self.turnUnlock and 2 or 1,
         callback = AS_Settings.onTurnUnlockChanged,
-    })
-
-    self.options.diffBonus = self:addRow(layout, template, {
-        label = L("vtpas_diffBonus_label"),
-        tip = L("vtpas_diffBonus_tip"),
-        texts = onOff,
-        state = self.diffBonus and 2 or 1,
-        callback = AS_Settings.onDiffBonusChanged,
     })
 
     self.options.auto4wd = self:addRow(layout, template, {
@@ -683,7 +693,7 @@ function AS_Settings:buildUI(frame)
     self.options.wetGrip = self:addRow(layout, template, {
         label = L("vtpas_wetGrip_label"),
         tip = L("vtpas_wetGrip_tip"),
-        texts = { L("vtpas_off"), L("vtpas_wetGrip_low"), L("vtpas_wetGrip_mid"), L("vtpas_wetGrip_high"), L("vtpas_wetGrip_vhigh") },
+        texts = { L("vtpas_wetGrip_beginner"), L("vtpas_wetGrip_easy"), L("vtpas_wetGrip_normal"), L("vtpas_wetGrip_hard"), L("vtpas_wetGrip_extreme") },
         state = self.wetGrip,
         callback = AS_Settings.onWetGripChanged,
     })
@@ -712,6 +722,7 @@ end
 function AS_Settings:refreshStates()
     local o = self.options
     if o.slip ~= nil then o.slip:setState(self:getStateForValue(self.slip)) end
+    if o.slipFront ~= nil then o.slipFront:setState(self:getStateForValue(self.slipFront)) end
     if o.diffDelay ~= nil then o.diffDelay:setState(self:getIndex(self.DIFF_DELAY_LIST, self.diffDelay)) end
     if o.diffMode ~= nil then o.diffMode:setState(self.helperOnly and 2 or 1) end
     if o.tireMode ~= nil then o.tireMode:setState(self.tiresUserAuto and 1 or 2) end
@@ -724,7 +735,6 @@ function AS_Settings:refreshStates()
     if o.alertPercent ~= nil then o.alertPercent:setState(self:getIndex(self.ALERT_PERCENTS, self.alertPercent)) end
     if o.alertSeconds ~= nil then o.alertSeconds:setState(self:getIndex(self.ALERT_SECONDS_LIST, self.alertSeconds)) end
     if o.turnUnlock ~= nil then o.turnUnlock:setState(self.turnUnlock and 2 or 1) end
-    if o.diffBonus ~= nil then o.diffBonus:setState(self.diffBonus and 2 or 1) end
     if o.auto4wd ~= nil then o.auto4wd:setState(self.auto4wd and 2 or 1) end
     if o.wetGrip ~= nil then o.wetGrip:setState(self.wetGrip) end
     if o.seedCoverFill ~= nil then o.seedCoverFill:setState(self.seedCoverFill and 2 or 1) end

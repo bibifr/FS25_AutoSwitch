@@ -17,16 +17,16 @@ local vtpInfo, L, showTimedNotification, getVtpClass, isAutoDriveActive, isCours
 -------------------------------------------------------------------------------
 AS_WetGrip = {}
 -- (v1.26) effet renforcé : début à 20 %, maximum à 70 % d'humidité, niveaux plus forts
-AS_WetGrip.LEVEL = 0.45        -- perte maxi (0 = désactivé, 0.30 faible, 0.45 moyenne, 0.60 forte, 0.75 très forte)
+AS_WetGrip.LEVEL = 0.75        -- perte maxi (v1.0.0.21 : 0.45 Débutant, 0.60 Facile, 0.75 Normal, 0.90 Dur, 1.05 Extrême)
 AS_WetGrip.WET_START = 0.20    -- en dessous de cette humidité : aucune perte
 AS_WetGrip.WET_FULL = 0.70     -- humidité où la perte est maximale
-AS_WetGrip.MIN_MUL = 0.30
+AS_WetGrip.MIN_MUL = 0.20     -- (v1.0.0.21) 0.30 avant, pour laisser de la marge à Extrême
 -- (v1.26) adhérence "champ mouillé" de la table MoreRealistic abaissée de 20 % (en mémoire seulement)
 AS_WetGrip.MR_WET_FIELD_MUL = 0.80
 AS_WetGrip.CHECK_MS = 500
-AS_WetGrip.DIFF_BONUS = true          -- (v1.31) bonus d'adhérence quand les différentiels sont bloqués
-AS_WetGrip.DIFF_BONUS_FRONT = 0.02     -- +2 % sur les roues avant (différentiel avant bloqué)
-AS_WetGrip.DIFF_BONUS_REAR = 0.03      -- +3 % sur les roues arrière (différentiel arrière bloqué)
+AS_WetGrip.DIFF_BONUS = true          -- (v1.31) bonus d'adhérence quand les différentiels sont bloqués (v1.0.0.21 : toujours actif)
+AS_WetGrip.DIFF_BONUS_FRONT = 0.03     -- (v1.0.0.21) +3 % sur les roues avant (différentiel avant bloqué)
+AS_WetGrip.DIFF_BONUS_REAR = 0.04      -- (v1.0.0.21) +4 % sur les roues arrière (différentiel arrière bloqué)
 AS_WetGrip.MAX_MUL = 1.03
 -- (v1.28) champ renommé __vtpasGripMul : __vtpGripMul est déjà utilisé par Variable Tire Pressure
 -- (adhérence x2,5 en mode champ), ce qui écrasait notre réduction.

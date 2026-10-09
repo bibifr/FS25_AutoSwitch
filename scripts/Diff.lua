@@ -7,14 +7,17 @@ local vtpInfo, L, showTimedNotification, getVtpClass, isAutoDriveActive, isCours
 -------------------------------------------------------------------------------
 -- v1.3 : verrouillage automatique des différentiels (Enhanced Vehicle)
 --        selon le patinage des roues.
---   Patinage >= SLIP_ON_PERCENT  pendant SLIP_ON_MS  -> différentiels verrouillés
---   Patinage <= SLIP_OFF_PERCENT pendant SLIP_OFF_MS -> différentiels déverrouillés
+--   (v1.0.0.21) chaque diff a son seuil : arrière SLIP_ON_PERCENT, avant SLIP_ON_FRONT.
+--   Patinage >= seuil pendant SLIP_ON_MS            -> ce différentiel verrouillé
+--   Patinage <= moitié du seuil pendant SLIP_OFF_MS -> ce différentiel déverrouillé
 -- Ne déverrouille que ce que le script a lui-même verrouillé.
 -------------------------------------------------------------------------------
 AS_Diff = {}
 AS_Diff.ENABLED         = true
-AS_Diff.SLIP_ON_PERCENT  = 20     -- seuil de verrouillage (X %) (v1.30 : 20 % au lieu de 30 %)
-AS_Diff.SLIP_OFF_PERCENT = 10     -- seuil de déverrouillage = moitié du seuil de verrouillage (v1.30)
+AS_Diff.SLIP_ON_PERCENT  = 15     -- seuil de verrouillage du diff ARRIÈRE (v1.0.0.21 : 15 %)
+AS_Diff.SLIP_OFF_PERCENT = 7.5    -- déverrouillage arrière = moitié du seuil
+AS_Diff.SLIP_ON_FRONT    = 30     -- (v1.0.0.21) seuil de verrouillage du diff AVANT
+AS_Diff.SLIP_OFF_FRONT   = 15     -- déverrouillage avant = moitié du seuil
 AS_Diff.SLIP_ON_MS       = 1500    -- patinage maintenu avant de verrouiller
 AS_Diff.SLIP_OFF_MS      = 4000   -- adhérence retrouvée avant de déverrouiller (délais : à revoir plus tard)
 AS_Diff.CHECK_MS         = 100
@@ -70,6 +73,22 @@ local function setDiffs(vehicle, locked)
     return true
 end
 
+-- (v1.0.0.21) Verrouille / déverrouille un seul différentiel (1 = avant, 2 = arrière)
+local function setAxle(vehicle, idx, locked)
+    local vd = vehicle.vData
+    if vd == nil or vd.want == nil then return false end
+    vd.want[idx] = asState(vd.want[idx], locked)
+    if vehicle.raiseDirtyFlags ~= nil and vehicle.vehicleDirtyFlag ~= nil then
+        pcall(vehicle.raiseDirtyFlags, vehicle, vehicle.vehicleDirtyFlag)
+    end
+    return true
+end
+
+local function axleLocked(vehicle, idx)
+    local is = vehicle.vData.is
+    return is ~= nil and isLockedValue(is[idx])
+end
+
 -- (v1.30) Braquage maximal des roues (degrés)
 local function getSteerDeg(vehicle)
     local ws = vehicle.spec_wheels
@@ -98,7 +117,8 @@ local function setDriveMode(vehicle, mode)
 end
 
 -- Notification à l'écran indiquant quel véhicule verrouille / déverrouille ses différentiels.
-local function notifyDiff(vehicle, locked, slip)
+-- (v1.0.0.21) idx = 1 (avant) ou 2 (arrière) pour un seul différentiel, nil pour les deux
+local function notifyDiff(vehicle, locked, slip, idx)
     if not AS_Diff.NOTIFY or g_currentMission == nil then return end
 
     local name = vehicle:getName()
@@ -107,10 +127,11 @@ local function notifyDiff(vehicle, locked, slip)
     end
 
     local text
+    local axle = idx == 1 and "Front" or (idx == 2 and "Rear" or "")
     if locked then
-        text = string.format(L("vtpas_notif_diffLocked"), name, slip or 0)
+        text = string.format(L("vtpas_notif_diff" .. axle .. "Locked"), name, slip or 0)
     else
-        text = string.format(L("vtpas_notif_diffUnlocked"), name)
+        text = string.format(L("vtpas_notif_diff" .. axle .. "Unlocked"), name)
     end
 
     local t = nil
@@ -168,7 +189,7 @@ function AS_Diff:update(dt)
 
             local st = self.state[vehicle]
             if st == nil then
-                st = { engaged = false, engagedAt = 0, onSince = nil, offSince = nil, lastCheck = -10000 }
+                st = { engaged = false, eng = {}, engAt = {}, onSince = {}, offSince = {}, lastCheck = -10000 }
                 self.state[vehicle] = st
                 dlog("%s : Enhanced Vehicle détecté", vehicle:getName())
             end
@@ -199,9 +220,12 @@ function AS_Diff:update(dt)
                 -- (v1.30) virage : déverrouillage obligatoire, pas de verrouillage pendant le virage
                 if self.TURN_UNLOCK then
                     if AS_Steer ~= nil then
-                        -- (v1.0.0.20) virage = braquage au-delà du seuil de coupure des blocages
-                        -- posés par AutoSwitch (10 % du braquage complet pour les deux diffs, SteerLimit.lua)
-                        st.turning = not AS_Steer.fitsLocks(vehicle, self.LOCK_FRONT, self.LOCK_REAR)
+                        -- (v1.0.0.21) virage = braquage au-delà du seuil de coupure des blocages posés
+                        -- par AutoSwitch (SteerLimit.lua : 50 % arrière seul, 10 % les deux) ;
+                        -- sans blocage, au-delà du seuil du blocage arrière seul
+                        local f, r = st.eng[1] == true, st.eng[2] == true
+                        if not (f or r) then r = true end
+                        st.turning = not AS_Steer.fitsLocks(vehicle, f, r)
                     else
                         local steer = getSteerDeg(vehicle)
                         if not st.turning and steer >= self.TURN_ON_DEG then
@@ -211,11 +235,10 @@ function AS_Diff:update(dt)
                         end
                     end
                     if st.turning then
-                        st.onSince = nil
-                        st.offSince = nil
+                        st.onSince, st.offSince = {}, {}
                         if st.engaged then
                             setDiffs(vehicle, false)
-                            st.engaged = false
+                            st.engaged, st.eng = false, {}
                             notifyDiff(vehicle, false)
                         end
                         slip = nil   -- aucune décision de verrouillage pendant le virage
@@ -238,7 +261,7 @@ function AS_Diff:update(dt)
                     else
                         st.slip4wdSince = nil
                     end
-                    st.onSince = nil
+                    st.onSince = {}
                     slip = nil   -- pas de blocage des différentiels en 4x2
                 elseif st.slip4wd and slip ~= nil and st.zone4wd ~= true then
                     -- hors champ : retour en 4x2 quand l'adhérence est revenue
@@ -255,10 +278,13 @@ function AS_Diff:update(dt)
                 end
 
                 -- L'utilisateur a repris la main (déverrouillage manuel) ?
-                if st.engaged and (g_time - st.engagedAt) > 2000 and not anyDiffLocked(vehicle) then
-                    st.engaged = false
-                    dlog("%s : déverrouillage manuel détecté", vehicle:getName())
+                for idx = 1, 2 do
+                    if st.eng[idx] and (g_time - (st.engAt[idx] or 0)) > 2000 and not axleLocked(vehicle, idx) then
+                        st.eng[idx] = nil
+                        dlog("%s : déverrouillage manuel détecté (diff %d)", vehicle:getName(), idx)
+                    end
                 end
+                st.engaged = st.eng[1] == true or st.eng[2] == true
 
                 -- Mode manuel : le script n'agit que si AutoDrive ou Courseplay est actif sur ce véhicule
                 local allowed = true
@@ -267,54 +293,64 @@ function AS_Diff:update(dt)
                         st.helperLostSince = nil
                     else
                         allowed = false
-                        st.onSince = nil
+                        st.onSince = {}
                         st.helperLostSince = st.helperLostSince or g_time
                         if st.engaged and self.RELEASE_WHEN_HELPER_STOPS
                            and (g_time - st.helperLostSince) >= self.HELPER_RELEASE_DELAY_MS then
-                            if anyDiffLocked(vehicle) then
-                                setDiffs(vehicle, false)
-                                dlog("%s : assistant arrêté -> différentiels DÉVERROUILLÉS", vehicle:getName())
-                                notifyDiff(vehicle, false)
+                            for idx = 1, 2 do
+                                if st.eng[idx] and axleLocked(vehicle, idx) then
+                                    setAxle(vehicle, idx, false)
+                                    dlog("%s : assistant arrêté -> diff %d DÉVERROUILLÉ", vehicle:getName(), idx)
+                                    notifyDiff(vehicle, false, nil, idx)
+                                end
                             end
-                            st.engaged = false
-                            st.offSince = nil
+                            st.engaged, st.eng, st.offSince = false, {}, {}
                         end
                     end
                 end
 
+                -- (v1.0.0.21) chaque différentiel a son seuil : arrière d'abord, avant ensuite
                 if allowed and slip ~= nil then
-                    if slip >= self.SLIP_ON_PERCENT then
-                        st.offSince = nil
-                        if not st.engaged and not anyDiffLocked(vehicle) then
-                            st.onSince = st.onSince or g_time
-                            -- (v1.0.0.19) roues encore braquées au-delà du seuil de coupure des blocages : on attend
-                            local fits = AS_Steer == nil or AS_Steer.fitsLocks(vehicle, self.LOCK_FRONT, self.LOCK_REAR)
-                            if fits and (g_time - st.onSince) >= self.SLIP_ON_MS then
-                                if setDiffs(vehicle, true) then
-                                    st.engaged, st.engagedAt = true, g_time
-                                    dlog("%s : patinage %.0f%% -> différentiels VERROUILLÉS", vehicle:getName(), slip)
-                                    notifyDiff(vehicle, true, slip)
+                    for _, ax in ipairs({
+                        { idx = 2, use = self.LOCK_REAR,  on = self.SLIP_ON_PERCENT, off = self.SLIP_OFF_PERCENT },
+                        { idx = 1, use = self.LOCK_FRONT, on = self.SLIP_ON_FRONT,   off = self.SLIP_OFF_FRONT },
+                    }) do
+                        local idx = ax.idx
+                        if ax.use and ax.on > 0 and slip >= ax.on then
+                            st.offSince[idx] = nil
+                            if not st.eng[idx] and not axleLocked(vehicle, idx) then
+                                st.onSince[idx] = st.onSince[idx] or g_time
+                                -- roues braquées au-delà du seuil de coupure de ces blocages : on attend
+                                local front = idx == 1 or axleLocked(vehicle, 1)
+                                local rear  = idx == 2 or axleLocked(vehicle, 2)
+                                local fits = AS_Steer == nil or AS_Steer.fitsLocks(vehicle, front, rear)
+                                if fits and (g_time - st.onSince[idx]) >= self.SLIP_ON_MS then
+                                    if setAxle(vehicle, idx, true) then
+                                        st.eng[idx], st.engAt[idx] = true, g_time
+                                        dlog("%s : patinage %.0f%% -> diff %d VERROUILLÉ", vehicle:getName(), slip, idx)
+                                        notifyDiff(vehicle, true, slip, idx)
+                                    end
+                                    st.onSince[idx] = nil
                                 end
-                                st.onSince = nil
                             end
-                        end
-                    else
-                        st.onSince = nil
-                        if st.engaged then
-                            if slip <= self.SLIP_OFF_PERCENT then
-                                st.offSince = st.offSince or g_time
-                                if (g_time - st.offSince) >= self.SLIP_OFF_MS then
-                                    setDiffs(vehicle, false)
-                                    st.engaged = false
-                                    st.offSince = nil
-                                    dlog("%s : adhérence retrouvée -> différentiels DÉVERROUILLÉS", vehicle:getName())
-                                    notifyDiff(vehicle, false)
+                        else
+                            st.onSince[idx] = nil
+                            if st.eng[idx] then
+                                if slip <= ax.off or not ax.use or ax.on <= 0 then
+                                    st.offSince[idx] = st.offSince[idx] or g_time
+                                    if (g_time - st.offSince[idx]) >= self.SLIP_OFF_MS then
+                                        setAxle(vehicle, idx, false)
+                                        st.eng[idx], st.offSince[idx] = nil, nil
+                                        dlog("%s : adhérence retrouvée -> diff %d DÉVERROUILLÉ", vehicle:getName(), idx)
+                                        notifyDiff(vehicle, false, nil, idx)
+                                    end
+                                else
+                                    st.offSince[idx] = nil
                                 end
-                            else
-                                st.offSince = nil
                             end
                         end
                     end
+                    st.engaged = st.eng[1] == true or st.eng[2] == true
                 end
             end
         end
