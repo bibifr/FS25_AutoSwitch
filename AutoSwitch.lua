@@ -29,6 +29,8 @@
 -- v1.0.0.29 : contrôle des versions. Chaque mod requis doit être au moins à la
 -- version utilisée pour régler AutoSwitch ; sinon AutoSwitch ne démarre pas
 -- (aucun module chargé) et un message l'indique en jeu et dans log.txt.
+-- v1.0.0.30 : la 1.0.0.29 déclarait « introuvables » les mods requis chargés
+-- après AutoSwitch ; seule la version déclarée par le gestionnaire de mods compte.
 -- =============================================================================
 
 local modDir = g_currentModDirectory or ""
@@ -99,8 +101,9 @@ local function checkVersions()
     for _, req in ipairs(REQUIRED) do
         local name, minVersion = req[1], req[2]
         local ok, mod = pcall(g_modManager.getModByName, g_modManager, name)
-        local loaded = g_modIsLoaded == nil or g_modIsLoaded[name] == true
-        if not ok or mod == nil or not loaded then
+        -- pas de g_modIsLoaded : les mods requis dont le nom vient après FS25_AutoSwitch
+        -- ne sont pas encore chargés à ce moment-là (v1.0.0.30)
+        if not ok or mod == nil then
             bad[#bad + 1] = { name = name, title = name, found = nil, required = minVersion }
         else
             local cmp = compareVersions(mod.version, minVersion)
