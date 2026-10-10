@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <modDesc descVersion="106">
     <author>Fabien</author>
-    <version>1.0.0.33</version>
+    <version>1.0.0.34</version>
     <multiplayer supported="true"/>
 
     <title>
@@ -14,7 +14,7 @@
         <en><![CDATA[Companion mod that automates tire pressure and differential locks and makes traction realistic, by making Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics and Tractor Terrain Dynamics work together, without modifying any of them.
 
 - Tire pressure: with AutoDrive / Courseplay, deflate in the field and inflate on the road. Manual driving: Automatic or Manual mode. VTP's automatic re-inflation at 30 km/h is disabled.
-- Differentials (Enhanced Vehicle): rear then front lock depending on wheel slip (adjustable thresholds, 15 % and 30 % by default), unlock at half the threshold, 4WD in the field / 2WD on the road, 90 % steering in 4WD, locks released beyond 50 % of full steering (rear only), 20 % (front only) or 10 % (both) and refused with the wheels turned, reset on game load.
+- Differentials (Enhanced Vehicle): rear then front lock depending on wheel slip (adjustable thresholds, 15 % and 30 % by default), unlock at half the threshold, 2WD on asphalt and concrete only, 4WD everywhere else (fields, tracks), 90 % steering in 4WD, locks released beyond 50 % of full steering (rear only), 20 % (front only) or 10 % (both) and refused with the wheels turned, reset on game load.
 - Grip (MoreRealistic): grip loss on wet ground (Beginner, Easy, Normal, Hard, Extreme), Variable Tire Pressure field bonus capped at +15 % (+20 % with dual wheels), fixed bonus when differentials are locked (+4 % rear wheels, +3 % front wheels), Use Your Tyres wear taken into account.
 - Dual wheels: real width used by Mud System Physics, better grip on wet ground, VTP fix for tires with brand variants.
 - Dual-wheel racks: rear (BKT 650/65R42) and front (BKT 540/65R30) racks in the shop and the construction menu. Mounting / unmounting tire by tire (15 in-game minutes per tire). Park the tractor in the ground area, stand on the yellow marker and press Right Ctrl + I. Single-player only.
@@ -34,7 +34,7 @@ Required mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, Mor
         <fr><![CDATA[Mod compagnon qui automatise la pression des pneus et les différentiels et rend la traction réaliste, en faisant travailler ensemble Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics et Tractor Terrain Dynamics, sans modifier ces mods.
 
 - Pression des pneus : avec AutoDrive / Courseplay, dégonflage au champ et gonflage sur route. En conduite manuelle : Automatique ou Manuel. Le regonflage automatique de VTP à 30 km/h est désactivé.
-- Différentiels (Enhanced Vehicle) : blocage AR puis AV selon le patinage (seuils réglables, 15 % et 30 % par défaut), déblocage à la moitié du seuil, 4x4 au champ / 4x2 sur route, braquage 90 % en 4x4, blocages coupés au-delà de 50 % du braquage (AR seul), 20 % (AV seul) ou 10 % (les deux) et refusés roues braquées, remise à zéro au chargement.
+- Différentiels (Enhanced Vehicle) : blocage AR puis AV selon le patinage (seuils réglables, 15 % et 30 % par défaut), déblocage à la moitié du seuil, 4x2 sur goudron et béton seulement, 4x4 partout ailleurs (champs, chemins), braquage 90 % en 4x4, blocages coupés au-delà de 50 % du braquage (AR seul), 20 % (AV seul) ou 10 % (les deux) et refusés roues braquées, remise à zéro au chargement.
 - Adhérence (MoreRealistic) : perte d'adhérence en sol humide (Débutant, Facile, Normal, Dur, Extrême), bonus Variable Tire Pressure en champ ramené à +15 % (+20 % en jumelées), bonus fixe quand les différentiels sont bloqués (+4 % roues AR, +3 % roues AV), usure Use Your Tyres prise en compte.
 - Roues jumelées : largeur réelle prise en compte par Mud System Physics, meilleure adhérence en sol humide, correctif VTP pour les pneus à variantes de marques.
 - Palettes de jumelées : palettes AR (BKT 650/65R42) et AV (BKT 540/65R30) en boutique et au menu construction. Montage / démontage pneu par pneu (15 min de jeu par pneu). Garer le tracteur dans la zone au sol, se placer sur le repère jaune et appuyer sur Ctrl droit + I. Solo uniquement.
@@ -54,7 +54,7 @@ Mods requis : VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, More
         <de><![CDATA[Begleit-Mod, der Reifendruck und Differenzialsperren automatisiert und die Traktion realistisch macht, indem er Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics und Tractor Terrain Dynamics zusammenarbeiten lässt, ohne diese Mods zu verändern.
 
 - Reifendruck: mit AutoDrive / Courseplay Luft ablassen auf dem Feld, aufpumpen auf der Straße. Beim Selbstfahren: Automatisch oder Manuell. Das automatische Aufpumpen von VTP bei 30 km/h ist deaktiviert.
-- Differenziale (Enhanced Vehicle): Sperre hinten, dann vorne je nach Schlupf (einstellbare Werte, 15 % und 30 % als Standard), Entsperren bei der Hälfte des Werts, Allrad auf dem Feld / Zweirad auf der Straße, 90 % Lenkeinschlag bei Allrad, Sperren gelöst über 50 % des vollen Einschlags (nur hinten), 20 % (nur vorne) oder 10 % (beide) und bei eingeschlagenen Rädern abgelehnt, Zurücksetzen beim Laden.
+- Differenziale (Enhanced Vehicle): Sperre hinten, dann vorne je nach Schlupf (einstellbare Werte, 15 % und 30 % als Standard), Entsperren bei der Hälfte des Werts, Zweirad nur auf Asphalt und Beton, sonst überall Allrad (Felder, Wege), 90 % Lenkeinschlag bei Allrad, Sperren gelöst über 50 % des vollen Einschlags (nur hinten), 20 % (nur vorne) oder 10 % (beide) und bei eingeschlagenen Rädern abgelehnt, Zurücksetzen beim Laden.
 - Haftung (MoreRealistic): Haftungsverlust auf nassem Boden (Anfänger, Leicht, Normal, Schwer, Extrem), Feldbonus von Variable Tire Pressure auf +15 % begrenzt (+20 % mit Zwillingsrädern), fester Bonus bei gesperrten Differenzialen (+4 % hinten, +3 % vorne), Reifenverschleiß von Use Your Tyres berücksichtigt.
 - Zwillingsräder: tatsächliche Breite für Mud System Physics, bessere Haftung auf nassem Boden, VTP-Korrektur für Reifen mit Markenvarianten.
 - Zwillingsrad-Paletten: Paletten hinten (BKT 650/65R42) und vorne (BKT 540/65R30) im Shop und im Baumenü. Montage / Demontage Reifen für Reifen (15 Spielminuten pro Reifen). Traktor im Bodenbereich abstellen, auf die gelbe Markierung stellen und Strg rechts + I drücken. Nur Einzelspieler.

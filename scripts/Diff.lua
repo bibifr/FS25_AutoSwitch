@@ -33,7 +33,7 @@ AS_Diff.HELPER_RELEASE_DELAY_MS   = 3000   -- délai avant ce relâchement (évi
 AS_Diff.TURN_UNLOCK      = true   -- (v1.30) déverrouillage obligatoire en virage
 AS_Diff.TURN_ON_DEG      = 15     -- braquage au-delà duquel on considère un virage (sans SteerLimit.lua)
 AS_Diff.TURN_OFF_DEG     = 8      -- braquage en dessous duquel le virage est terminé
-AS_Diff.AUTO_4WD         = true   -- (v1.30) 4x4 dans les champs, 4x2 sur route (Enhanced Vehicle)
+AS_Diff.AUTO_4WD         = true   -- (v1.30) 4x4 dans les champs, 4x2 sur route (Enhanced Vehicle) ; v1.0.0.34 : 4x2 sur le dur seulement
 AS_Diff.ZONE_CHECK_MS    = 1000
 AS_Diff.state = {}
 
@@ -196,9 +196,17 @@ function AS_Diff:update(dt)
 
             -- (v1.30) 4x4 dans les champs, 4x2 sur route : appliqué seulement au changement de zone
             -- (un changement manuel reste respecté jusqu'au prochain changement de zone)
+            -- (v1.0.0.34) 4x2 seulement sur le dur (goudron, béton) : chemins de gravier, terre,
+            -- herbe et sable en 4x4 comme les champs (même détection que la vitesse AutoDrive)
             if self.AUTO_4WD and vd.want[3] ~= nil and (g_time - (st.lastZoneCheck or -10000)) >= self.ZONE_CHECK_MS then
                 st.lastZoneCheck = g_time
-                local inField = isVehicleInField(vehicle)
+                local inField
+                if AS_AdSpeed ~= nil and AS_AdSpeed.detectZone ~= nil then
+                    local ok, zone = pcall(AS_AdSpeed.detectZone, AS_AdSpeed, vehicle)
+                    if ok and zone ~= nil then inField = (zone ~= "road") end
+                else
+                    inField = isVehicleInField(vehicle)
+                end
                 if inField ~= nil then
                     if inField ~= st.zoneCandidate then
                         st.zoneCandidate, st.zoneCount = inField, 1

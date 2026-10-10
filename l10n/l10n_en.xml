@@ -83,8 +83,8 @@
         <text name="vtpas_wetGrip_normal" text="Normal"/>
         <text name="vtpas_wetGrip_hard" text="Hard"/>
         <text name="vtpas_wetGrip_extreme" text="Extreme"/>
-        <text name="vtpas_auto4wd_label" text="Drive: 4WD in fields / 2WD on road"/>
-        <text name="vtpas_auto4wd_tip" text="Automatically switches to four-wheel drive when entering a field and to two-wheel drive on the road (Enhanced Vehicle). In 2WD, if the rear axle slips beyond the threshold, 4WD engages first, then the differentials lock if slip continues; on the road it returns to 2WD once grip is back. A manual change is kept until the next field/road change."/>
+        <text name="vtpas_auto4wd_label" text="Drive: 2WD on asphalt and concrete, 4WD elsewhere"/>
+        <text name="vtpas_auto4wd_tip" text="Automatically switches to two-wheel drive on hard surfaces (asphalt road, concrete) and to four-wheel drive everywhere else: fields, gravel or dirt tracks, grass (Enhanced Vehicle). In 2WD, if the rear axle slips beyond the threshold, 4WD engages first, then the differentials lock if slip continues; on the road it returns to 2WD once grip is back. A manual change is kept until the next ground change."/>
         <text name="input_AS_DUAL_SWITCH" text="Mount / remove dual wheels"/>
         <text name="as_dual_store_function" text="On foot next to the rack, with a stopped tractor nearby: Right Ctrl + I. Full rack = mount dual wheels, empty rack = remove them. 30 min of work (15 min per tire), one tire every 15 min."/>
         <text name="as_dual_mounting" text="Dual wheel mounting started: ready at %s"/>

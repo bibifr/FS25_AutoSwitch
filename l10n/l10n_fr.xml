@@ -83,8 +83,8 @@
         <text name="vtpas_wetGrip_normal" text="Normal"/>
         <text name="vtpas_wetGrip_hard" text="Dur"/>
         <text name="vtpas_wetGrip_extreme" text="Extrême"/>
-        <text name="vtpas_auto4wd_label" text="Transmission : 4x4 champ / 4x2 route"/>
-        <text name="vtpas_auto4wd_tip" text="Passe automatiquement en 4 roues motrices en entrant dans un champ et en 2 roues motrices sur la route (Enhanced Vehicle). En 2 roues motrices, si l'essieu arrière patine au-delà du seuil, le 4x4 s'enclenche d'abord, puis les différentiels se bloquent si ça patine encore ; sur route, retour en 4x2 quand l'adhérence revient. Un réglage manuel reste respecté jusqu'au prochain passage champ/route."/>
+        <text name="vtpas_auto4wd_label" text="Transmission : 4x2 sur goudron et béton, 4x4 ailleurs"/>
+        <text name="vtpas_auto4wd_tip" text="Passe automatiquement en 2 roues motrices sur le dur (route goudronnée, béton) et en 4 roues motrices partout ailleurs : champs, chemins de gravier ou de terre, herbe (Enhanced Vehicle). En 2 roues motrices, si l'essieu arrière patine au-delà du seuil, le 4x4 s'enclenche d'abord, puis les différentiels se bloquent si ça patine encore ; sur route, retour en 4x2 quand l'adhérence revient. Un réglage manuel reste respecté jusqu'au prochain changement de terrain."/>
         <text name="input_AS_DUAL_SWITCH" text="Monter / démonter les jumelées"/>
         <text name="as_dual_store_function" text="À pied près de la palette, tracteur arrêté à côté : Ctrl droit + I. Palette pleine = montage des jumelées, palette vide = démontage. 1 h de travail, un pneu toutes les 15 min."/>
         <text name="as_dual_mounting" text="Montage des jumelées commencé : prêt à %s"/>
