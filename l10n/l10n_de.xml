@@ -132,5 +132,8 @@
         <text name="vtpas_versionDisabled" text="AutoSwitch ist deaktiviert: einige benötigte Mods sind zu alt. Bitte aktualisieren und den Spielstand neu laden."/>
         <text name="vtpas_versionLine" text="%s: Version %s, mindestens %s erforderlich"/>
         <text name="vtpas_versionMissing" text="%s: nicht gefunden, mindestens %s erforderlich"/>
+        <text name="vtpas_sleepHours" text="+%d Std."/>
+        <text name="vtpas_sleepDay" text="%d Tag"/>
+        <text name="vtpas_sleepDays" text="%d Tage"/>
     </texts>
 </l10n>

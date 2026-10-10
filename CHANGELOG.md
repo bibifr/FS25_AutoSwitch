@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.32 | Menu Dormir : la liste propose +1 h à +23 h, puis 1 à 7 jours (au lieu d'une heure de réveil, 24 h au plus). Les jours passent normalement pendant le sommeil |
 | 1.0.0.31 | Nouvelles icônes du magasin pour les palettes de pneus AR et AV |
 | 1.0.0.30 | Contrôle des versions corrigé : la 1.0.0.29 déclarait « introuvables » les mods requis chargés après AutoSwitch (tous sauf AutoDrive) et désactivait AutoSwitch à tort |
 | 1.0.0.29 | Mud System Physics 1.3.6 et Tractor Terrain Dynamics 1.0.3.7 (bêta). Pont MSP → TTD : au champ, TTD reçoit l'humidité locale de MSP, et le frein de boue, la perte d'adhérence et la charge moteur de MSP sont coupés quand TTD gère le véhicule (plus de résistance en double). Chemins mouillés : pénalité du préréglage « Difficile » de TTD retirée. Calibrateur de TTD bloqué (Ctrl+C et clic molette prenaient les commandes). Contrôle des versions : si un mod requis est plus ancien que la version minimale, AutoSwitch ne démarre pas et l'indique en jeu et dans log.txt |
