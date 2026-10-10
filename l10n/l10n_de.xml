@@ -133,7 +133,10 @@
         <text name="vtpas_versionLine" text="%s: Version %s, mindestens %s erforderlich"/>
         <text name="vtpas_versionMissing" text="%s: nicht gefunden, mindestens %s erforderlich"/>
         <text name="vtpas_sleepHours" text="+%d Std."/>
-        <text name="vtpas_sleepDay" text="%d Tag"/>
-        <text name="vtpas_sleepDays" text="%d Tage"/>
+        <text name="vtpas_sleepDay" text="+%d Tag"/>
+        <text name="vtpas_sleepDays" text="+%d Tage"/>
+        <text name="vtpas_sleepText" text="Wählen Sie, wie lange Sie schlafen: Stunden und Tage."/>
+        <text name="vtpas_sleepHoursTitle" text="Zeit in Stunden"/>
+        <text name="vtpas_sleepDaysTitle" text="Zeit in Tagen"/>
     </texts>
 </l10n>

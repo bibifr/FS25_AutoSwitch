@@ -2,7 +2,7 @@
 
 # FS25 AutoSwitch
 
-**Version 1.0.0.30** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
+**Version 1.0.0.33** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
 
 ## French
 
@@ -29,6 +29,7 @@ Objectif: Rendre le jeux plus realiste et performant
 | Outils stables | Rayon des roues figé sur les outils à l'arrêt : plus de sautillement dû à Mud System Physics + MoreRealistic. |
 | Boue sur roues sans frein | La résistance de boue de Mud System Physics freine aussi les roues sans frein (remorques, outils) avec MoreRealistic. |
 | Arbitrage des mods | AutoSwitch bloque ou ordonne lui-même les crochets en conflit (MoreRealistic, Use Your Tyres, DynamicDrivePro, Enhanced Vehicle, Recovery Winch), sans désactiver aucun mod. ModMixer n'est plus nécessaire. |
+| Dormir | Deux curseurs dans la fenêtre Dormir : temps en heures (+0 à +23 h) et temps en jours (+0 à +7), cumulés. Plus de limite de 24 h ; les jours passent normalement (cultures, ventes, salaires). |
 
 ## Utiliser les palettes de jumelées
 
@@ -72,7 +73,7 @@ AutoSwitch fait partie d'un ensemble réaliste global : tous ces mods sont oblig
 
 ## English
 
-**Version 1.0.0.30** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
+**Version 1.0.0.33** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
 
 Companion mod that automates **tire pressure and differential locks** and makes **traction realistic** by making Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics and Tractor Terrain Dynamics work together, without modifying any of them. It also adds **dual-wheel racks** mounted tire by tire.
 Objective: Make game more realistic 
@@ -95,6 +96,7 @@ Objective: Make game more realistic
 | Stable implements | Wheel radius frozen on stopped implements: no more bouncing caused by Mud System Physics + MoreRealistic. |
 | Mud on unbraked wheels | Mud System Physics mud drag also slows unbraked wheels (trailers, implements) with MoreRealistic. |
 | Mod arbitration | AutoSwitch blocks or orders the conflicting hooks itself (MoreRealistic, Use Your Tyres, DynamicDrivePro, Enhanced Vehicle, Recovery Winch), without disabling any mod. ModMixer is no longer needed. |
+| Sleep | Two sliders in the Sleep dialog: time in hours (+0 to +23 h) and time in days (+0 to +7), added together. No more 24 h limit; days pass normally (crops, sales, wages). |
 
 ### Using the dual-wheel racks
 
