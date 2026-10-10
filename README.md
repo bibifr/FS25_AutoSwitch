@@ -2,7 +2,7 @@
 
 # FS25 AutoSwitch
 
-**Version 1.0.0.25** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
+**Version 1.0.0.29** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
 
 ## French
 
@@ -23,7 +23,7 @@ Objectif: Rendre le jeux plus realiste et performant
 | Affichage | Plage de vitesse conseillée (déplaçable à la souris) et pourcentage de patinage près du compteur, alerte de patinage. |
 | Semis | Protection du semis, remplissage du semoir couvercle fermé, ressemis direct sur bandes écrasées. |
 | Vitesse AutoDrive | Vitesse imposée selon le terrain : 20 km/h au champ, 30 km/h sur les chemins, sans limite sur la route. Réglable par tranches de 2 km/h dans les paramètres. |
-| Boue | Réglages Mud System Physics du mod (profils de sol compris) + TTD en « Difficile », appliqués automatiquement à chaque chargement. |
+| Boue | Réglages Mud System Physics du mod (profils de sol compris) + TTD en « Difficile », appliqués automatiquement à chaque chargement. Pont MSP → TTD : au champ, TTD reçoit l'humidité locale de Mud System Physics et la résistance n'est pas appliquée deux fois. Chemins mouillés : la pénalité « Difficile » de TTD est retirée (chemins à nouveau praticables). Calibrateur de TTD bloqué (Ctrl+C et clic molette). |
 | Traces de pneus | Gardées avec la sauvegarde et redessinées au chargement (60 000 points les plus récents, solo ou hôte). |
 | Saleté des pneus | Les pneus salis par la boue mettent au moins 1 h de route à se nettoyer (1 h à 2 h 10 selon la vitesse) ; l'eau, la pluie et le lavage les nettoient normalement. |
 | Outils stables | Rayon des roues figé sur les outils à l'arrêt : plus de sautillement dû à Mud System Physics + MoreRealistic. |
@@ -41,21 +41,21 @@ Les jumelées doivent exister dans la **même marque de pneus** que ceux du trac
 
 ## Mods requis
 
-- [Variable Tire Pressure](https://www.farming-simulator.com/mod.php?mod_id=347991&title=fs2025)
-- [Enhanced Vehicle](https://github.com/ZhooL/FS25_EnhancedVehicle/releases)
-- [AutoDrive](https://github.com/Stephan-S/FS25_AutoDrive/releases)
-- [Courseplay](https://github.com/Courseplay/Courseplay_FS25/releases)
-- [MoreRealistic](https://github.com/quadural/MoreRealistic_FS25/blob/main/MoreRealistic.zip)
-- [MoreRealistic XML Databank](https://github.com/quadural/MoreRealistic_FS25/blob/main/moreRealisticXmlDatabank.zip)
-- [Mud System Physics](https://www.kingmods.net/en/fs25/mods/73208/mud-system-physics)
-- [Tractor Terrain Dynamics](https://www.farming-simulator.com/mod.php?mod_id=369531&title=fs2025)
-- [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025)
-- [Use Up Your Tyres](https://www.farming-simulator.com/mod.php?mod_id=321793&title=fs2025)
-- [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases)
-- [Crop Destruction Overhaul](https://www.farming-simulator.com/mod.php?mod_id=356527&title=fs2025)
-- [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025)
+- [Variable Tire Pressure](https://www.farming-simulator.com/mod.php?mod_id=347991&title=fs2025) : version 1.0.0.13 minimum
+- [Enhanced Vehicle](https://github.com/ZhooL/FS25_EnhancedVehicle/releases) : version 1.1.7.1 minimum
+- [AutoDrive](https://github.com/Stephan-S/FS25_AutoDrive/releases) : version 3.0.1.4 minimum
+- [Courseplay](https://github.com/Courseplay/Courseplay_FS25/releases) : version 8.1.0.3 minimum
+- [MoreRealistic](https://github.com/quadural/MoreRealistic_FS25/blob/main/MoreRealistic.zip) : version 0.26.09.13 minimum
+- [MoreRealistic XML Databank](https://github.com/quadural/MoreRealistic_FS25/blob/main/moreRealisticXmlDatabank.zip) : version 1.0.0.1 minimum
+- [Mud System Physics](https://www.kingmods.net/en/fs25/mods/73208/mud-system-physics) : version 1.3.6.0 minimum
+- [Tractor Terrain Dynamics](https://www.kingmods.net/en/fs25/mods/78890/tractor-terrain-dynamics) : version 1.0.3.7 minimum (bêta)
+- [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025) : version 1.0.1.0 minimum
+- [Use Up Your Tyres](https://www.farming-simulator.com/mod.php?mod_id=321793&title=fs2025) : version 1.1.0.0 minimum
+- [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases) : version 1.6.0.0 minimum
+- [Crop Destruction Overhaul](https://www.farming-simulator.com/mod.php?mod_id=356527&title=fs2025) : version 1.1.0.0 minimum
+- [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025) : version 2.0.0.8 minimum
 
-AutoSwitch fait partie d'un ensemble réaliste global : tous ces mods sont obligatoires.
+AutoSwitch fait partie d'un ensemble réaliste global : tous ces mods sont obligatoires, au moins dans la version indiquée. Si l'un d'eux est plus ancien, AutoSwitch ne démarre pas et le signale en jeu.
 
 ## Installation
 
@@ -72,7 +72,7 @@ AutoSwitch fait partie d'un ensemble réaliste global : tous ces mods sont oblig
 
 ## English
 
-**Version 1.0.0.25** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
+**Version 1.0.0.29** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
 
 Companion mod that automates **tire pressure and differential locks** and makes **traction realistic** by making Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics and Tractor Terrain Dynamics work together, without modifying any of them. It also adds **dual-wheel racks** mounted tire by tire.
 Objective: Make game more realistic 
@@ -89,7 +89,7 @@ Objective: Make game more realistic
 | Display | Recommended speed range (movable with the mouse) and slip percentage next to the speedometer, slip warning. |
 | Sowing | Seeding protection, seeder filling with the lid closed, direct re-sowing on crushed strips. |
 | AutoDrive speed | Speed set by the ground: 20 km/h in fields, 30 km/h on tracks, no limit on roads. Adjustable in 2 km/h steps in the settings. |
-| Mud | The mod's Mud System Physics settings (ground profiles included) + TTD on "Hard", applied automatically on every load. |
+| Mud | The mod's Mud System Physics settings (ground profiles included) + TTD on "Hard", applied automatically on every load. MSP → TTD bridge: on fields, TTD gets Mud System Physics' local wetness and resistance is not applied twice. Wet paths: TTD's "Hard" penalty is removed (paths are drivable again). TTD calibrator blocked (Ctrl+C and middle click). |
 | Tire tracks | Kept with the savegame and redrawn on load (latest 60,000 points, single-player or host). |
 | Tire dirt | Muddy tires take at least 1 hour of driving to clean (1 h to 2 h 10 depending on speed); water, rain and washing clean them normally. |
 | Stable implements | Wheel radius frozen on stopped implements: no more bouncing caused by Mud System Physics + MoreRealistic. |
@@ -107,21 +107,21 @@ Dual wheels must exist in the **same tire brand** as the tractor's tires. Wheel 
 
 ### Required mods
 
-- [Variable Tire Pressure](https://www.farming-simulator.com/mod.php?mod_id=347991&title=fs2025)
-- [Enhanced Vehicle](https://github.com/ZhooL/FS25_EnhancedVehicle/releases)
-- [AutoDrive](https://github.com/Stephan-S/FS25_AutoDrive/releases)
-- [Courseplay](https://github.com/Courseplay/Courseplay_FS25/releases)
-- [MoreRealistic](https://github.com/quadural/MoreRealistic_FS25/blob/main/MoreRealistic.zip)
-- [MoreRealistic XML Databank](https://github.com/quadural/MoreRealistic_FS25/blob/main/moreRealisticXmlDatabank.zip)
-- [Mud System Physics](https://www.kingmods.net/en/fs25/mods/73208/mud-system-physics)
-- [Tractor Terrain Dynamics](https://www.farming-simulator.com/mod.php?mod_id=369531&title=fs2025)
-- [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025)
-- [Use Up Your Tyres](https://www.farming-simulator.com/mod.php?mod_id=321793&title=fs2025)
-- [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases)
-- [Crop Destruction Overhaul](https://www.farming-simulator.com/mod.php?mod_id=356527&title=fs2025)
-- [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025)
+- [Variable Tire Pressure](https://www.farming-simulator.com/mod.php?mod_id=347991&title=fs2025): version 1.0.0.13 minimum
+- [Enhanced Vehicle](https://github.com/ZhooL/FS25_EnhancedVehicle/releases): version 1.1.7.1 minimum
+- [AutoDrive](https://github.com/Stephan-S/FS25_AutoDrive/releases): version 3.0.1.4 minimum
+- [Courseplay](https://github.com/Courseplay/Courseplay_FS25/releases): version 8.1.0.3 minimum
+- [MoreRealistic](https://github.com/quadural/MoreRealistic_FS25/blob/main/MoreRealistic.zip): version 0.26.09.13 minimum
+- [MoreRealistic XML Databank](https://github.com/quadural/MoreRealistic_FS25/blob/main/moreRealisticXmlDatabank.zip): version 1.0.0.1 minimum
+- [Mud System Physics](https://www.kingmods.net/en/fs25/mods/73208/mud-system-physics): version 1.3.6.0 minimum
+- [Tractor Terrain Dynamics](https://www.kingmods.net/en/fs25/mods/78890/tractor-terrain-dynamics): version 1.0.3.7 minimum (beta)
+- [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025): version 1.0.1.0 minimum
+- [Use Up Your Tyres](https://www.farming-simulator.com/mod.php?mod_id=321793&title=fs2025): version 1.1.0.0 minimum
+- [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases): version 1.6.0.0 minimum
+- [Crop Destruction Overhaul](https://www.farming-simulator.com/mod.php?mod_id=356527&title=fs2025): version 1.1.0.0 minimum
+- [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025): version 2.0.0.8 minimum
 
-AutoSwitch is part of a global realistic pack: all these mods are required.
+AutoSwitch is part of a global realistic pack: all these mods are required, at least in the version shown. If one of them is older, AutoSwitch does not start and says so in game.
 
 ### Installation
 

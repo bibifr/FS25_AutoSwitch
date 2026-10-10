@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.29 | Mud System Physics 1.3.6 et Tractor Terrain Dynamics 1.0.3.7 (bêta). Pont MSP → TTD : au champ, TTD reçoit l'humidité locale de MSP, et le frein de boue, la perte d'adhérence et la charge moteur de MSP sont coupés quand TTD gère le véhicule (plus de résistance en double). Chemins mouillés : pénalité du préréglage « Difficile » de TTD retirée. Calibrateur de TTD bloqué (Ctrl+C et clic molette prenaient les commandes). Contrôle des versions : si un mod requis est plus ancien que la version minimale, AutoSwitch ne démarre pas et l'indique en jeu et dans log.txt |
 | 1.0.0.25 | Menu : ligne « Différentiels : déblocage en virage » retirée. La coupure des blocages selon le braquage et le refus roues braquées sont toujours actifs |
 | 1.0.0.24 | Nouvelle icône du mod : pneu de tracteur avec « AS » au centre, aux couleurs vert / jaune |
 | 1.0.0.23 | Adhérence : le bonus de Variable Tire Pressure en champ (x2,5 par défaut, jusqu'à x5 en jumelées) est ramené à +15 % (+20 % en jumelées), VTP reste actif. Une roue dont le jeu ne donne pas le type de sol (vu sur les roues arrière d'un Fendt 942) a maintenant aussi sa perte en sol humide. Relevé de la 1.0.0.22 retiré du log |

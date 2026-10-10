@@ -129,5 +129,8 @@
         <text name="vtpas_adRoad_label" text="AutoDrive: speed on roads"/>
         <text name="vtpas_adRoad_tip" text="Speed imposed on AutoDrive on paved roads. No limit: the tractor's maximum speed."/>
         <text name="vtpas_adNoLimit" text="No limit"/>
+        <text name="vtpas_versionDisabled" text="AutoSwitch is disabled: some required mods are too old. Update them, then reload the savegame."/>
+        <text name="vtpas_versionLine" text="%s: version %s, %s minimum required"/>
+        <text name="vtpas_versionMissing" text="%s: not found, %s minimum required"/>
     </texts>
 </l10n>
