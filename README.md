@@ -2,7 +2,7 @@
 
 # FS25 AutoSwitch
 
-**Version 1.0.0.34** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
+**Version 1.0.0.35** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
 
 ## French
 
@@ -20,7 +20,7 @@ Objectif: Rendre le jeux plus realiste et performant
 | Adhérence (MoreRealistic) | Perte d'adhérence en sol humide (Débutant, Facile, Normal, Dur, Extrême), bonus Variable Tire Pressure en champ ramené à +15 % (+20 % en jumelées), bonus fixe quand les différentiels sont bloqués (+4 % roues AR, +3 % roues AV), usure Use Your Tyres prise en compte. |
 | Roues jumelées | Largeur réelle prise en compte par Mud System Physics, meilleure adhérence en sol humide, correctif VTP pour les pneus à variantes de marques. |
 | Palettes de jumelées | Palettes AR (BKT 650/65R42, 4 500 €) et AV (BKT 540/65R30, 3 500 €) en boutique et au menu construction. Montage / démontage pneu par pneu (15 min de jeu par pneu), zone de stationnement au sol, repère joueur, minuteur, tracteur verrouillé pendant le chantier. |
-| Affichage | Plage de vitesse conseillée (déplaçable à la souris) et pourcentage de patinage près du compteur, alerte de patinage. |
+| Affichage | Plage de vitesse conseillée (déplaçable à la souris) et tracteur vu de dessus près du compteur (ponts bloqués, 4x4, patinage de chaque roue ou par pont bloqué), alerte de patinage. |
 | Semis | Protection du semis, remplissage du semoir couvercle fermé, ressemis direct sur bandes écrasées. |
 | Vitesse AutoDrive | Vitesse imposée selon le terrain : 20 km/h au champ, 30 km/h sur les chemins, sans limite sur la route. Réglable par tranches de 2 km/h dans les paramètres. |
 | Boue | Réglages Mud System Physics du mod (profils de sol compris) + TTD en « Difficile », appliqués automatiquement à chaque chargement. Pont MSP → TTD : au champ, TTD reçoit l'humidité locale de Mud System Physics et la résistance n'est pas appliquée deux fois. Chemins mouillés : la pénalité « Difficile » de TTD est retirée (chemins à nouveau praticables). Calibrateur de TTD bloqué (Ctrl+C et clic molette). |
@@ -73,7 +73,7 @@ AutoSwitch fait partie d'un ensemble réaliste global : tous ces mods sont oblig
 
 ## English
 
-**Version 1.0.0.34** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
+**Version 1.0.0.35** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
 
 Companion mod that automates **tire pressure and differential locks** and makes **traction realistic** by making Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics and Tractor Terrain Dynamics work together, without modifying any of them. It also adds **dual-wheel racks** mounted tire by tire.
 Objective: Make game more realistic 
@@ -87,7 +87,7 @@ Objective: Make game more realistic
 | Grip (MoreRealistic) | Grip loss on wet ground (Beginner, Easy, Normal, Hard, Extreme), Variable Tire Pressure field bonus capped at +15 % (+20 % with dual wheels), fixed bonus when differentials are locked (+4 % rear wheels, +3 % front wheels), Use Your Tyres wear taken into account. |
 | Dual wheels | Real width used by Mud System Physics, better grip on wet ground, VTP fix for tires with brand variants. |
 | Dual-wheel racks | Rear (BKT 650/65R42, €4,500) and front (BKT 540/65R30, €3,500) racks in the shop and the construction menu. Mounting / unmounting tire by tire (15 in-game minutes per tire), parking area on the ground, player marker, timer, tractor locked during the job. |
-| Display | Recommended speed range (movable with the mouse) and slip percentage next to the speedometer, slip warning. |
+| Display | Recommended speed range (movable with the mouse) and top view of the tractor next to the speedometer (locked axles, 4WD, slip of each wheel or per locked axle), slip warning. |
 | Sowing | Seeding protection, seeder filling with the lid closed, direct re-sowing on crushed strips. |
 | AutoDrive speed | Speed set by the ground: 20 km/h in fields, 30 km/h on tracks, no limit on roads. Adjustable in 2 km/h steps in the settings. |
 | Mud | The mod's Mud System Physics settings (ground profiles included) + TTD on "Hard", applied automatically on every load. MSP → TTD bridge: on fields, TTD gets Mud System Physics' local wetness and resistance is not applied twice. Wet paths: TTD's "Hard" penalty is removed (paths are drivable again). TTD calibrator blocked (Ctrl+C and middle click). |

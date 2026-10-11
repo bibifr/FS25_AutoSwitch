@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.35 | Affichage : l'icône de patinage devient le tracteur vu de dessus (pont AV / AR bloqué en rouge, transmission 4x4 en vert, selon Enhanced Vehicle), avec le patinage de chaque roue ; un pont bloqué n'affiche plus qu'un patinage, centré sur le pont |
 | 1.0.0.34 | Transmission : 4x2 seulement sur le dur (route goudronnée, béton), 4x4 sur les chemins de gravier, de terre, l'herbe et le sable comme dans les champs |
 | 1.0.0.33 | Menu Dormir en deux curseurs avec leur titre : « Temps en heures » (+0 à +23 h, +0 h par défaut) et « Temps en jours » (+0 à +7, +1 jour par défaut), cumulés. Fenêtre agrandie |
 | 1.0.0.32 | Menu Dormir : la liste propose +1 h à +23 h, puis 1 à 7 jours (au lieu d'une heure de réveil, 24 h au plus). Les jours passent normalement pendant le sommeil |

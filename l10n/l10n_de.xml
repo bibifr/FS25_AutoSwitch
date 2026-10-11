@@ -73,7 +73,7 @@
         <text name="vtpas_protectSeed_label" text="Saat schützen (Rückwärts / Sämaschine)"/>
         <text name="vtpas_protectSeed_tip" text="Verhindert, dass Mud System Physics die Saat unter den Rädern löscht, wenn das Fahrzeug rückwärts fährt, sowie unter den Rädern einer Sämaschine oder Legemaschine. Andere Schäden im Schlamm bleiben erhalten."/>
         <text name="vtpas_slipIcon_label" text="Schlupf-Symbol"/>
-        <text name="vtpas_slipIcon_tip" text="Zeigt (im Fahrzeug) dauerhaft ein Radsymbol mit dem Schlupf in Prozent darunter, an den Geschwindigkeitsbereich angehängt und mit ihm verschiebbar. Farbe: weiß, gelb ab 10 %, orange an der Differenzialschwelle, rot an der Warnschwelle."/>
+        <text name="vtpas_slipIcon_tip" text="Zeigt (im Fahrzeug) dauerhaft den Traktor von oben (gesperrte Achsen rot, Allradantrieb grün) mit dem Schlupf jedes Rads oder einem Wert pro gesperrter Achse, an den Geschwindigkeitsbereich angehängt und mit ihm verschiebbar. Farbe: weiß, gelb ab 10 %, orange an der Differenzialschwelle, rot an der Warnschwelle."/>
         <text name="vtpas_seedCoverFill_label" text="Sämaschine mit geschlossener Abdeckung befüllen"/>
         <text name="vtpas_seedCoverFill_tip" text="Erlaubt das Befüllen von Sämaschinen und Legemaschinen mit Saatgut (Big Bag, Palette, Anhänger, Schnecke, Station) auch bei geschlossener Behälterabdeckung. Aus = Verhalten des Basisspiels."/>
         <text name="vtpas_wetGrip_label" text="Haftung bei nassem Boden (MoreRealistic)"/>

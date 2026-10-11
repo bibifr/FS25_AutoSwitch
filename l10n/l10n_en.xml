@@ -73,7 +73,7 @@
         <text name="vtpas_protectSeed_label" text="Protect sown crops (reverse / seeder)"/>
         <text name="vtpas_protectSeed_tip" text="Prevents Mud System Physics from erasing crops under the wheels when the vehicle reverses, and under the wheels of a seeder or planter. Other mud crop damage is kept."/>
         <text name="vtpas_slipIcon_label" text="Slip icon"/>
-        <text name="vtpas_slipIcon_tip" text="Always shows (in a vehicle) a wheel icon with the slip percentage below it, attached to the speed range and moved with it. Colour: white, yellow from 10 %, orange at the differential threshold, red at the alert threshold."/>
+        <text name="vtpas_slipIcon_tip" text="Always shows (in a vehicle) the tractor seen from above (locked axles in red, 4WD driveline in green) with the slip of each wheel, or a single percentage per locked axle, attached to the speed range and moved with it. Colour: white, yellow from 10 %, orange at the differential threshold, red at the alert threshold."/>
         <text name="vtpas_seedCoverFill_label" text="Fill seeder with closed cover"/>
         <text name="vtpas_seedCoverFill_tip" text="Allows seeders and planters to be filled with seeds (big bag, pallet, trailer, auger, station) even when the hopper cover is closed. Off = base game behaviour."/>
         <text name="vtpas_wetGrip_label" text="Wet ground grip (MoreRealistic)"/>

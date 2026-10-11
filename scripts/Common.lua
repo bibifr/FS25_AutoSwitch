@@ -186,6 +186,52 @@ local function getRearSlipPercent(vehicle)
     return maxSlip
 end
 
+-- (v1.0.0.35) Patinage (%) par coin du véhicule : { fl, fr, rl, rr } (avant/arrière, gauche/droite),
+-- le plus fort des pneus du coin (jumelées comprises) ; nil pour un coin sans roue mesurée.
+local function getWheelSlips(vehicle)
+    local ws = vehicle.spec_wheels
+    if ws == nil or ws.wheels == nil or vehicle.rootNode == nil then return nil end
+    local pos, minZ, maxZ = {}, math.huge, -math.huge
+    for i, wheel in ipairs(ws.wheels) do
+        local n = wheel.repr or wheel.driveNode or wheel.node
+        if n ~= nil and n ~= 0 then
+            local ok, x, _, z = pcall(localToLocal, n, vehicle.rootNode, 0, 0, 0)
+            if ok and type(z) == "number" then
+                pos[i] = { x = x, z = z }
+                if z < minZ then minZ = z end
+                if z > maxZ then maxZ = z end
+            end
+        end
+    end
+    if minZ == math.huge or maxZ - minZ < 0.5 then return nil end
+    local midZ = (minZ + maxZ) * 0.5
+
+    local vehSpeed = math.abs(vehicle:getLastSpeed() or 0) / 3.6
+    local res = {}
+    for i, wheel in ipairs(ws.wheels) do
+        local ps = pos[i]
+        if ps ~= nil then
+            local key = (ps.z >= midZ and "f" or "r") .. (ps.x >= 0 and "l" or "r")
+            local p = wheel.physics or wheel
+            local node   = wheel.node or p.node
+            local shape  = p.wheelShape or wheel.wheelShape
+            local radius = p.radius or wheel.radius
+            local slip = 0
+            if node ~= nil and shape ~= nil and radius ~= nil and p.hasGroundContact ~= false then
+                local ok, axleSpeed = pcall(getWheelShapeAxleSpeed, node, shape)
+                if ok and axleSpeed ~= nil then
+                    local wheelSpeed = math.abs(axleSpeed) * radius
+                    if wheelSpeed >= AS_Diff.MIN_WHEEL_SPEED then
+                        slip = math.max(0, (wheelSpeed - vehSpeed) / wheelSpeed * 100)
+                    end
+                end
+            end
+            if res[key] == nil or slip > res[key] then res[key] = slip end
+        end
+    end
+    return res
+end
+
 local function asState(sample, locked)
     if type(sample) == "number" then return locked and 1 or 0 end
     return locked
@@ -255,6 +301,7 @@ AS.getVehicles = getVehicles
 AS.getEvClass = getEvClass
 AS.getMaxSlipPercent = getMaxSlipPercent
 AS.getRearSlipPercent = getRearSlipPercent
+AS.getWheelSlips = getWheelSlips
 AS.asState = asState
 AS.isLockedValue = isLockedValue
 AS.shClamp = shClamp

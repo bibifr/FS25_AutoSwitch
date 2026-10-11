@@ -3,6 +3,7 @@
 
 local vtpInfo, L, showTimedNotification, getVtpClass, isAutoDriveActive, isCourseplayActive, isVehicleInField, getVehicles, getEvClass, getMaxSlipPercent, getRearSlipPercent, asState, isLockedValue, shClamp, shSmootherstep, getMudClass, shGetControlledVehicle
     = AS.vtpInfo, AS.L, AS.showTimedNotification, AS.getVtpClass, AS.isAutoDriveActive, AS.isCourseplayActive, AS.isVehicleInField, AS.getVehicles, AS.getEvClass, AS.getMaxSlipPercent, AS.getRearSlipPercent, AS.asState, AS.isLockedValue, AS.shClamp, AS.shSmootherstep, AS.getMudClass, AS.shGetControlledVehicle
+local getWheelSlips = AS.getWheelSlips
 
 -------------------------------------------------------------------------------
 -- v1.4 : vitesse conseillée affichée au-dessus du compteur de vitesse.
@@ -19,13 +20,14 @@ AS_SpeedHint.ENABLED    = true
 AS_SpeedHint.BOTTOM_CM  = 1.5     -- hauteur du bas de l'affichage au-dessus du bord bas de l'écran (cm)
 AS_SpeedHint.SCREEN_HEIGHT_CM = 31.5  -- hauteur visible supposée de l'écran (≈ écran 24 à 27 pouces 16:9)
 AS_SpeedHint.FIELD_MIN_KPH = 3   -- vitesse basse minimale affichée dans un champ
-AS_SpeedHint.SLIP_ICON = true    -- icône de patinage (roue + flèches, % au centre) affichée en permanence
+AS_SpeedHint.SLIP_ICON = true    -- icône de patinage affichée en permanence (v1.0.0.35 : tracteur vu de dessus, % par roue)
 AS_SpeedHint.FIELD_MAX_KPH = 18  -- vitesse haute maximale en travail dans un champ
 AS_SpeedHint.POS_X = nil         -- position déplacée à la souris (coin bas-gauche, 0..1) ; nil = position par défaut
 AS_SpeedHint.POS_Y = nil
 AS_SpeedHint.dragging = false
 AS_SpeedHint.box = nil           -- dernier cadre dessiné { x, y, w, h }
 AS_SpeedHint.UPDATE_MS  = 500
+AS_SpeedHint.WHEEL_UPDATE_MS = 250
 AS_SpeedHint.MARGIN_KPH = 1       -- marge de sécurité ajoutée à la vitesse mini
 AS_SpeedHint.state = { lastUpdate = -10000, slipPct = 0 }
 
@@ -254,6 +256,24 @@ function AS_SpeedHint:update(dt)
             end
         end
     end
+    -- (v1.0.0.35) patinage de chaque roue, lissé, pour l'icône du tracteur
+    if (g_time - (self.state.lastWheelUpdate or -10000)) >= self.WHEEL_UPDATE_MS then
+        self.state.lastWheelUpdate = g_time
+        local ok, slips = pcall(getWheelSlips, vehicle)
+        local ws = self.state.wheelSlip
+        if ws == nil or self.state.wheelVehicle ~= vehicle then
+            ws = {}
+            self.state.wheelSlip, self.state.wheelVehicle = ws, vehicle
+        end
+        for _, k in ipairs({ "fl", "fr", "rl", "rr" }) do
+            local v = ok and slips ~= nil and slips[k] or nil
+            if v == nil then
+                ws[k] = nil
+            else
+                ws[k] = (ws[k] or 0) + (shClamp(v, 0, 100) - (ws[k] or 0)) * 0.5
+            end
+        end
+    end
 end
 
 local SH_COLORS = {
@@ -285,6 +305,48 @@ function AS_SpeedHint:getIconOverlay()
         end
     end
     return self.iconOverlay
+end
+
+-- (v1.0.0.35) tracteur vu de dessus selon l'état Enhanced Vehicle :
+-- 0 rien, 1 pont AV bloqué, 2 pont AR, 3 les deux, +4 en 4x4 (transmission en vert)
+function AS_SpeedHint:getDriveOverlay(k)
+    self.driveOverlays = self.driveOverlays or {}
+    local ov = self.driveOverlays[k]
+    if ov == nil then
+        local path = Utils.getFilename(string.format("hud/vtpas_drive%d.dds", k), AS_MOD_DIR)
+        local ok, o = pcall(createImageOverlay, path)
+        if ok and o ~= nil and o ~= 0 then
+            ov = o
+        else
+            ov = false
+            print("[AS_SpeedHint] icône introuvable : " .. tostring(path))
+        end
+        self.driveOverlays[k] = ov
+    end
+    return ov or nil
+end
+
+local function shDriveState(vehicle)
+    local vd = vehicle.vData
+    local is = vd ~= nil and vd.is or nil
+    if is == nil then return 0, false, false end
+    local front, rear = isLockedValue(is[1]), isLockedValue(is[2])
+    local k = (front and 1 or 0) + (rear and 2 or 0) + (is[3] == 1 and 4 or 0)
+    return k, front, rear
+end
+
+-- texte de patinage centré en (cx, cy), sur fond sombre
+local function shDrawPct(cx, cy, size, pct, padX, padY)
+    local txt = tostring(math.floor(pct + 0.5)) .. " %"
+    local r, g, b = shSlipColor(pct)
+    setTextBold(true)
+    local w = getTextWidth(size, txt)
+    if drawFilledRect ~= nil then
+        drawFilledRect(cx - w * 0.5 - padX, cy - size * 0.5 - padY, w + padX * 2, size + padY * 2, 0, 0, 0, 0.6)
+    end
+    setTextAlignment(RenderText.ALIGN_CENTER)
+    setTextColor(r, g, b, 1)
+    renderText(cx, cy - size * 0.35, size, txt)
 end
 
 function AS_SpeedHint:draw()
@@ -319,14 +381,21 @@ function AS_SpeedHint:draw()
     local boxW = getTextWidth(size1, string.format(L("vtpas_hint_range"), 88, 88)) + padX * 2
     local boxH = size1 + padY * 2
 
-    -- icône : carrée, un peu plus haute que le cadre, accolée à sa gauche
-    local iconPx = 23
+    -- (v1.0.0.35) icône : tracteur vu de dessus, % de patinage de chaque côté des roues
+    local iconPx = 72
     local iconW, iconH = pxw(iconPx), py(iconPx)
     local gapI = pxw(4)
-    local pctSize = py(12)                       -- % de patinage écrit sous l'icône
-    local pctGap = py(2)
-    local iconBlockH = iconH + pctGap + pctSize
-    local groupW = iconW + gapI + boxW
+    local pctSize = py(11)
+    local labelW = 0
+    if showIcon then
+        setTextBold(true)
+        labelW = getTextWidth(pctSize, "100 %") + pxw(6)
+    else
+        iconW, labelW = 0, 0
+    end
+    local iconBlockW = labelW * 2 + iconW
+    local iconBlockH = iconH
+    local groupW = iconBlockW + gapI + boxW
     local groupH = math.max(boxH, iconBlockH)
 
     -- position du groupe (coin bas-gauche)
@@ -350,8 +419,8 @@ function AS_SpeedHint:draw()
     y = shClamp(y, 0, math.max(0, 1 - groupH))
     self.box = { x = x, y = y, w = groupW, h = groupH }
 
-    local boxX = x + iconW + gapI
-    local iconY = y + groupH - iconH                 -- icône en haut du bloc, % en dessous
+    local boxX = x + iconBlockW + gapI
+    local iconY = y + groupH - iconH                 -- icône en haut du bloc
     local boxY = iconY + (iconH - boxH) * 0.5        -- plage centrée sur l'icône
     local hasRange = showRange and st.line1 ~= nil
 
@@ -359,22 +428,36 @@ function AS_SpeedHint:draw()
         drawFilledRect(x - pxw(2), y - py(2), groupW + pxw(4), groupH + py(4), 1, 0.78, 0.2, self.dragging and 0.9 or 0.6)
     end
 
-    -- icône de patinage + pourcentage en dessous (affichés en permanence)
+    -- (v1.0.0.35) tracteur vu de dessus (état Enhanced Vehicle) + patinage de chaque roue ;
+    -- pont bloqué : un seul % centré sur le pont
     if showIcon then
-        local pct = math.floor((st.slipPct or 0) + 0.5)
-        local r, g, b = shSlipColor(pct)
+        local k, frontLocked, rearLocked = shDriveState(vehicle)
+        local iconX = x + labelW
         if drawFilledRect ~= nil then
-            drawFilledRect(x, y, iconW, groupH, 0, 0, 0, 0.45)
+            drawFilledRect(x, y, iconBlockW, groupH, 0, 0, 0, 0.35)
         end
-        local ov = self:getIconOverlay()
+        local ov = self:getDriveOverlay(k)
         if ov ~= nil then
-            setOverlayColor(ov, r, g, b, 1)
-            renderOverlay(ov, x, iconY, iconW, iconH)
+            setOverlayColor(ov, 1, 1, 1, 1)
+            renderOverlay(ov, iconX, iconY, iconW, iconH)
         end
-        setTextAlignment(RenderText.ALIGN_CENTER)
-        setTextBold(true)
-        setTextColor(r, g, b, 1)
-        renderText(x + iconW * 0.5, iconY - pctGap - pctSize * 0.85, pctSize, tostring(pct) .. " %")
+        -- ponts dans l'image (256 px) : avant à 55 px du haut, arrière à 195 px
+        local ws = st.wheelVehicle == vehicle and st.wheelSlip or nil
+        if ws ~= nil then
+            local padX, padY = pxw(3), py(1.5)
+            local axles = {
+                { y = iconY + iconH * (1 - 55 / 256), l = ws.fl, r = ws.fr, locked = frontLocked },
+                { y = iconY + iconH * (1 - 195 / 256), l = ws.rl, r = ws.rr, locked = rearLocked },
+            }
+            for _, a in ipairs(axles) do
+                if a.locked and (a.l ~= nil or a.r ~= nil) then
+                    shDrawPct(iconX + iconW * 0.5, a.y, pctSize, math.max(a.l or 0, a.r or 0), padX, padY)
+                else
+                    if a.l ~= nil then shDrawPct(x + labelW * 0.5, a.y, pctSize, a.l, padX, padY) end
+                    if a.r ~= nil then shDrawPct(iconX + iconW + labelW * 0.5, a.y, pctSize, a.r, padX, padY) end
+                end
+            end
+        end
     end
 
     -- plage de vitesse conseillée (dans les champs)
@@ -451,6 +534,10 @@ function AS_SpeedHint:delete()
         delete(self.iconOverlay)
         self.iconOverlay = nil
     end
+    for k, ov in pairs(self.driveOverlays or {}) do
+        if ov then delete(ov) end
+    end
+    self.driveOverlays = nil
 end
 
 addModEventListener(AS_SpeedHint)
