@@ -73,7 +73,7 @@
         <text name="vtpas_protectSeed_label" text="Protéger le semis (marche arrière / semoir)"/>
         <text name="vtpas_protectSeed_tip" text="Empêche Mud System Physics d'effacer la culture sous les roues quand le véhicule recule, et sous les roues d'un semoir ou d'une planteuse. Le reste de la destruction dans la boue est conservé."/>
         <text name="vtpas_slipIcon_label" text="Icône de patinage"/>
-        <text name="vtpas_slipIcon_tip" text="Affiche en permanence (dans un véhicule) le tracteur vu de dessus (ponts bloqués en rouge, transmission 4x4 en vert) avec le patinage de chaque roue, ou un seul pourcentage par pont bloqué, accolée à la plage de vitesse et déplaçable avec elle. Couleur : blanc, jaune dès 10 %, orange au seuil des différentiels, rouge au seuil d'alerte."/>
+        <text name="vtpas_slipIcon_tip" text="Affiche en permanence (dans un véhicule) le tracteur vu de dessus (ponts bloqués en rouge, transmission 4x4 en vert) avec le patinage de chaque roue, ou un seul pourcentage par pont bloqué, déplaçable à la souris indépendamment de la plage de vitesse. Couleur : blanc, jaune dès 10 %, orange au seuil des différentiels, rouge au seuil d'alerte."/>
         <text name="vtpas_seedCoverFill_label" text="Remplir le semoir couvercle fermé"/>
         <text name="vtpas_seedCoverFill_tip" text="Permet de remplir les semoirs et planteuses en graines (big bag, palette, remorque, vis, station) même quand le couvercle de la trémie est fermé. Désactivé = comportement du jeu de base."/>
         <text name="vtpas_wetGrip_label" text="Adhérence en sol humide (MoreRealistic)"/>

@@ -24,6 +24,8 @@ AS_SpeedHint.SLIP_ICON = true    -- icône de patinage affichée en permanence (
 AS_SpeedHint.FIELD_MAX_KPH = 18  -- vitesse haute maximale en travail dans un champ
 AS_SpeedHint.POS_X = nil         -- position déplacée à la souris (coin bas-gauche, 0..1) ; nil = position par défaut
 AS_SpeedHint.POS_Y = nil
+AS_SpeedHint.ICON_X = nil        -- (v1.0.0.36) position du tracteur, déplacé seul (nil = au-dessus de la plage)
+AS_SpeedHint.ICON_Y = nil
 AS_SpeedHint.dragging = false
 AS_SpeedHint.box = nil           -- dernier cadre dessiné { x, y, w, h }
 AS_SpeedHint.UPDATE_MS  = 500
@@ -350,7 +352,7 @@ local function shDrawPct(cx, cy, size, pct, padX, padY)
 end
 
 function AS_SpeedHint:draw()
-    self.box = nil
+    self.box, self.iconBox = nil, nil
     if g_currentMission == nil then return end
     local showRange = self.ENABLED == true
     local showIcon = self.SLIP_ICON == true
@@ -381,95 +383,80 @@ function AS_SpeedHint:draw()
     local boxW = getTextWidth(size1, string.format(L("vtpas_hint_range"), 88, 88)) + padX * 2
     local boxH = size1 + padY * 2
 
-    -- (v1.0.0.35) icône : tracteur vu de dessus, % de patinage de chaque côté des roues
-    local iconPx = 72
-    local iconW, iconH = pxw(iconPx), py(iconPx)
-    local gapI = pxw(4)
-    local pctSize = py(11)
-    local labelW = 0
-    if showIcon then
-        setTextBold(true)
-        labelW = getTextWidth(pctSize, "100 %") + pxw(6)
+    -- position par défaut de la plage : à gauche du compteur
+    local rightX
+    local bg = sm.speedBg
+    if bg ~= nil and bg.x ~= nil then
+        rightX = bg.x
+    elseif sm.getPosition ~= nil then
+        rightX = sm:getPosition()
     else
-        iconW, labelW = 0, 0
+        rightX = 0.80
     end
-    local iconBlockW = labelW * 2 + iconW
-    local iconBlockH = iconH
-    local groupW = iconBlockW + gapI + boxW
-    local groupH = math.max(boxH, iconBlockH)
+    local defX = rightX - pxw(10) - boxW
+    local defY = (self.BOTTOM_CM or 1.5) / math.max(10, self.SCREEN_HEIGHT_CM or 31.5)
 
-    -- position du groupe (coin bas-gauche)
-    local x, y
-    if self.POS_X ~= nil and self.POS_Y ~= nil then
-        x, y = self.POS_X, self.POS_Y
-    else
-        local rightX
-        local bg = sm.speedBg
-        if bg ~= nil and bg.x ~= nil then
-            rightX = bg.x
-        elseif sm.getPosition ~= nil then
-            rightX = sm:getPosition()
-        else
-            rightX = 0.80
-        end
-        x = rightX - pxw(10) - groupW
-        y = (self.BOTTOM_CM or 1.5) / math.max(10, self.SCREEN_HEIGHT_CM or 31.5)
-    end
-    x = shClamp(x, 0, math.max(0, 1 - groupW))
-    y = shClamp(y, 0, math.max(0, 1 - groupH))
-    self.box = { x = x, y = y, w = groupW, h = groupH }
-
-    local boxX = x + iconBlockW + gapI
-    local iconY = y + groupH - iconH                 -- icône en haut du bloc
-    local boxY = iconY + (iconH - boxH) * 0.5        -- plage centrée sur l'icône
-    local hasRange = showRange and st.line1 ~= nil
-
-    if drawFilledRect ~= nil and self:getCanDrag() then
-        drawFilledRect(x - pxw(2), y - py(2), groupW + pxw(4), groupH + py(4), 1, 0.78, 0.2, self.dragging and 0.9 or 0.6)
-    end
-
-    -- (v1.0.0.35) tracteur vu de dessus (état Enhanced Vehicle) + patinage de chaque roue ;
-    -- pont bloqué : un seul % centré sur le pont
-    if showIcon then
-        local k, frontLocked, rearLocked = shDriveState(vehicle)
-        local iconX = x + labelW
+    -- (v1.0.0.36) plage de vitesse conseillée : bloc indépendant, déplaçable seul
+    local x, y = defX, defY
+    if self.POS_X ~= nil and self.POS_Y ~= nil then x, y = self.POS_X, self.POS_Y end
+    x = shClamp(x, 0, math.max(0, 1 - boxW))
+    y = shClamp(y, 0, math.max(0, 1 - boxH))
+    self.box = showRange and { x = x, y = y, w = boxW, h = boxH } or nil
+    if showRange and st.line1 ~= nil then
         if drawFilledRect ~= nil then
-            drawFilledRect(x, y, iconBlockW, groupH, 0, 0, 0, 0.35)
-        end
-        local ov = self:getDriveOverlay(k)
-        if ov ~= nil then
-            setOverlayColor(ov, 1, 1, 1, 1)
-            renderOverlay(ov, iconX, iconY, iconW, iconH)
-        end
-        -- ponts dans l'image (256 px) : avant à 55 px du haut, arrière à 195 px
-        local ws = st.wheelVehicle == vehicle and st.wheelSlip or nil
-        if ws ~= nil then
-            local padX, padY = pxw(3), py(1.5)
-            local axles = {
-                { y = iconY + iconH * (1 - 55 / 256), l = ws.fl, r = ws.fr, locked = frontLocked },
-                { y = iconY + iconH * (1 - 195 / 256), l = ws.rl, r = ws.rr, locked = rearLocked },
-            }
-            for _, a in ipairs(axles) do
-                if a.locked and (a.l ~= nil or a.r ~= nil) then
-                    shDrawPct(iconX + iconW * 0.5, a.y, pctSize, math.max(a.l or 0, a.r or 0), padX, padY)
-                else
-                    if a.l ~= nil then shDrawPct(x + labelW * 0.5, a.y, pctSize, a.l, padX, padY) end
-                    if a.r ~= nil then shDrawPct(iconX + iconW + labelW * 0.5, a.y, pctSize, a.r, padX, padY) end
-                end
-            end
-        end
-    end
-
-    -- plage de vitesse conseillée (dans les champs)
-    if hasRange then
-        if drawFilledRect ~= nil then
-            drawFilledRect(boxX, boxY, boxW, boxH, 0, 0, 0, 0.6)
+            drawFilledRect(x, y, boxW, boxH, 0, 0, 0, 0.6)
         end
         local c = SH_COLORS[st.color] or SH_COLORS.green
         setTextAlignment(RenderText.ALIGN_CENTER)
         setTextBold(true)
         setTextColor(c[1], c[2], c[3], c[4])
-        renderText(boxX + boxW * 0.5, boxY + padY + py(1), size1, st.line1)
+        renderText(x + boxW * 0.5, y + padY + py(1), size1, st.line1)
+    end
+
+    -- (v1.0.0.35) tracteur vu de dessus (état Enhanced Vehicle) + patinage de chaque roue ;
+    -- pont bloqué : un seul % centré sur le pont
+    -- (v1.0.0.36) bloc indépendant de la plage, déplaçable seul ; par défaut au-dessus d'elle
+    self.iconBox = nil
+    if showIcon then
+        local iconPx = 72
+        local iconW, iconH = pxw(iconPx), py(iconPx)
+        local pctSize = py(11)
+        setTextBold(true)
+        local labelW = getTextWidth(pctSize, "100 %") + pxw(6)
+        local blockW = labelW * 2 + iconW
+        local bx, by = defX + boxW - blockW, defY + boxH + py(8)
+        if self.ICON_X ~= nil and self.ICON_Y ~= nil then bx, by = self.ICON_X, self.ICON_Y end
+        bx = shClamp(bx, 0, math.max(0, 1 - blockW))
+        by = shClamp(by, 0, math.max(0, 1 - iconH))
+        self.iconBox = { x = bx, y = by, w = blockW, h = iconH }
+
+        local k, frontLocked, rearLocked = shDriveState(vehicle)
+        local iconX = bx + labelW
+        if drawFilledRect ~= nil then
+            drawFilledRect(bx, by, blockW, iconH, 0, 0, 0, 0.35)
+        end
+        local ov = self:getDriveOverlay(k)
+        if ov ~= nil then
+            setOverlayColor(ov, 1, 1, 1, 1)
+            renderOverlay(ov, iconX, by, iconW, iconH)
+        end
+        -- ponts dans l'image (256 px) : avant à 55 px du haut, arrière à 195 px
+        local ws = st.wheelVehicle == vehicle and st.wheelSlip or nil
+        if ws ~= nil then
+            local lpX, lpY = pxw(3), py(1.5)
+            local axles = {
+                { y = by + iconH * (1 - 55 / 256), l = ws.fl, r = ws.fr, locked = frontLocked },
+                { y = by + iconH * (1 - 195 / 256), l = ws.rl, r = ws.rr, locked = rearLocked },
+            }
+            for _, a in ipairs(axles) do
+                if a.locked and (a.l ~= nil or a.r ~= nil) then
+                    shDrawPct(iconX + iconW * 0.5, a.y, pctSize, math.max(a.l or 0, a.r or 0), lpX, lpY)
+                else
+                    if a.l ~= nil then shDrawPct(bx + labelW * 0.5, a.y, pctSize, a.l, lpX, lpY) end
+                    if a.r ~= nil then shDrawPct(iconX + iconW + labelW * 0.5, a.y, pctSize, a.r, lpX, lpY) end
+                end
+            end
+        end
     end
 
     setTextAlignment(RenderText.ALIGN_LEFT)
@@ -487,39 +474,50 @@ function AS_SpeedHint:getCanDrag()
         and g_inputBinding:getShowMouseCursor() == true
 end
 
-function AS_SpeedHint:isOverBox(px, py_)
-    local b = self.box
-    return b ~= nil and px >= b.x and px <= b.x + b.w and py_ >= b.y and py_ <= b.y + b.h
+local function shInBox(bx, px, py_)
+    return bx ~= nil and px >= bx.x and px <= bx.x + bx.w and py_ >= bx.y and py_ <= bx.y + bx.h
 end
 
 function AS_SpeedHint:savePosition()
     if AS_Settings ~= nil then
-        AS_Settings.hintPosX = self.POS_X
-        AS_Settings.hintPosY = self.POS_Y
+        AS_Settings.hintPosX, AS_Settings.hintPosY = self.POS_X, self.POS_Y
+        AS_Settings.iconPosX, AS_Settings.iconPosY = self.ICON_X, self.ICON_Y
         AS_Settings:save()
     end
 end
 
+-- (v1.0.0.36) deux blocs déplaçables séparément (tracteur, plage), sans surlignage
 function AS_SpeedHint:mouseEvent(posX, posY, isDown, isUp, button)
     if not self:getCanDrag() then
         self.dragging = false
         return
     end
 
-    if isDown and self:isOverBox(posX, posY) then
-        if button == Input.MOUSE_BUTTON_LEFT then
-            self.dragging = true
-            self.dragDX, self.dragDY = posX - self.box.x, posY - self.box.y
+    if isDown and button == Input.MOUSE_BUTTON_LEFT then
+        local target, b = nil, nil
+        if shInBox(self.iconBox, posX, posY) then
+            target, b = "icon", self.iconBox
+        elseif shInBox(self.box, posX, posY) then
+            target, b = "range", self.box
+        end
+        if target ~= nil then
+            self.dragging, self.dragTarget = true, target
+            self.dragDX, self.dragDY = posX - b.x, posY - b.y
         end
         return
     end
 
     if self.dragging then
-        self.POS_X = posX - (self.dragDX or 0)
-        self.POS_Y = posY - (self.dragDY or 0)
-        if self.box ~= nil then
-            self.POS_X = shClamp(self.POS_X, 0, math.max(0, 1 - self.box.w))
-            self.POS_Y = shClamp(self.POS_Y, 0, math.max(0, 1 - self.box.h))
+        local b = self.dragTarget == "icon" and self.iconBox or self.box
+        local nx, ny = posX - (self.dragDX or 0), posY - (self.dragDY or 0)
+        if b ~= nil then
+            nx = shClamp(nx, 0, math.max(0, 1 - b.w))
+            ny = shClamp(ny, 0, math.max(0, 1 - b.h))
+        end
+        if self.dragTarget == "icon" then
+            self.ICON_X, self.ICON_Y = nx, ny
+        else
+            self.POS_X, self.POS_Y = nx, ny
         end
         if isUp then
             self.dragging = false

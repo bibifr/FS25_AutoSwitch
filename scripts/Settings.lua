@@ -56,6 +56,8 @@ AS_Settings.WETGRIP_FROM_OLD = { 1, 1, 1, 2, 3 }   -- ancien réglage (désactiv
 AS_Settings.auto4wd = true     -- 4x4 champ / 4x2 route
 AS_Settings.hintPosX = nil          -- position déplacée à la souris (nil = par défaut)
 AS_Settings.hintPosY = nil
+AS_Settings.iconPosX = nil          -- (v1.0.0.36) position du tracteur (nil = par défaut)
+AS_Settings.iconPosY = nil
 
 local function sprint(fmt, ...)
     -- (v1.25) seules les erreurs sont écrites dans le journal
@@ -100,6 +102,10 @@ function AS_Settings:save()
             if self.hintPosX ~= nil and self.hintPosY ~= nil then
                 setXMLFloat(xml, "vtpAutoSwitch.speedHint#posX", self.hintPosX)
                 setXMLFloat(xml, "vtpAutoSwitch.speedHint#posY", self.hintPosY)
+            end
+            if self.iconPosX ~= nil and self.iconPosY ~= nil then
+                setXMLFloat(xml, "vtpAutoSwitch.slipIcon#posX", self.iconPosX)
+                setXMLFloat(xml, "vtpAutoSwitch.slipIcon#posY", self.iconPosY)
             end
             saveXMLFile(xml)
             delete(xml)
@@ -170,6 +176,11 @@ function AS_Settings:load()
                 if hx ~= nil and hy ~= nil then
                     self.hintPosX, self.hintPosY = math.max(0, math.min(1, hx)), math.max(0, math.min(1, hy))
                 end
+                local ix = getXMLFloat(xml, "vtpAutoSwitch.slipIcon#posX")
+                local iy = getXMLFloat(xml, "vtpAutoSwitch.slipIcon#posY")
+                if ix ~= nil and iy ~= nil then
+                    self.iconPosX, self.iconPosY = math.max(0, math.min(1, ix)), math.max(0, math.min(1, iy))
+                end
                 delete(xml)
             end
         end
@@ -209,6 +220,7 @@ function AS_Settings:apply()
     AS_NotifyDuration.diffs = self.durDiffs * 1000
     AS_NotifyDuration.alert = self.durAlert * 1000
     AS_SpeedHint.POS_X, AS_SpeedHint.POS_Y = self.hintPosX, self.hintPosY
+    AS_SpeedHint.ICON_X, AS_SpeedHint.ICON_Y = self.iconPosX, self.iconPosY
 end
 
 function AS_Settings:getStateForValue(v)
