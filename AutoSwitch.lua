@@ -25,6 +25,7 @@
 --   TtdBridge     pont MSP -> TTD : humidité locale, pas de résistance en double
 --   TireDirtKeep  la saleté des pneus part moins vite en roulant
 --   SleepPlus     menu Dormir : avancer de X heures ou de X jours
+--   LightRange    lumières des véhicules visibles de plus loin
 --   Settings      menu Paramètres et sauvegarde des réglages (toujours en dernier)
 --
 -- v1.0.0.29 : contrôle des versions. Chaque mod requis doit être au moins à la
@@ -59,6 +60,7 @@ local FILES = {
     "scripts/TtdBridge.lua",
     "scripts/TireDirtKeep.lua",
     "scripts/SleepPlus.lua",
+    "scripts/LightRange.lua",
     "scripts/Settings.lua",
 }
 

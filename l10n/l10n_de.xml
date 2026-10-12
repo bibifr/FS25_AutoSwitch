@@ -138,5 +138,8 @@
         <text name="vtpas_sleepText" text="Wählen Sie, wie lange Sie schlafen: Stunden und Tage."/>
         <text name="vtpas_sleepHoursTitle" text="Zeit in Stunden"/>
         <text name="vtpas_sleepDaysTitle" text="Zeit in Tagen"/>
+        <text name="vtpas_lightRange_label" text="Sichtweite der Fahrzeuglichter"/>
+        <text name="vtpas_lightRange_tip" text="Entfernung, bis zu der Scheinwerfer, Lichter und Rundumleuchten anderer Fahrzeuge sichtbar bleiben. x1 = Basisspiel. Die Bodenbeleuchtung bleibt unverändert."/>
+        <text name="vtpas_lightRange_base" text="x1 (Basisspiel)"/>
     </texts>
 </l10n>

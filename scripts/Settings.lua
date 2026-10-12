@@ -58,6 +58,8 @@ AS_Settings.hintPosX = nil          -- position déplacée à la souris (nil = p
 AS_Settings.hintPosY = nil
 AS_Settings.iconPosX = nil          -- (v1.0.0.36) position du tracteur (nil = par défaut)
 AS_Settings.iconPosY = nil
+AS_Settings.lightRange = 5         -- (v1.0.0.37) distance d'affichage des feux des véhicules (x1 = jeu de base)
+AS_Settings.LIGHT_RANGE_LIST = { 1, 2, 3, 4, 5, 6, 8, 10 }
 
 local function sprint(fmt, ...)
     -- (v1.25) seules les erreurs sont écrites dans le journal
@@ -99,6 +101,7 @@ function AS_Settings:save()
             setXMLBool(xml, "vtpAutoSwitch.seedCoverFill#enabled", self.seedCoverFill)
             setXMLInt(xml, "vtpAutoSwitch.notifDuration#diffs", self.durDiffs)
             setXMLInt(xml, "vtpAutoSwitch.notifDuration#alert", self.durAlert)
+            setXMLInt(xml, "vtpAutoSwitch.lightRange#factor", self.lightRange)
             if self.hintPosX ~= nil and self.hintPosY ~= nil then
                 setXMLFloat(xml, "vtpAutoSwitch.speedHint#posX", self.hintPosX)
                 setXMLFloat(xml, "vtpAutoSwitch.speedHint#posY", self.hintPosY)
@@ -171,6 +174,8 @@ function AS_Settings:load()
                 if d2 ~= nil then self.durDiffs = math.max(1, math.min(60, d2)) end
                 local d3 = getXMLInt(xml, "vtpAutoSwitch.notifDuration#alert")
                 if d3 ~= nil then self.durAlert = math.max(1, math.min(60, d3)) end
+                local lr = getXMLInt(xml, "vtpAutoSwitch.lightRange#factor")
+                if lr ~= nil then self.lightRange = math.max(1, math.min(10, lr)) end
                 local hx = getXMLFloat(xml, "vtpAutoSwitch.speedHint#posX")
                 local hy = getXMLFloat(xml, "vtpAutoSwitch.speedHint#posY")
                 if hx ~= nil and hy ~= nil then
@@ -221,6 +226,7 @@ function AS_Settings:apply()
     AS_NotifyDuration.alert = self.durAlert * 1000
     AS_SpeedHint.POS_X, AS_SpeedHint.POS_Y = self.hintPosX, self.hintPosY
     AS_SpeedHint.ICON_X, AS_SpeedHint.ICON_Y = self.iconPosX, self.iconPosY
+    AS_LightRange:setFactor(self.lightRange)
 end
 
 function AS_Settings:getStateForValue(v)
@@ -406,6 +412,16 @@ function AS_Settings:onSlipIconChanged(state, element)
     self:apply()
     self:save()
     sprint("icône de patinage : %s", self.slipIcon and "affichée" or "masquée")
+end
+
+function AS_Settings:onLightRangeChanged(state, element)
+    local v = self.LIGHT_RANGE_LIST[state]
+    if v ~= nil then
+        self.lightRange = v
+        self:apply()
+        self:save()
+        sprint("distance des feux : x%d", v)
+    end
 end
 
 function AS_Settings:onProtectSeedChanged(state, element)
@@ -708,6 +724,18 @@ function AS_Settings:buildUI(frame)
         callback = AS_Settings.onProtectSeedChanged,
     })
 
+    local lightTexts = {}
+    for i, v in ipairs(self.LIGHT_RANGE_LIST) do
+        lightTexts[i] = (v == 1) and L("vtpas_lightRange_base") or ("x" .. v)
+    end
+    self.options.lightRange = self:addRow(layout, template, {
+        label = L("vtpas_lightRange_label"),
+        tip = L("vtpas_lightRange_tip"),
+        texts = lightTexts,
+        state = self:getIndex(self.LIGHT_RANGE_LIST, self.lightRange),
+        callback = AS_Settings.onLightRangeChanged,
+    })
+
     self.built = true
     layout:invalidateLayout()
     sprint("options ajoutées au menu Paramètres")
@@ -737,6 +765,7 @@ function AS_Settings:refreshStates()
     if o.durDiffs ~= nil then o.durDiffs:setState(self:getIndex(self.DURATION_LIST, self.durDiffs)) end
     if o.durAlert ~= nil then o.durAlert:setState(self:getIndex(self.DURATION_LIST, self.durAlert)) end
     if o.speedHint ~= nil then o.speedHint:setState(self.speedHint and 2 or 1) end
+    if o.lightRange ~= nil then o.lightRange:setState(self:getIndex(self.LIGHT_RANGE_LIST, self.lightRange)) end
 end
 
 function AS_Settings:onSettingsFrameOpen(frame)

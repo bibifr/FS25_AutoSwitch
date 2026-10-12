@@ -138,5 +138,8 @@
         <text name="vtpas_sleepText" text="Choose how long to sleep: hours and days."/>
         <text name="vtpas_sleepHoursTitle" text="Time in hours"/>
         <text name="vtpas_sleepDaysTitle" text="Time in days"/>
+        <text name="vtpas_lightRange_label" text="Vehicle lights view distance"/>
+        <text name="vtpas_lightRange_tip" text="Distance at which the headlights, lights and beacons of other vehicles stay visible. x1 = base game. Ground lighting is unchanged."/>
+        <text name="vtpas_lightRange_base" text="x1 (base game)"/>
     </texts>
 </l10n>
