@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.42 | Patinage : chaque roue est comparée à sa propre vitesse au sol (en virage, les roues avant et extérieures ne comptent plus comme patinant, jusqu'à 40 % avant), pour l'affichage et le blocage des différentiels ; en 4x2, pas de patinage affiché sur les roues avant libres |
 | 1.0.0.41 | Dormir : avec des jours, réveil à 8 h le dernier jour (+ les heures choisies). Joueur bloqué au réveil après plusieurs jours corrigé : la fenêtre « Nouvelles du marché » de Dynamic Market, ouverte au changement de mois pendant le sommeil, restait invisible et gardait les touches ; elle s'affiche maintenant au réveil. Le réveil passe par le jeu lui-même |
 | 1.0.0.38 | Lumières : les halos des phares, feux et gyros des autres véhicules sont 2 fois plus lumineux (réglable dans le menu, x1 = jeu de base). Le véhicule conduit et ses outils ne changent pas |
 | 1.0.0.37 | Lumières : les phares, feux et gyros des autres véhicules restent visibles 5 fois plus loin (réglable dans le menu, x1 = jeu de base). L'éclairage au sol ne change pas |

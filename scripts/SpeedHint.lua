@@ -334,7 +334,7 @@ local function shDriveState(vehicle)
     if is == nil then return 0, false, false end
     local front, rear = isLockedValue(is[1]), isLockedValue(is[2])
     local k = (front and 1 or 0) + (rear and 2 or 0) + (is[3] == 1 and 4 or 0)
-    return k, front, rear
+    return k, front, rear, is[3] == 0
 end
 
 -- texte de patinage centré en (cx, cy), sur fond sombre
@@ -430,7 +430,7 @@ function AS_SpeedHint:draw()
         by = shClamp(by, 0, math.max(0, 1 - iconH))
         self.iconBox = { x = bx, y = by, w = blockW, h = iconH }
 
-        local k, frontLocked, rearLocked = shDriveState(vehicle)
+        local k, frontLocked, rearLocked, in2wd = shDriveState(vehicle)
         local iconX = bx + labelW
         if drawFilledRect ~= nil then
             drawFilledRect(bx, by, blockW, iconH, 0, 0, 0, 0.35)
@@ -444,8 +444,9 @@ function AS_SpeedHint:draw()
         local ws = st.wheelVehicle == vehicle and st.wheelSlip or nil
         if ws ~= nil then
             local lpX, lpY = pxw(3), py(1.5)
+            -- (v1.0.0.42) en 4x2, roues avant libres : pas de patinage affiché
             local axles = {
-                { y = by + iconH * (1 - 55 / 256), l = ws.fl, r = ws.fr, locked = frontLocked },
+                { y = by + iconH * (1 - 55 / 256), l = (not in2wd) and ws.fl or nil, r = (not in2wd) and ws.fr or nil, locked = frontLocked and not in2wd },
                 { y = by + iconH * (1 - 195 / 256), l = ws.rl, r = ws.rr, locked = rearLocked },
             }
             for _, a in ipairs(axles) do

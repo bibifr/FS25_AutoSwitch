@@ -109,6 +109,40 @@ local function getEvClass()
     return nil
 end
 
+-- (v1.0.0.42) Vitesse au sol (m/s) à l'endroit de la roue, dans le sens où elle roule :
+-- vitesse du châssis + rotation (virage) au point de la roue, projetée sur l'axe avant de la
+-- roue braquée. En virage, chaque roue suit son propre cercle (avant et extérieur plus vite) ;
+-- comparer à la vitesse du tracteur comptait cet écart comme du patinage (jusqu'à 40 %).
+-- Renvoie nil si le moteur physique ne donne pas les vitesses (on garde alors la vitesse du tracteur).
+local function wheelGroundSpeed(wheel, fallback)
+    local p = wheel.physics or wheel
+    local body = wheel.node or p.node
+    local ref = wheel.repr or wheel.driveNode or body
+    if body == nil or body == 0 or ref == nil or ref == 0
+       or g_server == nil or getLinearVelocity == nil or getAngularVelocity == nil then   -- client : pas de physique locale
+        return fallback
+    end
+    local ok, vx, vy, vz = pcall(getLinearVelocity, body)
+    local ok2, wx, wy, wz = pcall(getAngularVelocity, body)
+    if not ok or not ok2 or vx == nil or wx == nil then return fallback end
+    -- centre de masse du corps (getLinearVelocity est la vitesse du centre de masse)
+    local cx, cy, cz
+    local okc, lx, ly, lz = pcall(getCenterOfMass, body)
+    if okc and lx ~= nil then
+        cx, cy, cz = localToWorld(body, lx, ly, lz)
+    else
+        cx, cy, cz = getWorldTranslation(body)
+    end
+    local px, py, pz = getWorldTranslation(ref)
+    local rx, ry, rz = px - cx, py - cy, pz - cz
+    -- v_point = v + w x r
+    local ux = vx + (wy * rz - wz * ry)
+    local uy = vy + (wz * rx - wx * rz)
+    local uz = vz + (wx * ry - wy * rx)
+    local dx, dy, dz = localDirectionToWorld(ref, 0, 0, 1)
+    return math.abs(ux * dx + uy * dy + uz * dz)
+end
+
 -- Patinage maximal (en %) parmi les roues au sol : roue plus rapide que le véhicule.
 local function getMaxSlipPercent(vehicle)
     local ws = vehicle.spec_wheels
@@ -130,7 +164,8 @@ local function getMaxSlipPercent(vehicle)
             if ok and axleSpeed ~= nil then
                 local wheelSpeed = math.abs(axleSpeed) * radius
                 if wheelSpeed >= AS_Diff.MIN_WHEEL_SPEED then
-                    local slip = (wheelSpeed - vehSpeed) / wheelSpeed * 100
+                    local ground = wheelGroundSpeed(wheel, vehSpeed)
+                    local slip = (wheelSpeed - ground) / wheelSpeed * 100
                     if slip > maxSlip then maxSlip = slip end
                 end
             end
@@ -176,7 +211,7 @@ local function getRearSlipPercent(vehicle)
                 if ok and axleSpeed ~= nil then
                     local wheelSpeed = math.abs(axleSpeed) * radius
                     if wheelSpeed >= AS_Diff.MIN_WHEEL_SPEED then
-                        local slip = (wheelSpeed - vehSpeed) / wheelSpeed * 100
+                        local slip = (wheelSpeed - wheelGroundSpeed(wheel, vehSpeed)) / wheelSpeed * 100
                         if slip > maxSlip then maxSlip = slip end
                     end
                 end
@@ -222,7 +257,7 @@ local function getWheelSlips(vehicle)
                 if ok and axleSpeed ~= nil then
                     local wheelSpeed = math.abs(axleSpeed) * radius
                     if wheelSpeed >= AS_Diff.MIN_WHEEL_SPEED then
-                        slip = math.max(0, (wheelSpeed - vehSpeed) / wheelSpeed * 100)
+                        slip = math.max(0, (wheelSpeed - wheelGroundSpeed(wheel, vehSpeed)) / wheelSpeed * 100)
                     end
                 end
             end
