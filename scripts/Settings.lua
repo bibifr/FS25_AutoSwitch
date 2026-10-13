@@ -60,6 +60,8 @@ AS_Settings.iconPosX = nil          -- (v1.0.0.36) position du tracteur (nil = p
 AS_Settings.iconPosY = nil
 AS_Settings.lightRange = 5         -- (v1.0.0.37) distance d'affichage des feux des véhicules (x1 = jeu de base)
 AS_Settings.LIGHT_RANGE_LIST = { 1, 2, 3, 4, 5, 6, 8, 10 }
+AS_Settings.lightGlow = 2          -- (v1.0.0.38) luminosité des halos des feux (x1 = jeu de base)
+AS_Settings.LIGHT_GLOW_LIST = { 1, 2, 3, 4, 5 }
 
 local function sprint(fmt, ...)
     -- (v1.25) seules les erreurs sont écrites dans le journal
@@ -102,6 +104,7 @@ function AS_Settings:save()
             setXMLInt(xml, "vtpAutoSwitch.notifDuration#diffs", self.durDiffs)
             setXMLInt(xml, "vtpAutoSwitch.notifDuration#alert", self.durAlert)
             setXMLInt(xml, "vtpAutoSwitch.lightRange#factor", self.lightRange)
+            setXMLInt(xml, "vtpAutoSwitch.lightRange#glow", self.lightGlow)
             if self.hintPosX ~= nil and self.hintPosY ~= nil then
                 setXMLFloat(xml, "vtpAutoSwitch.speedHint#posX", self.hintPosX)
                 setXMLFloat(xml, "vtpAutoSwitch.speedHint#posY", self.hintPosY)
@@ -176,6 +179,8 @@ function AS_Settings:load()
                 if d3 ~= nil then self.durAlert = math.max(1, math.min(60, d3)) end
                 local lr = getXMLInt(xml, "vtpAutoSwitch.lightRange#factor")
                 if lr ~= nil then self.lightRange = math.max(1, math.min(10, lr)) end
+                local lg = getXMLInt(xml, "vtpAutoSwitch.lightRange#glow")
+                if lg ~= nil then self.lightGlow = math.max(1, math.min(5, lg)) end
                 local hx = getXMLFloat(xml, "vtpAutoSwitch.speedHint#posX")
                 local hy = getXMLFloat(xml, "vtpAutoSwitch.speedHint#posY")
                 if hx ~= nil and hy ~= nil then
@@ -227,6 +232,7 @@ function AS_Settings:apply()
     AS_SpeedHint.POS_X, AS_SpeedHint.POS_Y = self.hintPosX, self.hintPosY
     AS_SpeedHint.ICON_X, AS_SpeedHint.ICON_Y = self.iconPosX, self.iconPosY
     AS_LightRange:setFactor(self.lightRange)
+    AS_LightRange:setGlow(self.lightGlow)
 end
 
 function AS_Settings:getStateForValue(v)
@@ -421,6 +427,16 @@ function AS_Settings:onLightRangeChanged(state, element)
         self:apply()
         self:save()
         sprint("distance des feux : x%d", v)
+    end
+end
+
+function AS_Settings:onLightGlowChanged(state, element)
+    local v = self.LIGHT_GLOW_LIST[state]
+    if v ~= nil then
+        self.lightGlow = v
+        self:apply()
+        self:save()
+        sprint("luminosité des feux : x%d", v)
     end
 end
 
@@ -735,6 +751,17 @@ function AS_Settings:buildUI(frame)
         state = self:getIndex(self.LIGHT_RANGE_LIST, self.lightRange),
         callback = AS_Settings.onLightRangeChanged,
     })
+    local glowTexts = {}
+    for i, v in ipairs(self.LIGHT_GLOW_LIST) do
+        glowTexts[i] = (v == 1) and L("vtpas_lightRange_base") or ("x" .. v)
+    end
+    self.options.lightGlow = self:addRow(layout, template, {
+        label = L("vtpas_lightGlow_label"),
+        tip = L("vtpas_lightGlow_tip"),
+        texts = glowTexts,
+        state = self:getIndex(self.LIGHT_GLOW_LIST, self.lightGlow),
+        callback = AS_Settings.onLightGlowChanged,
+    })
 
     self.built = true
     layout:invalidateLayout()
@@ -766,6 +793,7 @@ function AS_Settings:refreshStates()
     if o.durAlert ~= nil then o.durAlert:setState(self:getIndex(self.DURATION_LIST, self.durAlert)) end
     if o.speedHint ~= nil then o.speedHint:setState(self.speedHint and 2 or 1) end
     if o.lightRange ~= nil then o.lightRange:setState(self:getIndex(self.LIGHT_RANGE_LIST, self.lightRange)) end
+    if o.lightGlow ~= nil then o.lightGlow:setState(self:getIndex(self.LIGHT_GLOW_LIST, self.lightGlow)) end
 end
 
 function AS_Settings:onSettingsFrameOpen(frame)

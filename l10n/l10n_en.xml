@@ -141,5 +141,7 @@
         <text name="vtpas_lightRange_label" text="Vehicle lights view distance"/>
         <text name="vtpas_lightRange_tip" text="Distance at which the headlights, lights and beacons of other vehicles stay visible. x1 = base game. Ground lighting is unchanged."/>
         <text name="vtpas_lightRange_base" text="x1 (base game)"/>
+        <text name="vtpas_lightGlow_label" text="Vehicle lights brightness"/>
+        <text name="vtpas_lightGlow_tip" text="Brightness of the headlight, light and beacon glow of other vehicles. x1 = base game. The driven vehicle and its implements are unchanged."/>
     </texts>
 </l10n>

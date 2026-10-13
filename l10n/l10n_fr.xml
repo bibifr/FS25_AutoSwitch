@@ -141,5 +141,7 @@
         <text name="vtpas_lightRange_label" text="Distance des feux des véhicules"/>
         <text name="vtpas_lightRange_tip" text="Distance à laquelle les phares, feux et gyros des autres véhicules restent visibles. x1 = jeu de base. L'éclairage au sol ne change pas."/>
         <text name="vtpas_lightRange_base" text="x1 (jeu de base)"/>
+        <text name="vtpas_lightGlow_label" text="Luminosité des feux des véhicules"/>
+        <text name="vtpas_lightGlow_tip" text="Luminosité des halos des phares, feux et gyros des autres véhicules. x1 = jeu de base. Le véhicule conduit et ses outils ne changent pas."/>
     </texts>
 </l10n>

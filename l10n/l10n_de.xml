@@ -141,5 +141,7 @@
         <text name="vtpas_lightRange_label" text="Sichtweite der Fahrzeuglichter"/>
         <text name="vtpas_lightRange_tip" text="Entfernung, bis zu der Scheinwerfer, Lichter und Rundumleuchten anderer Fahrzeuge sichtbar bleiben. x1 = Basisspiel. Die Bodenbeleuchtung bleibt unverändert."/>
         <text name="vtpas_lightRange_base" text="x1 (Basisspiel)"/>
+        <text name="vtpas_lightGlow_label" text="Helligkeit der Fahrzeuglichter"/>
+        <text name="vtpas_lightGlow_tip" text="Helligkeit des Scheinwerfer-, Licht- und Rundumleuchtenscheins anderer Fahrzeuge. x1 = Basisspiel. Das gefahrene Fahrzeug und seine Geräte bleiben unverändert."/>
     </texts>
 </l10n>

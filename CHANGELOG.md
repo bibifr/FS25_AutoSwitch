@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.38 | Lumières : les halos des phares, feux et gyros des autres véhicules sont 2 fois plus lumineux (réglable dans le menu, x1 = jeu de base). Le véhicule conduit et ses outils ne changent pas |
 | 1.0.0.37 | Lumières : les phares, feux et gyros des autres véhicules restent visibles 5 fois plus loin (réglable dans le menu, x1 = jeu de base). L'éclairage au sol ne change pas |
 | 1.0.0.36 | Affichage : le tracteur et la plage de vitesse sont deux blocs séparés, déplaçables chacun à la souris (position gardée) ; plus de cadre orange quand le curseur est visible |
 | 1.0.0.35 | Affichage : l'icône de patinage devient le tracteur vu de dessus (pont AV / AR bloqué en rouge, transmission 4x4 en vert, selon Enhanced Vehicle), avec le patinage de chaque roue ; un pont bloqué n'affiche plus qu'un patinage, centré sur le pont |
