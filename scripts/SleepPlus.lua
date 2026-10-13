@@ -8,8 +8,10 @@ local L = AS.L
 --   23:30), donc 24 h de sommeil au plus. Sa liste est remplacée par :
 --     +1 h ... +23 h, puis 1 jour ... 7 jours.
 -- v1.0.0.33 : deux listes avec un titre chacune (« Temps en heures » /
---   « Temps en jours »), fenêtre agrandie, +0 h et +1 jour par défaut, Heures (+0 à +23 h) et Jours (0 à 7, copie de la
---   liste du jeu posée dessous). Durée = jours + heures (0 + 0 = 1 h).
+--   « Temps en jours »), fenêtre agrandie, +0 h et +1 jour par défaut
+--   Heures (+0 à +23 h) et Jours (0 à 7, copie de la liste du jeu posée
+--   dessous). Durée = jours + heures (0 + 0 = 1 h).
+-- v1.0.0.41 : avec des jours, réveil à 8 h le dernier jour (+ les heures choisies).
 --   Relevés dans log.txt (10/10/2026) :
 --     - g_gui.guis.SleepDialog.target.targetTimeElement = la liste (48 choix) ;
 --     - pendant le sommeil g_sleepManager.isSleeping = true, le temps passe à
@@ -24,6 +26,7 @@ AS_SleepPlus.MAX_HOURS = 23
 AS_SleepPlus.MAX_DAYS  = 7
 AS_SleepPlus.DEFAULT_HOURS = 0    -- choix proposés à l'ouverture (Fabien) : +0 h et +1 jour
 AS_SleepPlus.DEFAULT_DAYS  = 1
+AS_SleepPlus.WAKE_HOUR     = 8    -- avec des jours : réveil à 8 h le dernier jour (Fabien, 13/10/2026)
 AS_SleepPlus.DAY_MS    = 24 * 60 * 60 * 1000
 -- Mise en page (hauteur d'écran, depuis le bas du contenu) : titre Heures,
 -- curseur Heures, titre Jours, curseur Jours ; fenêtre agrandie de EXTRA_H
@@ -32,10 +35,11 @@ AS_SleepPlus.DAYS_Y      = 0.037   -- curseur Jours = place d'origine du curseur
 AS_SleepPlus.LABEL_DY    = 0.050   -- titre au-dessus de son curseur (0.032 le chevauchait)
 AS_SleepPlus.BLOCK_DY    = 0.075   -- curseur Heures au-dessus du curseur Jours
 AS_SleepPlus.LABEL_H     = 0.022
+AS_SleepPlus.FALLBACK_MS = 3000    -- secours si le jeu ne se réveille pas seul (temps réel)
 
 AS_SleepPlus.wasOpen      = false
 AS_SleepPlus.wasSleeping  = false
-AS_SleepPlus.choiceMs     = nil   -- durée choisie dans la fenêtre
+AS_SleepPlus.choiceTarget = nil   -- fin du sommeil choisie dans la fenêtre (ms absolues)
 AS_SleepPlus.targetAbsMs  = nil   -- fin du sommeil (jour * 24 h + heure, en ms)
 
 local TAG = "[AutoSwitch SleepPlus] "
@@ -131,7 +135,7 @@ function AS_SleepPlus:onDialogOpen(dlg)
         print(TAG .. "liste de la fenêtre Dormir introuvable : fenêtre d'origine gardée")
         return
     end
-    self.choiceMs = nil
+    self.choiceTarget = nil
     self:growDialog(dlg, el.parent)
     self:createDaysList(dlg, el)
     local hours, days = buildTexts()
@@ -162,9 +166,13 @@ function AS_SleepPlus:onDialogClose(dlg)
     local h = (el ~= nil and el.getState ~= nil and el:getState() or 1) - 1
     local d = (self.daysEl ~= nil and self.daysEl:getState() or 1) - 1
     if h + d == 0 then h = 1 end                 -- 0 h et 0 jour : 1 h
-    self.choiceMs = d * self.DAY_MS + h * 3600000
-    self.choiceText = string.format("%d jour(s) + %d h", d, h)
-    self.choiceAt = nowAbsMs()
+    if d > 0 then
+        -- v1.0.0.41 : avec des jours, réveil à 8 h le dernier jour (+ les heures choisies)
+        local day = g_currentMission.environment.currentMonotonicDay or 0
+        self.choiceTarget = (day + d) * self.DAY_MS + (self.WAKE_HOUR + h) * 3600000
+    else
+        self.choiceTarget = nowAbsMs() + h * 3600000
+    end
     -- remettre la liste d'origine (heures de réveil) pour le jeu
     if el ~= nil and type(dlg.targetTimes) == "table" then
         el:setTexts(dlg.targetTimes)
@@ -172,25 +180,75 @@ function AS_SleepPlus:onDialogClose(dlg)
 end
 
 function AS_SleepPlus:onSleepStart()
-    if self.choiceMs == nil then return end
-    self.targetAbsMs = (self.choiceAt or nowAbsMs()) + self.choiceMs
+    if self.choiceTarget == nil then return end
+    self.targetAbsMs = self.choiceTarget
     self.gameWakeUpTime = g_sleepManager.wakeUpTime
     g_sleepManager.wakeUpTime = 1e15  -- hors d'atteinte (nombre fini, au cas où le jeu calcule avec)
-    self.choiceMs = nil
+    self.choiceTarget = nil
 end
+
+-- v1.0.0.39 : réveil par le jeu lui-même. En 1.0.0.32-38, AutoSwitch appelait
+-- stopSleep() : après 7 jours, le joueur est resté bloqué (plus aucune touche,
+-- même Échap), le jeu ne rendant pas les commandes. Maintenant l'heure de
+-- réveil du jeu est remise à 0 : il voit l'heure dépassée et se réveille par
+-- son chemin normal. stopSleep() ne sert plus que de secours.
+
 
 function AS_SleepPlus:wakeUp()
     self.targetAbsMs = nil
-    local ok, err = pcall(g_sleepManager.stopSleep, g_sleepManager)
-    if not ok then
-        -- secours : laisser le jeu réveiller lui-même
-        print(TAG .. "stopSleep a échoué (" .. tostring(err) .. "), réveil rendu au jeu")
-        g_sleepManager.wakeUpTime = 0
+    g_sleepManager.wakeUpTime = 0
+    self.fallbackTimer = self.FALLBACK_MS
+end
+
+function AS_SleepPlus:fallbackWake(dt)
+    if self.fallbackTimer == nil then return end
+    if g_sleepManager.isSleeping ~= true then
+        self.fallbackTimer = nil
+        return
+    end
+    self.fallbackTimer = self.fallbackTimer - dt
+    if self.fallbackTimer <= 0 then
+        self.fallbackTimer = nil
+        print(TAG .. "le jeu ne s'est pas réveillé seul, stopSleep() en secours")
+        local ok, err = pcall(g_sleepManager.stopSleep, g_sleepManager)
+        if not ok then print(TAG .. "stopSleep a échoué (" .. tostring(err) .. ")") end
+    end
+end
+
+
+-- v1.0.0.41 : Dynamic Market ouvre sa fenêtre « Nouvelles du marché » à chaque
+-- changement de mois, même pendant le sommeil. Ouverte en dormant, elle reste
+-- invisible mais garde les commandes (contexte DIALOG_DynamicMarketNewsDialog) :
+-- joueur bloqué au réveil, Échap compris (relevé du 13/10/2026 après 7 jours).
+-- Pendant le sommeil, la fenêtre est remise à plus tard : Dynamic Market
+-- l'ouvre lui-même une fois réveillé (sa file d'attente __marketNewsPendingKey).
+function AS_SleepPlus:hookDynamicMarket()
+    if self.dmHooked then return end
+    local dm = AS.modGlobal("FS25_DynamicMarket", "DynamicMarket")
+    if type(dm) ~= "table" then return end
+    self.dmHooked = true
+    if type(dm.tryOpenPendingMarketNews) == "function" then
+        local orig = dm.tryOpenPendingMarketNews
+        dm.tryOpenPendingMarketNews = function(selfDm, ...)
+            if g_sleepManager ~= nil and g_sleepManager.isSleeping == true then return end
+            return orig(selfDm, ...)
+        end
+    end
+    if type(dm.openMarketNewsDialog) == "function" then
+        local orig = dm.openMarketNewsDialog
+        dm.openMarketNewsDialog = function(selfDm, marketKey, ...)
+            if g_sleepManager ~= nil and g_sleepManager.isSleeping == true then
+                selfDm.__marketNewsPendingKey = marketKey or selfDm.__marketNewsPendingKey
+                return false
+            end
+            return orig(selfDm, marketKey, ...)
+        end
     end
 end
 
 function AS_SleepPlus:update(dt)
     if g_currentMission == nil or g_sleepManager == nil or g_currentMission.environment == nil then return end
+    self:hookDynamicMarket()
     if g_currentMission.getIsServer ~= nil and not g_currentMission:getIsServer() then return end
 
     local dlg = getDialog()
@@ -213,6 +271,7 @@ function AS_SleepPlus:update(dt)
     if sleeping and self.targetAbsMs ~= nil and nowAbsMs() >= self.targetAbsMs then
         self:wakeUp()
     end
+    self:fallbackWake(dt)
 end
 
 addModEventListener(AS_SleepPlus)
