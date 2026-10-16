@@ -1460,14 +1460,18 @@ if Vehicle ~= nil then
 end
 
 -- (1.0.0.43) liste des palettes refaite à l'achat, la pose, la vente ou la suppression
-local function onRackListChange(_, obj)
+-- (1.0.0.44) la valeur renvoyée par la fonction du jeu est transmise telle quelle :
+-- en 1.0.0.43 elle était perdue et le jeu refusait d'enregistrer les véhicules
+local function onRackListChange(sys, superFunc, obj, ...)
+    local r1, r2, r3 = superFunc(sys, obj, ...)
     if obj == nil or obj.configFileName == nil or rackKind(obj) ~= nil then AS_DualRack:markRacksDirty() end
+    return r1, r2, r3
 end
 for _, h in ipairs({ { VehicleSystem, "addVehicle" }, { VehicleSystem, "removeVehicle" },
                      { PlaceableSystem, "addPlaceable" }, { PlaceableSystem, "removePlaceable" } }) do
     local cls, fn = h[1], h[2]
     if cls ~= nil and cls[fn] ~= nil then
-        cls[fn] = Utils.appendedFunction(cls[fn], onRackListChange)
+        cls[fn] = Utils.overwrittenFunction(cls[fn], onRackListChange)
     end
 end
 

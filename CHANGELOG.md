@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.44 | Correctif urgent de la 1.0.0.43 : le jeu refusait d'enregistrer les véhicules au chargement (« Failed to register vehicle! »). Ne pas sauvegarder une partie chargée avec la 1.0.0.43 |
 | 1.0.0.43 | Palettes de pneus : plus de chute de FPS avec plusieurs palettes côte à côte. La liste des palettes est gardée en mémoire et refaite seulement à l'achat, la pose, la vente ou la suppression d'une palette ; les groupes ne sont recalculés que si une palette a bougé. Pneus des palettes cachés au-delà de 200 m (600 m avant) |
 | 1.0.0.42 | Patinage : chaque roue est comparée à sa propre vitesse au sol (en virage, les roues avant et extérieures ne comptent plus comme patinant, jusqu'à 40 % avant), pour l'affichage et le blocage des différentiels ; en 4x2, pas de patinage affiché sur les roues avant libres |
 | 1.0.0.41 | Dormir : avec des jours, réveil à 8 h le dernier jour (+ les heures choisies). Joueur bloqué au réveil après plusieurs jours corrigé : la fenêtre « Nouvelles du marché » de Dynamic Market, ouverte au changement de mois pendant le sommeil, restait invisible et gardait les touches ; elle s'affiche maintenant au réveil. Le réveil passe par le jeu lui-même |
