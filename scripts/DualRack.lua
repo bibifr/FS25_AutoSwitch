@@ -334,11 +334,17 @@ end
 -------------------------------------------------------------------------------
 -- (v2.6) pneus visibles sur la palette : retirés un par un (du haut vers le bas)
 -------------------------------------------------------------------------------
+-- (1.0.0.43) type mémorisé sur l'objet : le nom de fichier ne change jamais
 local function rackKind(v)
-    local f = v ~= nil and v.configFileName or nil
+    if v == nil then return nil end
+    local k = v.__asRackKind
+    if k ~= nil then return k or nil end
+    local f = v.configFileName
     if f == nil then return nil end
     local base = string.match(f, "([^/\\]+)$") or f
-    return AS_DualRack.RACK_KINDS[base]
+    k = AS_DualRack.RACK_KINDS[base]
+    v.__asRackKind = k or false
+    return k
 end
 local function isRack(v)
     return rackKind(v) ~= nil
@@ -402,8 +408,21 @@ function AS_DualRack:setRackCount(rack, n)
     rack.__asShown = n
 end
 
+-- (1.0.0.43) palettes et groupes mémorisés : la liste n'est refaite qu'à l'achat, la pose,
+-- la vente ou la suppression d'une palette (+ contrôle de secours toutes les 10 s),
+-- les groupes seulement quand une palette a bougé (contrôle toutes les 2 s).
+-- Avant, tout était recalculé à chaque image pour chaque palette : chute de FPS avec plusieurs palettes côte à côte.
+AS_DualRack.cache = nil          -- { list, pos = {[rack]={x,z}}, groupOf = {[rack]=g}, primaryOf = {[g]=primary} }
+AS_DualRack.cacheDirty = true
+AS_DualRack.cacheRetry = 0       -- ms avant une nouvelle lecture (palette pas encore chargée à l'achat)
+AS_DualRack.cacheScanTimer = 0
+AS_DualRack.cacheMoveTimer = 0
+AS_DualRack.SCAN_INTERVAL = 10000
+AS_DualRack.MOVE_INTERVAL = 2000
+AS_DualRack.MOVE_EPS = 0.2
+
 -- (v2.8) toutes les palettes : palettes de la boutique (véhicules) + objets du menu construction
-function AS_DualRack:allRacks()
+function AS_DualRack:scanRacks()
     local list = {}
     local vs = g_currentMission ~= nil and g_currentMission.vehicleSystem or nil
     if vs ~= nil then
@@ -418,6 +437,97 @@ function AS_DualRack:allRacks()
         end
     end
     return list
+end
+
+function AS_DualRack:markRacksDirty()
+    self.cacheDirty = true
+    self.cacheRetry = 2000 -- relecture 2 s plus tard : une palette achetée n'a pas encore son objet 3D
+end
+
+-- groupes : palettes à moins de GROUP_DIST m l'une de l'autre (de proche en proche)
+function AS_DualRack:buildGroups(c)
+    c.groupOf, c.primaryOf = {}, {}
+    for _, rack in ipairs(c.list) do
+        if c.groupOf[rack] == nil then
+            local group = { rack }
+            c.groupOf[rack] = group
+            local i = 1
+            while i <= #group do
+                local p = c.pos[group[i]]
+                for _, r in ipairs(c.list) do
+                    if c.groupOf[r] == nil then
+                        local q = c.pos[r]
+                        if MathUtil.vector2Length(q[1] - p[1], q[2] - p[2]) <= self.GROUP_DIST then
+                            c.groupOf[r] = group
+                            table.insert(group, r)
+                        end
+                    end
+                end
+                i = i + 1
+            end
+            local primary = nil
+            for _, r in ipairs(group) do
+                if rackKind(r) == "AR" and (primary == nil or r:getUniqueId() < primary:getUniqueId()) then primary = r end
+            end
+            if primary == nil then
+                for _, r in ipairs(group) do
+                    if primary == nil or r:getUniqueId() < primary:getUniqueId() then primary = r end
+                end
+            end
+            c.primaryOf[group] = primary
+        end
+    end
+end
+
+function AS_DualRack:rebuildCache()
+    local c = { list = self:scanRacks(), pos = {} }
+    for _, r in ipairs(c.list) do
+        local x, _, z = getWorldTranslation(r.rootNode)
+        c.pos[r] = { x, z }
+    end
+    self:buildGroups(c)
+    self.cache = c
+    self.cacheDirty = false
+end
+
+-- appelé à chaque image : ne fait presque rien tant que rien ne change
+function AS_DualRack:updateCache(dt)
+    dt = dt or 0
+    if self.cacheRetry > 0 then
+        self.cacheRetry = self.cacheRetry - dt
+        if self.cacheRetry <= 0 then self.cacheRetry = 0; self.cacheDirty = true end
+    end
+    self.cacheScanTimer = self.cacheScanTimer + dt
+    if self.cacheScanTimer >= self.SCAN_INTERVAL then
+        self.cacheScanTimer = 0
+        self.cacheDirty = true
+    end
+    if self.cacheDirty or self.cache == nil then
+        self:rebuildCache()
+        return
+    end
+    self.cacheMoveTimer = self.cacheMoveTimer + dt
+    if self.cacheMoveTimer < self.MOVE_INTERVAL then return end
+    self.cacheMoveTimer = 0
+    local c, moved = self.cache, false
+    for _, r in ipairs(c.list) do
+        if r.isDeleted or r.rootNode == nil then
+            self:rebuildCache()
+            return
+        end
+        local x, _, z = getWorldTranslation(r.rootNode)
+        local p = c.pos[r]
+        if math.abs(x - p[1]) > self.MOVE_EPS or math.abs(z - p[2]) > self.MOVE_EPS then
+            p[1], p[2] = x, z
+            moved = true
+        end
+    end
+    if moved then self:buildGroups(c) end
+end
+
+function AS_DualRack:allRacks()
+    if self.cache == nil or self.cacheDirty then self:rebuildCache() end
+    return self.cache.list
 end
 
 function AS_DualRack:findRackById(id)
@@ -478,32 +588,17 @@ end
 -- une seule zone tracteur et un seul repère joueur. Palette de référence : AR si présente.
 AS_DualRack.GROUP_DIST = 4.5
 function AS_DualRack:getGroup(rack)
-    local all = self:allRacks()
-    local group, inGroup = { rack }, { [rack] = true }
-    local i = 1
-    while i <= #group do
-        local gx, _, gz = getWorldTranslation(group[i].rootNode)
-        for _, r in ipairs(all) do
-            if not inGroup[r] then
-                local x, _, z = getWorldTranslation(r.rootNode)
-                if MathUtil.vector2Length(x - gx, z - gz) <= self.GROUP_DIST then
-                    inGroup[r] = true
-                    table.insert(group, r)
-                end
-            end
-        end
-        i = i + 1
+    local c = self.cache
+    if c == nil or self.cacheDirty then self:rebuildCache(); c = self.cache end
+    local group = c.groupOf[rack]
+    if group == nil then
+        -- palette pas encore dans la liste (achetée à l'instant) : liste refaite
+        self:rebuildCache()
+        c = self.cache
+        group = c.groupOf[rack]
+        if group == nil then return { rack }, rack end
     end
-    local primary = nil
-    for _, r in ipairs(group) do
-        if rackKind(r) == "AR" and (primary == nil or r:getUniqueId() < primary:getUniqueId()) then primary = r end
-    end
-    if primary == nil then
-        for _, r in ipairs(group) do
-            if primary == nil or r:getUniqueId() < primary:getUniqueId() then primary = r end
-        end
-    end
-    return group, primary
+    return group, c.primaryOf[group]
 end
 
 function AS_DualRack:getZone(rack)
@@ -1188,6 +1283,11 @@ function AS_DualRack:cancelJob(j, v, items)
 end
 
 function AS_DualRack:update(dt)
+    local okC, errC = pcall(self.updateCache, self, dt)
+    if not okC and not self.cacheErrPrinted then
+        self.cacheErrPrinted = true
+        print("[AS_DualRack] ERREUR liste palettes : " .. tostring(errC))
+    end
     if self.actionEventId ~= nil then
         self.helpTimer = (self.helpTimer or 0) + (dt or 0)
         if self.helpTimer >= 300 then
@@ -1301,6 +1401,8 @@ end
 function AS_DualRack:deleteMap()
     for rack, _ in pairs(self.markers) do pcall(self.removeMarker, self, rack) end
     self.markers = {}
+    self.cache = nil
+    self.cacheDirty = true
     self.jobs = {}
     self.rackTires = {}
     self.memoryLoaded = false
@@ -1354,6 +1456,18 @@ if Vehicle ~= nil then
                 return superFunc(self, ...)
             end)
         end
+    end
+end
+
+-- (1.0.0.43) liste des palettes refaite à l'achat, la pose, la vente ou la suppression
+local function onRackListChange(_, obj)
+    if obj == nil or obj.configFileName == nil or rackKind(obj) ~= nil then AS_DualRack:markRacksDirty() end
+end
+for _, h in ipairs({ { VehicleSystem, "addVehicle" }, { VehicleSystem, "removeVehicle" },
+                     { PlaceableSystem, "addPlaceable" }, { PlaceableSystem, "removePlaceable" } }) do
+    local cls, fn = h[1], h[2]
+    if cls ~= nil and cls[fn] ~= nil then
+        cls[fn] = Utils.appendedFunction(cls[fn], onRackListChange)
     end
 end
 
