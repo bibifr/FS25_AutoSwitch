@@ -2,7 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
-| 1.0.0.54 | Moissonneuses, ensileuses et machines 4x2 (sans différentiel central) : HUD avec une icône de moissonneuse (ou le tracteur en 4x2) et le patinage des roues motrices, seul le pont moteur se bloque (à la main ou en AUTO), blocage de l'autre pont annulé, pas de 4x2 / 4x4, braquage complet |
+| 1.0.0.54 | Moissonneuses, ensileuses et machines 4x2 (sans différentiel central) : HUD avec une icône de moissonneuse (dessin de Fabien) ou le tracteur en 4x2, et le patinage des roues motrices, seul le pont moteur se bloque (à la main ou en AUTO), blocage de l'autre pont annulé, pas de 4x2 / 4x4, braquage complet |
 | 1.0.0.53 | Différentiels, 4x2 / 4x4, braquage et tracteur du HUD réservés aux vrais 4x4 (différentiel central) : moissonneuses et machines 4x2 laissées telles quelles (avant, AutoSwitch les croyait en 4x4 et réduisait leur braquage) |
 | 1.0.0.51 | En MANUEL avec un blocage engagé, les roues braquent à fond à l'écran mais le tracteur ne tourne qu'au seuil du blocage (50 % AR, 20 % AV, 10 % les deux) : il ripe |
 | 1.0.0.50 | Touche Ctrl droit + Flèche haut (modifiable dans les commandes) : différentiels et transmission en AUTO ou MANUEL, mode écrit au-dessus du tracteur et enregistré. En MANUEL, AutoSwitch ne touche plus aux différentiels ni au 4x2 / 4x4, un blocage engagé ne se coupe plus en virage, le braquage est réduit à son seuil (50 % AR, 20 % AV, 10 % les deux). Retour en AUTO quand AutoDrive ou Courseplay prend la main (option du menu, activée par défaut) |

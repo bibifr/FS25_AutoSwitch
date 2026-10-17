@@ -465,12 +465,12 @@ function AS_SpeedHint:draw()
             renderOverlay(ov, iconX, by, iconW, iconH)
         end
         -- ponts dans l'image (256 px) : tracteur avant à 55 px du haut, arrière à 195 px ;
-        -- moissonneuse avant à 120 px, arrière à 220 px
+        -- moissonneuse avant à 73 px, arrière à 207 px
         local ws = st.wheelVehicle == vehicle and st.wheelSlip or nil
         if ws ~= nil then
             local lpX, lpY = pxw(3), py(1.5)
             local fy, ry = 55, 195
-            if harvester then fy, ry = 120, 220 end
+            if harvester then fy, ry = 73, 207 end
             -- (v1.0.0.42) roues libres (non motrices) : pas de patinage affiché
             local axles = {
                 { y = by + iconH * (1 - fy / 256), l = frontDriven and ws.fl or nil, r = frontDriven and ws.fr or nil, locked = frontLocked and frontDriven },
