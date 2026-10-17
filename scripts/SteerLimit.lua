@@ -203,17 +203,25 @@ function AS_Steer:update(dt)
     if g_currentMission == nil then return end
 
     -- (v1.0.0.51) après les loadMap : par-dessus MoreRealistic, MSP et TTD
-    if not self.physInstalled then
-        self.physInstalled = true
-        if WheelPhysics ~= nil and WheelPhysics.updatePhysics ~= nil then
-            WheelPhysics.updatePhysics = Utils.overwrittenFunction(WheelPhysics.updatePhysics, updatePhysics)
+    -- (v1.0.0.52) posé seulement en MANUEL, retiré en AUTO (gel en montant dans un tracteur sous Courseplay)
+    local manual = AS_Diff ~= nil and AS_Diff.MANUAL == true
+    if WheelPhysics ~= nil and WheelPhysics.updatePhysics ~= nil then
+        if manual and self.physOrig == nil then
+            self.physOrig = WheelPhysics.updatePhysics
+            self.physHook = Utils.overwrittenFunction(self.physOrig, updatePhysics)
+            WheelPhysics.updatePhysics = self.physHook
+        elseif not manual and self.physOrig ~= nil and WheelPhysics.updatePhysics == self.physHook then
+            WheelPhysics.updatePhysics = self.physOrig
+            self.physOrig, self.physHook = nil, nil
         end
     end
+    local controlled = shGetControlledVehicle()
 
     for _, vehicle in pairs(getVehicles()) do
         if vehicle.vData ~= nil and type(vehicle.maxRotTime) == "number" and type(vehicle.minRotTime) == "number" then
             updateSteer(self, vehicle)
-            self.phys[vehicle] = physScale(vehicle)
+            -- (v1.0.0.52) angle physique réduit seulement pour le véhicule conduit
+            self.phys[vehicle] = (manual and vehicle == controlled) and physScale(vehicle) or nil
             if g_server ~= nil then
                 updateLocks(self, vehicle)
             end
