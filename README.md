@@ -2,7 +2,7 @@
 
 # FS25 AutoSwitch
 
-**Version 1.0.0.45** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
+**Version 1.0.0.48** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
 
 ## French
 
@@ -53,7 +53,6 @@ Les jumelées doivent exister dans la **même marque de pneus** que ceux du trac
 - [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025) : version 1.0.1.0 minimum
 - Real Physics - Tire Wear (Reifenverschleiß) : version 1.2.2.67 minimum
 - [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases) : version 1.6.0.0 minimum
-- [Crop Destruction Overhaul](https://www.farming-simulator.com/mod.php?mod_id=356527&title=fs2025) : version 1.1.0.0 minimum
 - [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025) : version 2.0.0.8 minimum
 
 AutoSwitch fait partie d'un ensemble réaliste global : tous ces mods sont obligatoires, au moins dans la version indiquée. Si l'un d'eux est plus ancien, AutoSwitch ne démarre pas et le signale en jeu.
@@ -73,7 +72,7 @@ AutoSwitch fait partie d'un ensemble réaliste global : tous ces mods sont oblig
 
 ## English
 
-**Version 1.0.0.45** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
+**Version 1.0.0.48** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
 
 Companion mod that automates **tire pressure and differential locks** and makes **traction realistic** by making Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics and Tractor Terrain Dynamics work together, without modifying any of them. It also adds **dual-wheel racks** mounted tire by tire.
 Objective: Make game more realistic 
@@ -120,7 +119,6 @@ Dual wheels must exist in the **same tire brand** as the tractor's tires. Wheel 
 - [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025): version 1.0.1.0 minimum
 - Real Physics - Tire Wear (Reifenverschleiß): version 1.2.2.67 minimum
 - [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases): version 1.6.0.0 minimum
-- [Crop Destruction Overhaul](https://www.farming-simulator.com/mod.php?mod_id=356527&title=fs2025): version 1.1.0.0 minimum
 - [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025): version 2.0.0.8 minimum
 
 AutoSwitch is part of a global realistic pack: all these mods are required, at least in the version shown. If one of them is older, AutoSwitch does not start and says so in game.

@@ -27,6 +27,7 @@
 --   TireDirtKeep  la saleté des pneus part moins vite en roulant
 --   SleepPlus     menu Dormir : avancer de X heures ou de X jours
 --   LightRange    lumières des véhicules visibles de plus loin
+--   GrassTrample  herbe piétinée : recul de pousse au lieu du fauchage de Mud System Physics
 --   Settings      menu Paramètres et sauvegarde des réglages (toujours en dernier)
 --
 -- v1.0.0.29 : contrôle des versions. Chaque mod requis doit être au moins à la
@@ -36,6 +37,9 @@
 -- après AutoSwitch ; seule la version déclarée par le gestionnaire de mods compte.
 -- v1.0.0.45 : Use Your Tyres n'est plus requis, Reifenverschleiß le remplace.
 -- Son nom de mod change à chaque version : il est cherché par le début du nom.
+-- v1.0.0.46 : Crop Destruction Overhaul n'est plus requis.
+-- v1.0.0.47 : herbe piétinée corrigée (setParallelogramWorldCoords), stade le plus bas coupé.
+-- v1.0.0.48 : herbe piétinée plus douce (sec dès 11 km/h, humide dès 7 km/h, un stade).
 -- =============================================================================
 
 local modDir = g_currentModDirectory or ""
@@ -65,6 +69,7 @@ local FILES = {
     "scripts/TireDirtKeep.lua",
     "scripts/SleepPlus.lua",
     "scripts/LightRange.lua",
+    "scripts/GrassTrample.lua",
     "scripts/Settings.lua",
 }
 
@@ -80,7 +85,6 @@ local REQUIRED = {
     { "MoreRealistic",                "0.26.09.13" },
     { "moreRealisticXmlDatabank",     "1.0.0.1" },
     { "FS25_RealisticHarvesting",     "1.6.0.0" },
-    { "FS25_CropDestructionOverhaul", "1.1.0.0" },
     { "FS25_MoistureSystem",          "2.0.0.8" },
     { "FS25_Reifenverschleiss*",      "1.2.2.67", "Real Physics - Tire Wear" },
 }
