@@ -37,6 +37,9 @@
 -- après AutoSwitch ; seule la version déclarée par le gestionnaire de mods compte.
 -- v1.0.0.45 : Use Your Tyres n'est plus requis, Reifenverschleiß le remplace.
 -- Son nom de mod change à chaque version : il est cherché par le début du nom.
+-- v1.0.0.49 : un mod requis installé mais pas activé dans la partie est signalé
+-- en jeu au chargement (AutoSwitch démarre quand même). Vu avec Reifenverschleiß,
+-- décoché dans la sauvegarde : AutoSwitch ne le disait que dans log.txt.
 -- v1.0.0.46 : Crop Destruction Overhaul n'est plus requis.
 -- v1.0.0.47 : herbe piétinée corrigée (setParallelogramWorldCoords), stade le plus bas coupé.
 -- v1.0.0.48 : herbe piétinée plus douce (sec dès 11 km/h, humide dès 7 km/h, un stade).
@@ -199,3 +202,39 @@ for _, file in ipairs(FILES) do
         print("[AutoSwitch] ERREUR : fichier introuvable : " .. tostring(path))
     end
 end
+
+-- (v1.0.0.49) mods requis installés mais pas activés dans cette partie : signalés en jeu.
+-- Contrôle au premier update de la partie, quand tous les mods sont chargés.
+AS_ModCheck = { done = false }
+function AS_ModCheck:update(dt)
+    if self.done then return end
+    if g_currentMission == nil or g_gui == nil or g_modIsLoaded == nil then return end
+    self.done = true
+    local lines = {}
+    for _, req in ipairs(REQUIRED) do
+        local name = req[1]
+        local mod
+        if string.sub(name, -1) == "*" then
+            mod = findModByPrefix(string.sub(name, 1, -2))
+        elseif g_modManager ~= nil and g_modManager.getModByName ~= nil then
+            local ok, m = pcall(g_modManager.getModByName, g_modManager, name)
+            if ok then mod = m end
+        end
+        local modName = mod ~= nil and mod.modName or name
+        if g_modIsLoaded[modName] ~= true then
+            local title = (mod ~= nil and mod.title) or req[3] or name
+            print(string.format("[AutoSwitch] ATTENTION : %s (%s) n'est pas activé dans cette partie", tostring(title), modName))
+            lines[#lines + 1] = string.format(text("vtpas_modNotActiveLine", "%s : pas activé dans cette partie"), tostring(title))
+        end
+    end
+    if #lines == 0 then return end
+    local msg = text("vtpas_modNotActive", "AutoSwitch : des mods requis ne sont pas activés dans cette partie. Activez-les dans la sélection des mods au chargement de la partie.") .. "\n\n" .. table.concat(lines, "\n")
+    local shown = false
+    if InfoDialog ~= nil and InfoDialog.show ~= nil then
+        shown = pcall(InfoDialog.show, msg, nil, nil, DialogElement ~= nil and DialogElement.TYPE_WARNING or nil)
+    end
+    if not shown and g_currentMission.showBlinkingWarning ~= nil then
+        pcall(g_currentMission.showBlinkingWarning, g_currentMission, msg, 15000)
+    end
+end
+addModEventListener(AS_ModCheck)

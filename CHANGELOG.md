@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.49 | Contrôle des mods : un mod requis installé mais pas activé dans la partie (case décochée dans la sélection des mods) est signalé en jeu au chargement, avec son nom, et dans log.txt. AutoSwitch démarre quand même |
 | 1.0.0.48 | Herbe piétinée plus douce : sur sol sec à partir de 11 km/h, sur sol humide à partir de 7 km/h, un seul stade de pousse en moins |
 | 1.0.0.47 | Herbe piétinée corrigée (zone sous la roue), le stade le plus bas est coupé |
 | 1.0.0.46 | Herbe détruite au passage des roues : la pousse recule au lieu du fauchage de Mud System Physics (selon la vitesse et l'humidité du sol). Crop Destruction Overhaul n'est plus requis |
