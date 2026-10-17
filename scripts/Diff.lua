@@ -31,7 +31,7 @@ AS_Diff.TURN_ON_DEG      = 15     -- braquage au-delà duquel on considère un v
 AS_Diff.TURN_OFF_DEG     = 8      -- braquage en dessous duquel le virage est terminé
 AS_Diff.AUTO_4WD         = true   -- (v1.30) 4x4 dans les champs, 4x2 sur route (Enhanced Vehicle) ; v1.0.0.34 : 4x2 sur le dur seulement
 AS_Diff.ZONE_CHECK_MS    = 1000
-AS_Diff.MANUAL           = false  -- (v1.0.0.50) mode MANUEL (touche Ctrl + D + Flèche haut) : différentiels
+AS_Diff.MANUAL           = false  -- (v1.0.0.50) mode MANUEL (touche Ctrl droit + Flèche haut) : différentiels
                                   -- et 4x2 / 4x4 laissés au joueur, blocages jamais coupés (braquage bridé)
 AS_Diff.AUTO_ON_HELPER   = true   -- (v1.0.0.50) AutoDrive / Courseplay qui prend la main repasse en AUTO
 AS_Diff.state = {}

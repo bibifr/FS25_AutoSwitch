@@ -21,7 +21,7 @@ AS_Settings.slip        = 15     -- (v1.0.0.21) seuil du diff ARRIÈRE
 AS_Settings.slipFront   = 30     -- (v1.0.0.21) seuil du diff AVANT
 AS_Settings.notifyDiff  = true
 AS_Settings.notifyTires = true
-AS_Settings.driveManual = false  -- (v1.0.0.50) différentiels et 4x2 / 4x4 : true = MANUEL, false = AUTO (touche Ctrl + D + Flèche haut)
+AS_Settings.driveManual = false  -- (v1.0.0.50) différentiels et 4x2 / 4x4 : true = MANUEL, false = AUTO (touche Ctrl droit + Flèche haut)
 AS_Settings.autoOnHelper = true  -- (v1.0.0.50) AutoDrive / Courseplay qui prend la main repasse en AUTO
 AS_Settings.tiresUserAuto = false -- pneus, conduite manuelle : true = automatique, false = manuel
 AS_Settings.built   = false

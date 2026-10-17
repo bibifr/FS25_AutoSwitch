@@ -10,7 +10,7 @@
         <text name="vtpas_slipFront_label" text="Patinage pour blocage du diff avant"/>
         <text name="vtpas_slipFront_tip" text="Patinage (%) au-delà duquel le différentiel avant se verrouille automatiquement (Enhanced Vehicle). Il se déverrouille à la moitié de ce seuil. Désactivé = jamais."/>
         <text name="vtpas_diff_label" text="Différentiels et transmission"/>
-        <text name="vtpas_diff_tip" text="Auto = AutoSwitch bloque les différentiels selon le patinage, choisit 4x2 / 4x4 et coupe les blocages en virage. Manuel = vous gérez tout ; un blocage engagé ne se coupe plus, le braquage est réduit à son seuil (50 % arrière, 20 % avant, 10 % les deux). Touche : Ctrl + D + Flèche haut."/>
+        <text name="vtpas_diff_tip" text="Auto = AutoSwitch bloque les différentiels selon le patinage, choisit 4x2 / 4x4 et coupe les blocages en virage. Manuel = vous gérez tout ; un blocage engagé ne se coupe plus, le braquage est réduit à son seuil (50 % arrière, 20 % avant, 10 % les deux). Touche : Ctrl droit + Flèche haut."/>
         <text name="vtpas_tire_label" text="Pression des pneus (conduite manuelle)"/>
         <text name="vtpas_tire_tip" text="Avec AutoDrive ou Courseplay, le gonflage et le dégonflage sont toujours automatiques. Ce réglage s'applique lorsque vous conduisez vous-même : Automatique = pneus gonflés sur route et dégonflés dans les champs ; Manuel = vous utilisez la touche du mod."/>
         <text name="vtpas_notifDiff_label" text="Notifications des différentiels"/>

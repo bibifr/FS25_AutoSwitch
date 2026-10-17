@@ -18,7 +18,7 @@
 -- braquées au-delà de son seuil est refusé, avec une icône et un texte clignotants.
 -- Diff.lua ne rebloque qu'une fois les roues revenues sous le seuil (AS_Steer.fitsLocks).
 -- Toujours actif (v1.0.0.25 : ligne « Différentiels : déblocage en virage » retirée du menu).
--- (v1.0.0.50) En mode MANUEL (touche Ctrl + D + Flèche haut) : blocages jamais coupés ni
+-- (v1.0.0.50) En mode MANUEL (touche Ctrl droit + Flèche haut) : blocages jamais coupés ni
 -- refusés, le braquage est bridé au seuil des blocages posés (50 / 20 / 10 %).
 
 local getVehicles, isLockedValue, asState, L, showTimedNotification, shGetControlledVehicle
