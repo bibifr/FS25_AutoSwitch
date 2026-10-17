@@ -51,7 +51,7 @@ Les jumelées doivent exister dans la **même marque de pneus** que ceux du trac
 - [Mud System Physics](https://www.kingmods.net/en/fs25/mods/73208/mud-system-physics) : version 1.3.6.0 minimum
 - [Tractor Terrain Dynamics](https://www.kingmods.net/en/fs25/mods/78890/tractor-terrain-dynamics) : version 1.0.3.7 minimum (bêta)
 - [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025) : version 1.0.1.0 minimum
-- Real Physics - Tire Wear (Reifenverschleiß) : version 1.2.2.67 minimum
+- [Real Physics - Tire Wear (Reifenverschleiß)](https://www.kingmods.net/fr/fs25/mods/82753/usure-reelle-des-pneus) : version 1.2.2.67 minimum
 - [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases) : version 1.6.0.0 minimum
 - [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025) : version 2.0.0.8 minimum
 
@@ -117,7 +117,7 @@ Dual wheels must exist in the **same tire brand** as the tractor's tires. Wheel 
 - [Mud System Physics](https://www.kingmods.net/en/fs25/mods/73208/mud-system-physics): version 1.3.6.0 minimum
 - [Tractor Terrain Dynamics](https://www.kingmods.net/en/fs25/mods/78890/tractor-terrain-dynamics): version 1.0.3.7 minimum (beta)
 - [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025): version 1.0.1.0 minimum
-- Real Physics - Tire Wear (Reifenverschleiß): version 1.2.2.67 minimum
+- [Real Physics - Tire Wear (Reifenverschleiß)](https://www.kingmods.net/fr/fs25/mods/82753/usure-reelle-des-pneus): version 1.2.2.67 minimum
 - [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases): version 1.6.0.0 minimum
 - [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025): version 2.0.0.8 minimum
 
