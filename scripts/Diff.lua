@@ -211,9 +211,18 @@ function AS_Diff:update(dt)
 
     for _, vehicle in pairs(getVehicles()) do
         local vd = vehicle.vData
-        -- (v1.0.0.53) seulement les vrais 4x4 (différentiel central) : moissonneuses et 4x2 laissés tels quels
-        if vd ~= nil and vd.want ~= nil and AS.is4wd(vehicle)
+        if vd ~= nil and vd.want ~= nil
            and vehicle.getIsMotorStarted ~= nil and vehicle:getIsMotorStarted() then
+            -- (v1.0.0.54) sans différentiel central (moissonneuse, ensileuse, 4x2) : un seul
+            -- différentiel (1 d'Enhanced Vehicle, pont moteur), pas de 4x2 / 4x4 ; un blocage du
+            -- différentiel 2, qui n'existe pas, est annulé
+            local four = AS.is4wd(vehicle)
+            if not four and isLockedValue(vd.want[2]) then
+                vd.want[2] = asState(vd.want[2], false)
+                if vehicle.raiseDirtyFlags ~= nil and vehicle.vehicleDirtyFlag ~= nil then
+                    pcall(vehicle.raiseDirtyFlags, vehicle, vehicle.vehicleDirtyFlag)
+                end
+            end
 
             local st = self.state[vehicle]
             if st == nil then
@@ -240,7 +249,7 @@ function AS_Diff:update(dt)
             -- (un changement manuel reste respecté jusqu'au prochain changement de zone)
             -- (v1.0.0.34) 4x2 seulement sur le dur (goudron, béton) : chemins de gravier, terre,
             -- herbe et sable en 4x4 comme les champs (même détection que la vitesse AutoDrive)
-            if not manual and self.AUTO_4WD and vd.want[3] ~= nil and (g_time - (st.lastZoneCheck or -10000)) >= self.ZONE_CHECK_MS then
+            if four and not manual and self.AUTO_4WD and vd.want[3] ~= nil and (g_time - (st.lastZoneCheck or -10000)) >= self.ZONE_CHECK_MS then
                 st.lastZoneCheck = g_time
                 local inField
                 if AS_AdSpeed ~= nil and AS_AdSpeed.detectZone ~= nil then
@@ -274,6 +283,7 @@ function AS_Diff:update(dt)
                         -- par AutoSwitch (SteerLimit.lua : 50 % arrière seul, 10 % les deux) ;
                         -- sans blocage, au-delà du seuil du blocage arrière seul
                         local f, r = st.eng[1] == true, st.eng[2] == true
+                        if not four then f, r = false, f end   -- un seul blocage : seuil 50 %
                         if not (f or r) then r = true end
                         st.turning = not AS_Steer.fitsLocks(vehicle, f, r)
                     else
@@ -297,7 +307,7 @@ function AS_Diff:update(dt)
 
                 -- (v1.30) en 4x2, si l'essieu arrière patine : passage en 4x4 d'abord
                 -- (les différentiels ne se bloquent qu'une fois en 4x4)
-                local in2wd = vd.want[3] ~= nil and vd.want[3] == 0
+                local in2wd = four and vd.want[3] ~= nil and vd.want[3] == 0
                 if self.AUTO_4WD and in2wd and slip ~= nil then
                     local rear = getRearSlipPercent(vehicle) or slip
                     if rear >= self.SLIP_ON_PERCENT then
@@ -340,10 +350,15 @@ function AS_Diff:update(dt)
 
                 -- (v1.0.0.21) chaque différentiel a son seuil : arrière d'abord, avant ensuite
                 if allowed and slip ~= nil then
-                    for _, ax in ipairs({
+                    local axes = {
                         { idx = 2, use = self.LOCK_REAR,  on = self.SLIP_ON_PERCENT, off = self.SLIP_OFF_PERCENT },
                         { idx = 1, use = self.LOCK_FRONT, on = self.SLIP_ON_FRONT,   off = self.SLIP_OFF_FRONT },
-                    }) do
+                    }
+                    if not four then
+                        -- pont moteur seul : seuil du blocage arrière
+                        axes = { { idx = 1, use = self.LOCK_REAR, on = self.SLIP_ON_PERCENT, off = self.SLIP_OFF_PERCENT } }
+                    end
+                    for _, ax in ipairs(axes) do
                         local idx = ax.idx
                         if ax.use and ax.on > 0 and slip >= ax.on then
                             st.offSince[idx] = nil
@@ -352,6 +367,7 @@ function AS_Diff:update(dt)
                                 -- roues braquées au-delà du seuil de coupure de ces blocages : on attend
                                 local front = idx == 1 or axleLocked(vehicle, 1)
                                 local rear  = idx == 2 or axleLocked(vehicle, 2)
+                                if not four then front, rear = false, true end
                                 local fits = AS_Steer == nil or AS_Steer.fitsLocks(vehicle, front, rear)
                                 if fits and (g_time - st.onSince[idx]) >= self.SLIP_ON_MS then
                                     if setAxle(vehicle, idx, true) then

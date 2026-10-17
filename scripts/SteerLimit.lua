@@ -55,6 +55,16 @@ local function evWant(vd, i)
     return nil
 end
 
+-- (v1.0.0.54) blocages posés (avant, arrière). Sans différentiel central, le seul blocage
+-- (différentiel 1 d'Enhanced Vehicle, pont moteur) compte comme un blocage seul : seuil 50 %.
+local function evLocks(vehicle, vd)
+    if not AS.is4wd(vehicle) then
+        return false, isLockedValue(evWant(vd, 1))
+    end
+    return isLockedValue(evWant(vd, 1)), isLockedValue(evWant(vd, 2))
+end
+AS_Steer.evLocks = evLocks
+
 local function cutEnabled()
     return AS_Steer.ENABLED and (AS_Diff == nil or AS_Diff.TURN_UNLOCK ~= false)
 end
@@ -72,7 +82,7 @@ end
 local function physScale(vehicle)
     if AS_Diff == nil or AS_Diff.isManual == nil or not AS_Diff.isManual(vehicle) then return nil end
     local vd = vehicle.vData
-    local cut = AS_Steer.getCut(isLockedValue(evWant(vd, 1)), isLockedValue(evWant(vd, 2)))
+    local cut = AS_Steer.getCut(evLocks(vehicle, vd))
     if cut == nil then return nil end
     local st = AS_Steer.state[vehicle]
     local base = (st ~= nil and st.baseMax) or vehicle.maxRotTime
@@ -165,8 +175,7 @@ end
 local function updateLocks(self, vehicle)
     local vd = vehicle.vData
     if vd.want == nil then return end
-    local front = isLockedValue(evWant(vd, 1))
-    local rear  = isLockedValue(evWant(vd, 2))
+    local front, rear = evLocks(vehicle, vd)
     local prev = self.locks[vehicle] or { front = false, rear = false }
     self.locks[vehicle] = { front = front, rear = rear }
 
@@ -220,10 +229,9 @@ function AS_Steer:update(dt)
     for _, vehicle in pairs(getVehicles()) do
         if vehicle.vData ~= nil and type(vehicle.maxRotTime) == "number" and type(vehicle.minRotTime) == "number" then
             updateSteer(self, vehicle)
-            local four = AS.is4wd(vehicle)   -- (v1.0.0.53) moissonneuses et 4x2 laissés tels quels
             -- (v1.0.0.52) angle physique réduit seulement pour le véhicule conduit
-            self.phys[vehicle] = (four and manual and vehicle == controlled) and physScale(vehicle) or nil
-            if four and g_server ~= nil then
+            self.phys[vehicle] = (manual and vehicle == controlled) and physScale(vehicle) or nil
+            if g_server ~= nil then
                 updateLocks(self, vehicle)
             end
         end

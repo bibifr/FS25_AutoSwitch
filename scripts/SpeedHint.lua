@@ -311,11 +311,13 @@ end
 
 -- (v1.0.0.35) tracteur vu de dessus selon l'état Enhanced Vehicle :
 -- 0 rien, 1 pont AV bloqué, 2 pont AR, 3 les deux, +4 en 4x4 (transmission en vert)
-function AS_SpeedHint:getDriveOverlay(k)
+-- (v1.0.0.54) icône moissonneuse / ensileuse : hud/vtpas_combine0..7.dds
+function AS_SpeedHint:getDriveOverlay(k, harvester)
     self.driveOverlays = self.driveOverlays or {}
-    local ov = self.driveOverlays[k]
+    local key = harvester and (k + 8) or k
+    local ov = self.driveOverlays[key]
     if ov == nil then
-        local path = Utils.getFilename(string.format("hud/vtpas_drive%d.dds", k), AS_MOD_DIR)
+        local path = Utils.getFilename(string.format(harvester and "hud/vtpas_combine%d.dds" or "hud/vtpas_drive%d.dds", k), AS_MOD_DIR)
         local ok, o = pcall(createImageOverlay, path)
         if ok and o ~= nil and o ~= 0 then
             ov = o
@@ -323,18 +325,28 @@ function AS_SpeedHint:getDriveOverlay(k)
             ov = false
             print("[AS_SpeedHint] icône introuvable : " .. tostring(path))
         end
-        self.driveOverlays[k] = ov
+        self.driveOverlays[key] = ov
     end
     return ov or nil
 end
 
+-- état affiché : k (icône), pont avant / arrière bloqué, pont avant / arrière moteur
+-- (v1.0.0.54) sans différentiel central : un seul pont moteur (avant pour une moissonneuse
+-- ou une ensileuse, arrière sinon), son blocage est le différentiel 1 d'Enhanced Vehicle
 local function shDriveState(vehicle)
     local vd = vehicle.vData
     local is = vd ~= nil and vd.is or nil
-    if is == nil then return 0, false, false end
+    if is == nil then return 0, false, false, false, true end
+    if not AS.is4wd(vehicle) then
+        local lock = isLockedValue(is[1])
+        if AS.isHarvester(vehicle) then
+            return lock and 1 or 0, lock, false, true, false
+        end
+        return lock and 2 or 0, false, lock, false, true
+    end
     local front, rear = isLockedValue(is[1]), isLockedValue(is[2])
     local k = (front and 1 or 0) + (rear and 2 or 0) + (is[3] == 1 and 4 or 0)
-    return k, front, rear, is[3] == 0
+    return k, front, rear, is[3] ~= 0, true
 end
 
 -- texte de patinage centré en (cx, cy), sur fond sombre
@@ -417,8 +429,7 @@ function AS_SpeedHint:draw()
     -- pont bloqué : un seul % centré sur le pont
     -- (v1.0.0.36) bloc indépendant de la plage, déplaçable seul ; par défaut au-dessus d'elle
     self.iconBox = nil
-    -- (v1.0.0.53) tracteur affiché seulement pour les vrais 4x4
-    if showIcon and AS.is4wd(vehicle) then
+    if showIcon then
         local iconPx = 72
         local iconW, iconH = pxw(iconPx), py(iconPx)
         local pctSize = py(11)
@@ -442,24 +453,28 @@ function AS_SpeedHint:draw()
         if manual then setTextColor(1, 0.6, 0.1, 1) else setTextColor(0.3, 1, 0.3, 1) end
         renderText(bx + blockW * 0.5, by + iconH + py(2) + modeSize * 0.15, modeSize, L(manual and "vtpas_hud_manual" or "vtpas_hud_auto"))
 
-        local k, frontLocked, rearLocked, in2wd = shDriveState(vehicle)
+        local k, frontLocked, rearLocked, frontDriven, rearDriven = shDriveState(vehicle)
+        local harvester = AS.isHarvester(vehicle)
         local iconX = bx + labelW
         if drawFilledRect ~= nil then
             drawFilledRect(bx, by, blockW, iconH, 0, 0, 0, 0.35)
         end
-        local ov = self:getDriveOverlay(k)
+        local ov = self:getDriveOverlay(k, harvester)
         if ov ~= nil then
             setOverlayColor(ov, 1, 1, 1, 1)
             renderOverlay(ov, iconX, by, iconW, iconH)
         end
-        -- ponts dans l'image (256 px) : avant à 55 px du haut, arrière à 195 px
+        -- ponts dans l'image (256 px) : tracteur avant à 55 px du haut, arrière à 195 px ;
+        -- moissonneuse avant à 120 px, arrière à 220 px
         local ws = st.wheelVehicle == vehicle and st.wheelSlip or nil
         if ws ~= nil then
             local lpX, lpY = pxw(3), py(1.5)
-            -- (v1.0.0.42) en 4x2, roues avant libres : pas de patinage affiché
+            local fy, ry = 55, 195
+            if harvester then fy, ry = 120, 220 end
+            -- (v1.0.0.42) roues libres (non motrices) : pas de patinage affiché
             local axles = {
-                { y = by + iconH * (1 - 55 / 256), l = (not in2wd) and ws.fl or nil, r = (not in2wd) and ws.fr or nil, locked = frontLocked and not in2wd },
-                { y = by + iconH * (1 - 195 / 256), l = ws.rl, r = ws.rr, locked = rearLocked },
+                { y = by + iconH * (1 - fy / 256), l = frontDriven and ws.fl or nil, r = frontDriven and ws.fr or nil, locked = frontLocked and frontDriven },
+                { y = by + iconH * (1 - ry / 256), l = rearDriven and ws.rl or nil, r = rearDriven and ws.rr or nil, locked = rearLocked and rearDriven },
             }
             for _, a in ipairs(axles) do
                 if a.locked and (a.l ~= nil or a.r ~= nil) then

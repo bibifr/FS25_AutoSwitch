@@ -80,6 +80,11 @@ local function is4wd(v)
     return r
 end
 
+-- (v1.0.0.54) moissonneuse ou ensileuse (spécialisation Combine du jeu)
+local function isHarvester(v)
+    return v.spec_combine ~= nil
+end
+
 -- Retourne true si le véhicule est dans un champ, false sinon, nil si indéterminable.
 local function isVehicleInField(vehicle)
     local x, _, z = getWorldTranslation(vehicle.rootNode)
@@ -353,6 +358,7 @@ AS.getVtpClass = getVtpClass
 AS.isAutoDriveActive = isAutoDriveActive
 AS.isCourseplayActive = isCourseplayActive
 AS.is4wd = is4wd
+AS.isHarvester = isHarvester
 AS.isVehicleInField = isVehicleInField
 AS.getVehicles = getVehicles
 AS.getEvClass = getEvClass
