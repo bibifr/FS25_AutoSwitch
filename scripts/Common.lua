@@ -59,6 +59,11 @@ local function isCourseplayActive(v)
     return v.getIsCpActive ~= nil and v:getIsCpActive() == true
 end
 
+-- (v1.0.0.54) moissonneuse ou ensileuse (spécialisation Combine du jeu)
+local function isHarvester(v)
+    return v.spec_combine ~= nil
+end
+
 -- (v1.0.0.53) vrai 4x4 : un différentiel central relie les deux ponts (ses deux entrées sont
 -- des différentiels, pas des roues). Moissonneuses et 4x2 n'en ont pas. Sans information
 -- (pas de liste de différentiels), on garde l'ancien comportement (4x4).
@@ -66,6 +71,12 @@ local is4wdCache = setmetatable({}, { __mode = "k" })
 local function is4wd(v)
     local c = is4wdCache[v]
     if c ~= nil then return c end
+    -- (v1.0.0.55) moissonneuses et ensileuses : pont avant seul, même avec un différentiel
+    -- central dans le mod (Lexion 6900 : arrière à 0 % quand l'avant patine à 100 % en 4x4)
+    if isHarvester(v) then
+        is4wdCache[v] = false
+        return false
+    end
     local sm = v.spec_motorized
     local diffs = sm ~= nil and sm.differentials or nil
     if type(diffs) ~= "table" or #diffs == 0 then return true end
@@ -78,11 +89,6 @@ local function is4wd(v)
     end
     is4wdCache[v] = r
     return r
-end
-
--- (v1.0.0.54) moissonneuse ou ensileuse (spécialisation Combine du jeu)
-local function isHarvester(v)
-    return v.spec_combine ~= nil
 end
 
 -- Retourne true si le véhicule est dans un champ, false sinon, nil si indéterminable.
