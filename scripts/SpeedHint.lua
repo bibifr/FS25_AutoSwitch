@@ -417,7 +417,8 @@ function AS_SpeedHint:draw()
     -- pont bloqué : un seul % centré sur le pont
     -- (v1.0.0.36) bloc indépendant de la plage, déplaçable seul ; par défaut au-dessus d'elle
     self.iconBox = nil
-    if showIcon then
+    -- (v1.0.0.53) tracteur affiché seulement pour les vrais 4x4
+    if showIcon and AS.is4wd(vehicle) then
         local iconPx = 72
         local iconW, iconH = pxw(iconPx), py(iconPx)
         local pctSize = py(11)

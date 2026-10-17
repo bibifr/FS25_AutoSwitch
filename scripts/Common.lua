@@ -59,6 +59,27 @@ local function isCourseplayActive(v)
     return v.getIsCpActive ~= nil and v:getIsCpActive() == true
 end
 
+-- (v1.0.0.53) vrai 4x4 : un différentiel central relie les deux ponts (ses deux entrées sont
+-- des différentiels, pas des roues). Moissonneuses et 4x2 n'en ont pas. Sans information
+-- (pas de liste de différentiels), on garde l'ancien comportement (4x4).
+local is4wdCache = setmetatable({}, { __mode = "k" })
+local function is4wd(v)
+    local c = is4wdCache[v]
+    if c ~= nil then return c end
+    local sm = v.spec_motorized
+    local diffs = sm ~= nil and sm.differentials or nil
+    if type(diffs) ~= "table" or #diffs == 0 then return true end
+    local r = false
+    for _, d in ipairs(diffs) do
+        if d.diffIndex1IsWheel ~= true and d.diffIndex2IsWheel ~= true then
+            r = true
+            break
+        end
+    end
+    is4wdCache[v] = r
+    return r
+end
+
 -- Retourne true si le véhicule est dans un champ, false sinon, nil si indéterminable.
 local function isVehicleInField(vehicle)
     local x, _, z = getWorldTranslation(vehicle.rootNode)
@@ -331,6 +352,7 @@ AS.showTimedNotification = showTimedNotification
 AS.getVtpClass = getVtpClass
 AS.isAutoDriveActive = isAutoDriveActive
 AS.isCourseplayActive = isCourseplayActive
+AS.is4wd = is4wd
 AS.isVehicleInField = isVehicleInField
 AS.getVehicles = getVehicles
 AS.getEvClass = getEvClass

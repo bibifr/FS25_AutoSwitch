@@ -211,7 +211,8 @@ function AS_Diff:update(dt)
 
     for _, vehicle in pairs(getVehicles()) do
         local vd = vehicle.vData
-        if vd ~= nil and vd.want ~= nil
+        -- (v1.0.0.53) seulement les vrais 4x4 (différentiel central) : moissonneuses et 4x2 laissés tels quels
+        if vd ~= nil and vd.want ~= nil and AS.is4wd(vehicle)
            and vehicle.getIsMotorStarted ~= nil and vehicle:getIsMotorStarted() then
 
             local st = self.state[vehicle]

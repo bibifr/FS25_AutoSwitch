@@ -61,7 +61,7 @@ end
 
 function AS_Steer.getFactor(vehicle)
     local vd = vehicle.vData
-    if vd == nil then return 1 end
+    if vd == nil or not AS.is4wd(vehicle) then return 1 end   -- (v1.0.0.53) vrais 4x4 seulement
     if evWant(vd, 3) == 1 then return AS_Steer.FACTOR_4X4 end
     return AS_Steer.FACTOR_4X2
 end
@@ -220,9 +220,10 @@ function AS_Steer:update(dt)
     for _, vehicle in pairs(getVehicles()) do
         if vehicle.vData ~= nil and type(vehicle.maxRotTime) == "number" and type(vehicle.minRotTime) == "number" then
             updateSteer(self, vehicle)
+            local four = AS.is4wd(vehicle)   -- (v1.0.0.53) moissonneuses et 4x2 laissés tels quels
             -- (v1.0.0.52) angle physique réduit seulement pour le véhicule conduit
-            self.phys[vehicle] = (manual and vehicle == controlled) and physScale(vehicle) or nil
-            if g_server ~= nil then
+            self.phys[vehicle] = (four and manual and vehicle == controlled) and physScale(vehicle) or nil
+            if four and g_server ~= nil then
                 updateLocks(self, vehicle)
             end
         end
