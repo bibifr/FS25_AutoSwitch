@@ -10,7 +10,7 @@
         <text name="vtpas_slipFront_label" text="Wheel slip for front diff lock"/>
         <text name="vtpas_slipFront_tip" text="Wheel slip (%) above which the front differential locks automatically (Enhanced Vehicle). It unlocks at half this threshold. Off = never."/>
         <text name="vtpas_diff_label" text="Differentials and transmission"/>
-        <text name="vtpas_diff_tip" text="Auto = AutoSwitch locks the differentials on slip, picks 2WD / 4WD and releases the locks in turns. Manual = you handle everything; an engaged lock is never released, steering is reduced to its limit (50 % rear, 20 % front, 10 % both). Key: Right Ctrl + Up arrow."/>
+        <text name="vtpas_diff_tip" text="Auto = AutoSwitch locks the differentials on slip, picks 2WD / 4WD and releases the locks in turns. Manual = you handle everything; an engaged lock is never released, the tractor only turns up to its limit (wheels turned fully, it slides) (50 % rear, 20 % front, 10 % both). Key: Right Ctrl + Up arrow."/>
         <text name="vtpas_tire_label" text="Tire pressure (manual driving)"/>
         <text name="vtpas_tire_tip" text="With AutoDrive or Courseplay inflating and deflating are always automatic. This setting applies when you drive yourself: Automatic = inflated on roads, deflated in fields; Manual = you use the mod's key."/>
         <text name="vtpas_notifDiff_label" text="Differential notifications"/>

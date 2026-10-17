@@ -20,6 +20,8 @@
 -- Toujours actif (v1.0.0.25 : ligne « Différentiels : déblocage en virage » retirée du menu).
 -- (v1.0.0.50) En mode MANUEL (touche Ctrl droit + Flèche haut) : blocages jamais coupés ni
 -- refusés, le braquage est bridé au seuil des blocages posés (50 / 20 / 10 %).
+-- (v1.0.0.51) ce bridage ne vaut que pour la physique : les roues braquent à fond à l'écran
+-- et le tracteur ripe (WheelPhysics.updatePhysics).
 
 local getVehicles, isLockedValue, asState, L, showTimedNotification, shGetControlledVehicle
     = AS.getVehicles, AS.isLockedValue, AS.asState, AS.L, AS.showTimedNotification, AS.shGetControlledVehicle
@@ -38,6 +40,7 @@ AS_Steer.DEBUG         = false
 AS_Steer.state = setmetatable({}, { __mode = "k" })   -- bornes de braquage modifiées
 AS_Steer.locks = setmetatable({}, { __mode = "k" })   -- derniers blocages vus par véhicule
 AS_Steer.alert = nil
+AS_Steer.phys = setmetatable({}, { __mode = "k" })    -- (v1.0.0.51) réduction de l'angle physique
 
 local function dlog(fmt, ...)
     if AS_Steer.DEBUG then
@@ -59,14 +62,37 @@ end
 function AS_Steer.getFactor(vehicle)
     local vd = vehicle.vData
     if vd == nil then return 1 end
-    local factor = AS_Steer.FACTOR_4X2
-    if evWant(vd, 3) == 1 then factor = AS_Steer.FACTOR_4X4 end
-    -- (v1.0.0.50) mode manuel : les blocages ne se coupent plus, ils brident le braquage à leur seuil
-    if AS_Diff ~= nil and AS_Diff.isManual ~= nil and AS_Diff.isManual(vehicle) then
-        local cut = AS_Steer.getCut(isLockedValue(evWant(vd, 1)), isLockedValue(evWant(vd, 2)))
-        if cut ~= nil and cut < factor then factor = cut end
+    if evWant(vd, 3) == 1 then return AS_Steer.FACTOR_4X4 end
+    return AS_Steer.FACTOR_4X2
+end
+
+-- (v1.0.0.51) mode manuel, blocage engagé : les roues braquent à fond à l'écran, mais la
+-- physique ne reçoit que l'angle du seuil du blocage (le tracteur tourne large et ripe).
+-- Part de l'angle à garder pour la physique, nil si rien à réduire.
+local function physScale(vehicle)
+    if AS_Diff == nil or AS_Diff.isManual == nil or not AS_Diff.isManual(vehicle) then return nil end
+    local vd = vehicle.vData
+    local cut = AS_Steer.getCut(isLockedValue(evWant(vd, 1)), isLockedValue(evWant(vd, 2)))
+    if cut == nil then return nil end
+    local st = AS_Steer.state[vehicle]
+    local base = (st ~= nil and st.baseMax) or vehicle.maxRotTime
+    local rt = vehicle.rotatedTime or 0
+    if rt < 0 then base = (st ~= nil and st.baseMin) or vehicle.minRotTime end
+    local limit = math.abs(base or 0) * cut
+    if limit <= 0 or math.abs(rt) <= limit then return nil end
+    return limit / math.abs(rt)
+end
+
+local function updatePhysics(self, superFunc, ...)
+    local scale = AS_Steer.phys[self.vehicle]
+    local sa = self.steeringAngle
+    if scale == nil or type(sa) ~= "number" or sa == 0 then
+        return superFunc(self, ...)
     end
-    return factor
+    self.steeringAngle = sa * scale
+    local ok, err = pcall(superFunc, self, ...)
+    self.steeringAngle = sa   -- angle affiché inchangé
+    if not ok then error(err) end
 end
 
 -- Seuil de coupure (part du braquage complet) pour ces blocages ; nil sans blocage
@@ -147,7 +173,7 @@ local function updateLocks(self, vehicle)
     if not (front or rear) or not cutEnabled() or self.fitsLocks(vehicle, front, rear) then
         return
     end
-    -- (v1.0.0.50) mode manuel : ni coupure ni refus, le braquage est bridé (getFactor)
+    -- (v1.0.0.50) mode manuel : ni coupure ni refus, angle physique bridé (physScale)
     if AS_Diff ~= nil and AS_Diff.isManual ~= nil and AS_Diff.isManual(vehicle) then
         return
     end
@@ -176,9 +202,18 @@ end
 function AS_Steer:update(dt)
     if g_currentMission == nil then return end
 
+    -- (v1.0.0.51) après les loadMap : par-dessus MoreRealistic, MSP et TTD
+    if not self.physInstalled then
+        self.physInstalled = true
+        if WheelPhysics ~= nil and WheelPhysics.updatePhysics ~= nil then
+            WheelPhysics.updatePhysics = Utils.overwrittenFunction(WheelPhysics.updatePhysics, updatePhysics)
+        end
+    end
+
     for _, vehicle in pairs(getVehicles()) do
         if vehicle.vData ~= nil and type(vehicle.maxRotTime) == "number" and type(vehicle.minRotTime) == "number" then
             updateSteer(self, vehicle)
+            self.phys[vehicle] = physScale(vehicle)
             if g_server ~= nil then
                 updateLocks(self, vehicle)
             end
@@ -243,6 +278,7 @@ function AS_Steer:delete()
     end
     self.state = setmetatable({}, { __mode = "k" })
     self.locks = setmetatable({}, { __mode = "k" })
+    self.phys = setmetatable({}, { __mode = "k" })
     self.alert = nil
 end
 

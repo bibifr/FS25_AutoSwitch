@@ -10,7 +10,7 @@
         <text name="vtpas_slipFront_label" text="Radschlupf für Sperre vorne"/>
         <text name="vtpas_slipFront_tip" text="Radschlupf (%), ab dem die vordere Differenzialsperre automatisch einrastet (Enhanced Vehicle). Gelöst wird bei der Hälfte dieses Werts. Aus = nie."/>
         <text name="vtpas_diff_label" text="Differentiale und Antrieb"/>
-        <text name="vtpas_diff_tip" text="Auto = AutoSwitch sperrt die Differentiale nach Schlupf, wählt 2WD / 4WD und löst die Sperren in Kurven. Manuell = Sie steuern alles selbst; eine eingelegte Sperre wird nicht mehr gelöst, der Lenkeinschlag wird auf ihre Grenze reduziert (50 % hinten, 20 % vorne, 10 % beide). Taste: Strg rechts + Pfeil hoch."/>
+        <text name="vtpas_diff_tip" text="Auto = AutoSwitch sperrt die Differentiale nach Schlupf, wählt 2WD / 4WD und löst die Sperren in Kurven. Manuell = Sie steuern alles selbst; eine eingelegte Sperre wird nicht mehr gelöst, der Traktor lenkt nur bis zu ihrer Grenze (Räder voll eingeschlagen, er rutscht) (50 % hinten, 20 % vorne, 10 % beide). Taste: Strg rechts + Pfeil hoch."/>
         <text name="vtpas_tire_label" text="Reifendruck (manuelles Fahren)"/>
         <text name="vtpas_tire_tip" text="Mit AutoDrive oder Courseplay werden die Reifen immer automatisch aufgepumpt und entlüftet. Diese Einstellung gilt, wenn Sie selbst fahren: Automatisch = auf der Straße aufgepumpt, im Feld abgelassen; Manuell = Sie verwenden die Taste des Mods."/>
         <text name="vtpas_notifDiff_label" text="Differenzial-Benachrichtigungen"/>
