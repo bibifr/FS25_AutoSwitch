@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.56 | Transmission réelle de chaque machine lue dans les différentiels utilisés par le jeu (après MoreRealistic) : 4x4, pont avant seul ou pont arrière seul. Chaque machine est notée dans modSettings/FS25_AutoSwitch/transmissions.xml, l'attribut forced (4x4 / front / rear) corrige une machine à la main. Remplace la règle « moissonneuses en pont avant seul » de la 1.0.0.55 |
 | 1.0.0.55 | Moissonneuses et ensileuses toujours gérées en pont avant seul, même si le mod déclare un 4x4 (Lexion 6900 : l'arrière restait à 0 % de patinage en 4x4) |
 | 1.0.0.54 | Moissonneuses, ensileuses et machines 4x2 (sans différentiel central) : HUD avec une icône de moissonneuse (dessin de Fabien) ou le tracteur en 4x2, et le patinage des roues motrices, seul le pont moteur se bloque (à la main ou en AUTO), blocage de l'autre pont annulé, pas de 4x2 / 4x4, braquage complet |
 | 1.0.0.53 | Différentiels, 4x2 / 4x4, braquage et tracteur du HUD réservés aux vrais 4x4 (différentiel central) : moissonneuses et machines 4x2 laissées telles quelles (avant, AutoSwitch les croyait en 4x4 et réduisait leur braquage) |

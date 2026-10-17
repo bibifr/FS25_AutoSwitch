@@ -49,6 +49,7 @@ local modDir = g_currentModDirectory or ""
 
 local FILES = {
     "scripts/Common.lua",
+    "scripts/Transmission.lua",
     "scripts/Arbiter.lua",
     "scripts/Tires.lua",
     "scripts/Diff.lua",

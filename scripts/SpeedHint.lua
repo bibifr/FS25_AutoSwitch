@@ -331,15 +331,15 @@ function AS_SpeedHint:getDriveOverlay(k, harvester)
 end
 
 -- état affiché : k (icône), pont avant / arrière bloqué, pont avant / arrière moteur
--- (v1.0.0.54) sans différentiel central : un seul pont moteur (avant pour une moissonneuse
--- ou une ensileuse, arrière sinon), son blocage est le différentiel 1 d'Enhanced Vehicle
+-- (v1.0.0.54) sans 4x4 : un seul pont moteur, son blocage est le différentiel 1 d'Enhanced
+-- Vehicle ; (v1.0.0.56) pont moteur lu dans la transmission réelle (Transmission.lua)
 local function shDriveState(vehicle)
     local vd = vehicle.vData
     local is = vd ~= nil and vd.is or nil
     if is == nil then return 0, false, false, false, true end
     if not AS.is4wd(vehicle) then
         local lock = isLockedValue(is[1])
-        if AS.isHarvester(vehicle) then
+        if AS.drivenAxle(vehicle) == "front" then
             return lock and 1 or 0, lock, false, true, false
         end
         return lock and 2 or 0, false, lock, false, true
