@@ -18,6 +18,8 @@
 -- braquées au-delà de son seuil est refusé, avec une icône et un texte clignotants.
 -- Diff.lua ne rebloque qu'une fois les roues revenues sous le seuil (AS_Steer.fitsLocks).
 -- Toujours actif (v1.0.0.25 : ligne « Différentiels : déblocage en virage » retirée du menu).
+-- (v1.0.0.50) En mode MANUEL (touche Ctrl + D + Flèche haut) : blocages jamais coupés ni
+-- refusés, le braquage est bridé au seuil des blocages posés (50 / 20 / 10 %).
 
 local getVehicles, isLockedValue, asState, L, showTimedNotification, shGetControlledVehicle
     = AS.getVehicles, AS.isLockedValue, AS.asState, AS.L, AS.showTimedNotification, AS.shGetControlledVehicle
@@ -57,8 +59,14 @@ end
 function AS_Steer.getFactor(vehicle)
     local vd = vehicle.vData
     if vd == nil then return 1 end
-    if evWant(vd, 3) == 1 then return AS_Steer.FACTOR_4X4 end
-    return AS_Steer.FACTOR_4X2
+    local factor = AS_Steer.FACTOR_4X2
+    if evWant(vd, 3) == 1 then factor = AS_Steer.FACTOR_4X4 end
+    -- (v1.0.0.50) mode manuel : les blocages ne se coupent plus, ils brident le braquage à leur seuil
+    if AS_Diff ~= nil and AS_Diff.isManual ~= nil and AS_Diff.isManual(vehicle) then
+        local cut = AS_Steer.getCut(isLockedValue(evWant(vd, 1)), isLockedValue(evWant(vd, 2)))
+        if cut ~= nil and cut < factor then factor = cut end
+    end
+    return factor
 end
 
 -- Seuil de coupure (part du braquage complet) pour ces blocages ; nil sans blocage
@@ -137,6 +145,10 @@ local function updateLocks(self, vehicle)
     self.locks[vehicle] = { front = front, rear = rear }
 
     if not (front or rear) or not cutEnabled() or self.fitsLocks(vehicle, front, rear) then
+        return
+    end
+    -- (v1.0.0.50) mode manuel : ni coupure ni refus, le braquage est bridé (getFactor)
+    if AS_Diff ~= nil and AS_Diff.isManual ~= nil and AS_Diff.isManual(vehicle) then
         return
     end
 

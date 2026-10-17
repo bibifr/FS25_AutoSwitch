@@ -26,16 +26,43 @@ AS_Diff.LOCK_FRONT       = true
 AS_Diff.LOCK_REAR        = true
 AS_Diff.DEBUG            = false
 AS_Diff.NOTIFY           = true   -- notification à l'écran à chaque verrouillage / déverrouillage
-AS_Diff.HELPER_ONLY               = true   -- conduite manuelle : true = manuel, false = automatique
-                                                -- (avec AutoDrive / Courseplay actif, c'est TOUJOURS automatique)
-AS_Diff.RELEASE_WHEN_HELPER_STOPS = true   -- relâche les différentiels verrouillés par le script quand l'assistant s'arrête
-AS_Diff.HELPER_RELEASE_DELAY_MS   = 3000   -- délai avant ce relâchement (évite les coupures brèves)
 AS_Diff.TURN_UNLOCK      = true   -- (v1.30) déverrouillage obligatoire en virage
 AS_Diff.TURN_ON_DEG      = 15     -- braquage au-delà duquel on considère un virage (sans SteerLimit.lua)
 AS_Diff.TURN_OFF_DEG     = 8      -- braquage en dessous duquel le virage est terminé
 AS_Diff.AUTO_4WD         = true   -- (v1.30) 4x4 dans les champs, 4x2 sur route (Enhanced Vehicle) ; v1.0.0.34 : 4x2 sur le dur seulement
 AS_Diff.ZONE_CHECK_MS    = 1000
+AS_Diff.MANUAL           = false  -- (v1.0.0.50) mode MANUEL (touche Ctrl + D + Flèche haut) : différentiels
+                                  -- et 4x2 / 4x4 laissés au joueur, blocages jamais coupés (braquage bridé)
+AS_Diff.AUTO_ON_HELPER   = true   -- (v1.0.0.50) AutoDrive / Courseplay qui prend la main repasse en AUTO
 AS_Diff.state = {}
+
+-- (v1.0.0.50) vrai si AutoSwitch laisse ce véhicule au joueur
+function AS_Diff.isManual(vehicle)
+    if not AS_Diff.MANUAL then return false end
+    if AS_Diff.AUTO_ON_HELPER and vehicle ~= nil
+       and (isAutoDriveActive(vehicle) or isCourseplayActive(vehicle)) then
+        return false
+    end
+    return true
+end
+
+-- (v1.0.0.50) bascule AUTO / MANUEL, enregistrée dans les réglages
+function AS_Diff:setManual(manual, silent)
+    manual = manual == true
+    if AS_Settings ~= nil and AS_Settings.setDriveManual ~= nil then
+        AS_Settings:setDriveManual(manual)
+    else
+        self.MANUAL = manual
+    end
+    if not silent then
+        showTimedNotification("diffs", FSBaseMission ~= nil and FSBaseMission.INGAME_NOTIFICATION_INFO or nil,
+            L(manual and "vtpas_notif_modeManual" or "vtpas_notif_modeAuto"))
+    end
+end
+
+function AS_Diff:onModeAction()
+    self:setManual(not self.MANUAL)
+end
 
 local function dlog(fmt, ...)
     if AS_Diff.DEBUG then
@@ -194,11 +221,25 @@ function AS_Diff:update(dt)
                 dlog("%s : Enhanced Vehicle détecté", vehicle:getName())
             end
 
+            -- (v1.0.0.50) AutoDrive / Courseplay prend la main sur le véhicule conduit : retour en AUTO
+            local helper = isAutoDriveActive(vehicle) or isCourseplayActive(vehicle)
+            if helper and not st.helperOn and self.MANUAL and self.AUTO_ON_HELPER
+               and vehicle == shGetControlledVehicle() then
+                self:setManual(false)
+            end
+            st.helperOn = helper
+            local manual = self.isManual(vehicle)
+            if manual then
+                st.zone4wd, st.zoneCandidate, st.zoneCount, st.slip4wd = nil, nil, 0, false
+                st.onSince, st.offSince, st.turning = {}, {}, false
+                st.eng, st.engaged = {}, false   -- les blocages en place appartiennent au joueur
+            end
+
             -- (v1.30) 4x4 dans les champs, 4x2 sur route : appliqué seulement au changement de zone
             -- (un changement manuel reste respecté jusqu'au prochain changement de zone)
             -- (v1.0.0.34) 4x2 seulement sur le dur (goudron, béton) : chemins de gravier, terre,
             -- herbe et sable en 4x4 comme les champs (même détection que la vitesse AutoDrive)
-            if self.AUTO_4WD and vd.want[3] ~= nil and (g_time - (st.lastZoneCheck or -10000)) >= self.ZONE_CHECK_MS then
+            if not manual and self.AUTO_4WD and vd.want[3] ~= nil and (g_time - (st.lastZoneCheck or -10000)) >= self.ZONE_CHECK_MS then
                 st.lastZoneCheck = g_time
                 local inField
                 if AS_AdSpeed ~= nil and AS_AdSpeed.detectZone ~= nil then
@@ -221,7 +262,7 @@ function AS_Diff:update(dt)
                 end
             end
 
-            if (g_time - st.lastCheck) >= self.CHECK_MS then
+            if not manual and (g_time - st.lastCheck) >= self.CHECK_MS then
                 st.lastCheck = g_time
                 local slip = getMaxSlipPercent(vehicle)
 
@@ -294,28 +335,7 @@ function AS_Diff:update(dt)
                 end
                 st.engaged = st.eng[1] == true or st.eng[2] == true
 
-                -- Mode manuel : le script n'agit que si AutoDrive ou Courseplay est actif sur ce véhicule
-                local allowed = true
-                if self.HELPER_ONLY then
-                    if isAutoDriveActive(vehicle) or isCourseplayActive(vehicle) then
-                        st.helperLostSince = nil
-                    else
-                        allowed = false
-                        st.onSince = {}
-                        st.helperLostSince = st.helperLostSince or g_time
-                        if st.engaged and self.RELEASE_WHEN_HELPER_STOPS
-                           and (g_time - st.helperLostSince) >= self.HELPER_RELEASE_DELAY_MS then
-                            for idx = 1, 2 do
-                                if st.eng[idx] and axleLocked(vehicle, idx) then
-                                    setAxle(vehicle, idx, false)
-                                    dlog("%s : assistant arrêté -> diff %d DÉVERROUILLÉ", vehicle:getName(), idx)
-                                    notifyDiff(vehicle, false, nil, idx)
-                                end
-                            end
-                            st.engaged, st.eng, st.offSince = false, {}, {}
-                        end
-                    end
-                end
+                local allowed = true   -- (v1.0.0.50) ancien mode « manuel sauf assistant » remplacé par AS_Diff.MANUAL
 
                 -- (v1.0.0.21) chaque différentiel a son seuil : arrière d'abord, avant ensuite
                 if allowed and slip ~= nil then
@@ -372,3 +392,15 @@ function AS_Diff:delete()
 end
 
 addModEventListener(AS_Diff)
+
+-- (v1.0.0.50) touche AUTO / MANUEL, enregistrée dans le contexte du véhicule conduit
+if Drivable ~= nil and Drivable.onRegisterActionEvents ~= nil then
+    Drivable.onRegisterActionEvents = Utils.appendedFunction(Drivable.onRegisterActionEvents, function(self, isActiveForInput, isActiveForInputIgnoreSelection)
+        if not self.isClient or not isActiveForInputIgnoreSelection or InputAction == nil or InputAction.AS_DRIVE_MODE == nil then return end
+        local _, id = g_inputBinding:registerActionEvent(InputAction.AS_DRIVE_MODE, AS_Diff, AS_Diff.onModeAction, false, true, false, true)
+        if id ~= nil then
+            g_inputBinding:setActionEventText(id, L("input_AS_DRIVE_MODE"))
+            g_inputBinding:setActionEventTextVisibility(id, false)
+        end
+    end)
+end

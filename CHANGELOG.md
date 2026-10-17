@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.50 | Touche Ctrl + D + Flèche haut (modifiable dans les commandes) : différentiels et transmission en AUTO ou MANUEL, mode écrit au-dessus du tracteur et enregistré. En MANUEL, AutoSwitch ne touche plus aux différentiels ni au 4x2 / 4x4, un blocage engagé ne se coupe plus en virage, le braquage est réduit à son seuil (50 % AR, 20 % AV, 10 % les deux). Retour en AUTO quand AutoDrive ou Courseplay prend la main (option du menu, activée par défaut) |
 | 1.0.0.49 | Contrôle des mods : un mod requis installé mais pas activé dans la partie (case décochée dans la sélection des mods) est signalé en jeu au chargement, avec son nom, et dans log.txt. AutoSwitch démarre quand même |
 | 1.0.0.48 | Herbe piétinée plus douce : sur sol sec à partir de 11 km/h, sur sol humide à partir de 7 km/h, un seul stade de pousse en moins |
 | 1.0.0.47 | Herbe piétinée corrigée (zone sous la roue), le stade le plus bas est coupé |

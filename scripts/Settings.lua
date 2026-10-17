@@ -21,7 +21,8 @@ AS_Settings.slip        = 15     -- (v1.0.0.21) seuil du diff ARRIÈRE
 AS_Settings.slipFront   = 30     -- (v1.0.0.21) seuil du diff AVANT
 AS_Settings.notifyDiff  = true
 AS_Settings.notifyTires = true
-AS_Settings.helperOnly  = true   -- différentiels, conduite manuelle : true = manuel, false = automatique
+AS_Settings.driveManual = false  -- (v1.0.0.50) différentiels et 4x2 / 4x4 : true = MANUEL, false = AUTO (touche Ctrl + D + Flèche haut)
+AS_Settings.autoOnHelper = true  -- (v1.0.0.50) AutoDrive / Courseplay qui prend la main repasse en AUTO
 AS_Settings.tiresUserAuto = false -- pneus, conduite manuelle : true = automatique, false = manuel
 AS_Settings.built   = false
 AS_Settings.options = {}
@@ -85,7 +86,8 @@ function AS_Settings:save()
             setXMLInt(xml, "vtpAutoSwitch.diffLock#frontPercent", self.slipFront)
             setXMLBool(xml, "vtpAutoSwitch.notifications#diffs", self.notifyDiff)
             setXMLBool(xml, "vtpAutoSwitch.notifications#tires", self.notifyTires)
-            setXMLBool(xml, "vtpAutoSwitch.diffMode#helperOnly", self.helperOnly)
+            setXMLBool(xml, "vtpAutoSwitch.diffMode#manual", self.driveManual)
+            setXMLBool(xml, "vtpAutoSwitch.diffMode#autoOnHelper", self.autoOnHelper)
             setXMLBool(xml, "vtpAutoSwitch.tireMode#userAuto", self.tiresUserAuto)
             setXMLInt(xml, "vtpAutoSwitch.slipAlert#percent", self.alertPercent)
             setXMLInt(xml, "vtpAutoSwitch.slipAlert#seconds", self.alertSeconds)
@@ -135,8 +137,10 @@ function AS_Settings:load()
                 if nd ~= nil then self.notifyDiff = nd end
                 local nt = getXMLBool(xml, "vtpAutoSwitch.notifications#tires")
                 if nt ~= nil then self.notifyTires = nt end
-                local ho = getXMLBool(xml, "vtpAutoSwitch.diffMode#helperOnly")
-                if ho ~= nil then self.helperOnly = ho end
+                local dm = getXMLBool(xml, "vtpAutoSwitch.diffMode#manual")
+                if dm ~= nil then self.driveManual = dm end
+                local ah = getXMLBool(xml, "vtpAutoSwitch.diffMode#autoOnHelper")
+                if ah ~= nil then self.autoOnHelper = ah end
                 local tu = getXMLBool(xml, "vtpAutoSwitch.tireMode#userAuto")
                 if tu ~= nil then self.tiresUserAuto = tu end
                 local ap = getXMLInt(xml, "vtpAutoSwitch.slipAlert#percent")
@@ -209,7 +213,8 @@ function AS_Settings:apply()
     AS_Diff.SLIP_OFF_FRONT   = math.max(3, vf * 0.5)
     AS_Diff.NOTIFY   = self.notifyDiff
     AS_Tires.NOTIFY = self.notifyTires
-    AS_Diff.HELPER_ONLY = self.helperOnly
+    AS_Diff.MANUAL = self.driveManual
+    AS_Diff.AUTO_ON_HELPER = self.autoOnHelper
     AS_Tires.USER_AUTO = self.tiresUserAuto
     AS_SlipAlert.ENABLED       = self.alertPercent > 0
     AS_SlipAlert.ALERT_PERCENT = self.alertPercent
@@ -266,10 +271,25 @@ function AS_Settings:onSlipFrontChanged(state, element)
 end
 
 function AS_Settings:onDiffModeChanged(state, element)
-    self.helperOnly = (state == 2)
+    self.driveManual = (state == 2)
     self:apply()
     self:save()
-    sprint("différentiels, conduite manuelle : %s", self.helperOnly and "manuel" or "automatique")
+    sprint("différentiels et transmission : %s", self.driveManual and "manuel" or "automatique")
+end
+
+-- (v1.0.0.50) bascule par la touche AUTO / MANUEL (Diff.lua)
+function AS_Settings:setDriveManual(manual)
+    self.driveManual = manual == true
+    self:apply()
+    self:save()
+    local o = self.options
+    if o.diffMode ~= nil then pcall(o.diffMode.setState, o.diffMode, self.driveManual and 2 or 1) end
+end
+
+function AS_Settings:onAutoOnHelperChanged(state, element)
+    self.autoOnHelper = (state == 2)
+    self:apply()
+    self:save()
 end
 
 function AS_Settings:onTireModeChanged(state, element)
@@ -585,8 +605,16 @@ function AS_Settings:buildUI(frame)
         label = L("vtpas_diff_label"),
         tip = L("vtpas_diff_tip"),
         texts = autoManual,
-        state = self.helperOnly and 2 or 1,
+        state = self.driveManual and 2 or 1,
         callback = AS_Settings.onDiffModeChanged,
+    })
+
+    self.options.autoOnHelper = self:addRow(layout, template, {
+        label = L("vtpas_autoOnHelper_label"),
+        tip = L("vtpas_autoOnHelper_tip"),
+        texts = onOff,
+        state = self.autoOnHelper and 2 or 1,
+        callback = AS_Settings.onAutoOnHelperChanged,
     })
 
     self.options.tireMode = self:addRow(layout, template, {
@@ -773,7 +801,8 @@ function AS_Settings:refreshStates()
     if o.slip ~= nil then o.slip:setState(self:getStateForValue(self.slip)) end
     if o.slipFront ~= nil then o.slipFront:setState(self:getStateForValue(self.slipFront)) end
     if o.diffDelay ~= nil then o.diffDelay:setState(self:getIndex(self.DIFF_DELAY_LIST, self.diffDelay)) end
-    if o.diffMode ~= nil then o.diffMode:setState(self.helperOnly and 2 or 1) end
+    if o.diffMode ~= nil then o.diffMode:setState(self.driveManual and 2 or 1) end
+    if o.autoOnHelper ~= nil then o.autoOnHelper:setState(self.autoOnHelper and 2 or 1) end
     if o.tireMode ~= nil then o.tireMode:setState(self.tiresUserAuto and 1 or 2) end
     if o.tireDelay ~= nil then o.tireDelay:setState(self:getIndex(self.TIRE_DELAY_LIST, self.tireDelay)) end
     if o.adField ~= nil then o.adField:setState(self:getIndex(self.AD_FIELD_LIST, self.adFieldKph)) end
@@ -824,7 +853,7 @@ function AS_Settings:loadMap()
     addConsoleCommand("vtpSlip", "Seuil de patinage (%) du blocage auto des différentiels, 0 = désactivé",
                       "consoleSetSlip", self)
     sprint("réglages chargés : patinage %d %%, conduite manuelle : différentiels %s, pneus %s ; notif. différentiels %s, notif. pneus %s",
-           self.slip, self.helperOnly and "manuel" or "auto", self.tiresUserAuto and "auto" or "manuel",
+           self.slip, self.driveManual and "manuel" or "auto", self.tiresUserAuto and "auto" or "manuel",
            tostring(self.notifyDiff), tostring(self.notifyTires))
 end
 

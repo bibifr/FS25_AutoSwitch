@@ -9,8 +9,8 @@
         <text name="vtpas_slip_tip" text="Radschlupf (%), ab dem die hintere Differenzialsperre automatisch einrastet (Enhanced Vehicle). Gelöst wird bei der Hälfte dieses Werts. Aus = nie."/>
         <text name="vtpas_slipFront_label" text="Radschlupf für Sperre vorne"/>
         <text name="vtpas_slipFront_tip" text="Radschlupf (%), ab dem die vordere Differenzialsperre automatisch einrastet (Enhanced Vehicle). Gelöst wird bei der Hälfte dieses Werts. Aus = nie."/>
-        <text name="vtpas_diff_label" text="Differenziale (manuelles Fahren)"/>
-        <text name="vtpas_diff_tip" text="Mit AutoDrive oder Courseplay ist die Sperre immer automatisch. Diese Einstellung gilt, wenn Sie selbst fahren: Automatisch = sperrt, sobald der Radschlupf den Schwellenwert überschreitet; Manuell = Sie bedienen die Differenziale selbst."/>
+        <text name="vtpas_diff_label" text="Differentiale und Antrieb"/>
+        <text name="vtpas_diff_tip" text="Auto = AutoSwitch sperrt die Differentiale nach Schlupf, wählt 2WD / 4WD und löst die Sperren in Kurven. Manuell = Sie steuern alles selbst; eine eingelegte Sperre wird nicht mehr gelöst, der Lenkeinschlag wird auf ihre Grenze reduziert (50 % hinten, 20 % vorne, 10 % beide). Taste: Strg + D + Pfeil hoch."/>
         <text name="vtpas_tire_label" text="Reifendruck (manuelles Fahren)"/>
         <text name="vtpas_tire_tip" text="Mit AutoDrive oder Courseplay werden die Reifen immer automatisch aufgepumpt und entlüftet. Diese Einstellung gilt, wenn Sie selbst fahren: Automatisch = auf der Straße aufgepumpt, im Feld abgelassen; Manuell = Sie verwenden die Taste des Mods."/>
         <text name="vtpas_notifDiff_label" text="Differenzial-Benachrichtigungen"/>
@@ -85,6 +85,13 @@
         <text name="vtpas_wetGrip_extreme" text="Extrem"/>
         <text name="vtpas_auto4wd_label" text="Antrieb: 2WD auf Asphalt und Beton, sonst Allrad"/>
         <text name="vtpas_auto4wd_tip" text="Schaltet auf festem Untergrund (Asphaltstraße, Beton) automatisch auf Zweiradantrieb und überall sonst auf Allrad: Felder, Schotter- oder Erdwege, Gras (Enhanced Vehicle). Im Zweiradantrieb wird bei Schlupf der Hinterachse über der Schwelle zuerst Allrad zugeschaltet, danach werden bei anhaltendem Schlupf die Differenziale gesperrt; auf der Straße geht es zurück auf 2WD, sobald die Haftung zurück ist. Eine manuelle Änderung bleibt bis zum nächsten Untergrundwechsel erhalten."/>
+        <text name="input_AS_DRIVE_MODE" text="Differentiale und Antrieb: Auto / Manuell"/>
+        <text name="vtpas_autoOnHelper_label" text="Zurück auf Auto mit AutoDrive / Courseplay"/>
+        <text name="vtpas_autoOnHelper_tip" text="Im manuellen Modus wird wieder auf Auto geschaltet, sobald AutoDrive oder Courseplay den Traktor übernimmt."/>
+        <text name="vtpas_notif_modeManual" text="Differentiale und Antrieb: MANUELL"/>
+        <text name="vtpas_notif_modeAuto" text="Differentiale und Antrieb: AUTO"/>
+        <text name="vtpas_hud_manual" text="MANUELL"/>
+        <text name="vtpas_hud_auto" text="AUTO"/>
         <text name="input_AS_DUAL_SWITCH" text="Zwillingsräder montieren / abbauen"/>
         <text name="as_dual_store_function" text="Zu Fuß neben der Palette, Traktor daneben angehalten: Strg rechts + I. Volle Palette = Zwillingsräder montieren, leere Palette = abbauen. 1 Std. Arbeit, alle 15 Min. ein Reifen."/>
         <text name="as_dual_mounting" text="Montage der Zwillingsräder begonnen: fertig um %s"/>

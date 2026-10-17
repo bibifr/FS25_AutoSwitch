@@ -427,8 +427,19 @@ function AS_SpeedHint:draw()
         local bx, by = defX + boxW - blockW, defY + boxH + py(8)
         if self.ICON_X ~= nil and self.ICON_Y ~= nil then bx, by = self.ICON_X, self.ICON_Y end
         bx = shClamp(bx, 0, math.max(0, 1 - blockW))
-        by = shClamp(by, 0, math.max(0, 1 - iconH))
-        self.iconBox = { x = bx, y = by, w = blockW, h = iconH }
+        -- (v1.0.0.50) mode AUTO / MANUEL écrit au-dessus du tracteur (compris dans le bloc déplaçable)
+        local modeSize = py(12)
+        local modeH = modeSize + py(4)
+        by = shClamp(by, 0, math.max(0, 1 - iconH - modeH))
+        self.iconBox = { x = bx, y = by, w = blockW, h = iconH + modeH }
+        local manual = AS_Diff ~= nil and AS_Diff.isManual ~= nil and AS_Diff.isManual(vehicle)
+        if drawFilledRect ~= nil then
+            drawFilledRect(bx, by + iconH, blockW, modeH, 0, 0, 0, 0.6)
+        end
+        setTextAlignment(RenderText.ALIGN_CENTER)
+        setTextBold(true)
+        if manual then setTextColor(1, 0.6, 0.1, 1) else setTextColor(0.3, 1, 0.3, 1) end
+        renderText(bx + blockW * 0.5, by + iconH + py(2) + modeSize * 0.15, modeSize, L(manual and "vtpas_hud_manual" or "vtpas_hud_auto"))
 
         local k, frontLocked, rearLocked, in2wd = shDriveState(vehicle)
         local iconX = bx + labelW

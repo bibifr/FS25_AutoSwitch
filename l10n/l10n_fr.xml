@@ -9,8 +9,8 @@
         <text name="vtpas_slip_tip" text="Patinage (%) au-delà duquel le différentiel arrière se verrouille automatiquement (Enhanced Vehicle). Il se déverrouille à la moitié de ce seuil. Désactivé = jamais."/>
         <text name="vtpas_slipFront_label" text="Patinage pour blocage du diff avant"/>
         <text name="vtpas_slipFront_tip" text="Patinage (%) au-delà duquel le différentiel avant se verrouille automatiquement (Enhanced Vehicle). Il se déverrouille à la moitié de ce seuil. Désactivé = jamais."/>
-        <text name="vtpas_diff_label" text="Différentiels (conduite manuelle)"/>
-        <text name="vtpas_diff_tip" text="Avec AutoDrive ou Courseplay, le blocage est toujours automatique. Ce réglage s'applique lorsque vous conduisez vous-même : Automatique = blocage dès que le patinage dépasse le seuil ; Manuel = vous gérez les différentiels vous-même."/>
+        <text name="vtpas_diff_label" text="Différentiels et transmission"/>
+        <text name="vtpas_diff_tip" text="Auto = AutoSwitch bloque les différentiels selon le patinage, choisit 4x2 / 4x4 et coupe les blocages en virage. Manuel = vous gérez tout ; un blocage engagé ne se coupe plus, le braquage est réduit à son seuil (50 % arrière, 20 % avant, 10 % les deux). Touche : Ctrl + D + Flèche haut."/>
         <text name="vtpas_tire_label" text="Pression des pneus (conduite manuelle)"/>
         <text name="vtpas_tire_tip" text="Avec AutoDrive ou Courseplay, le gonflage et le dégonflage sont toujours automatiques. Ce réglage s'applique lorsque vous conduisez vous-même : Automatique = pneus gonflés sur route et dégonflés dans les champs ; Manuel = vous utilisez la touche du mod."/>
         <text name="vtpas_notifDiff_label" text="Notifications des différentiels"/>
@@ -85,6 +85,13 @@
         <text name="vtpas_wetGrip_extreme" text="Extrême"/>
         <text name="vtpas_auto4wd_label" text="Transmission : 4x2 sur goudron et béton, 4x4 ailleurs"/>
         <text name="vtpas_auto4wd_tip" text="Passe automatiquement en 2 roues motrices sur le dur (route goudronnée, béton) et en 4 roues motrices partout ailleurs : champs, chemins de gravier ou de terre, herbe (Enhanced Vehicle). En 2 roues motrices, si l'essieu arrière patine au-delà du seuil, le 4x4 s'enclenche d'abord, puis les différentiels se bloquent si ça patine encore ; sur route, retour en 4x2 quand l'adhérence revient. Un réglage manuel reste respecté jusqu'au prochain changement de terrain."/>
+        <text name="input_AS_DRIVE_MODE" text="Différentiels et transmission : Auto / Manuel"/>
+        <text name="vtpas_autoOnHelper_label" text="Retour en Auto avec AutoDrive / Courseplay"/>
+        <text name="vtpas_autoOnHelper_tip" text="En Manuel, repasse en Auto dès qu'AutoDrive ou Courseplay prend la main sur le tracteur."/>
+        <text name="vtpas_notif_modeManual" text="Différentiels et transmission : MANUEL"/>
+        <text name="vtpas_notif_modeAuto" text="Différentiels et transmission : AUTO"/>
+        <text name="vtpas_hud_manual" text="MANUEL"/>
+        <text name="vtpas_hud_auto" text="AUTO"/>
         <text name="input_AS_DUAL_SWITCH" text="Monter / démonter les jumelées"/>
         <text name="as_dual_store_function" text="À pied près de la palette, tracteur arrêté à côté : Ctrl droit + I. Palette pleine = montage des jumelées, palette vide = démontage. 1 h de travail, un pneu toutes les 15 min."/>
         <text name="as_dual_mounting" text="Montage des jumelées commencé : prêt à %s"/>

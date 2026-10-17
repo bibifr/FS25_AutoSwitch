@@ -9,8 +9,8 @@
         <text name="vtpas_slip_tip" text="Wheel slip (%) above which the rear differential locks automatically (Enhanced Vehicle). It unlocks at half this threshold. Off = never."/>
         <text name="vtpas_slipFront_label" text="Wheel slip for front diff lock"/>
         <text name="vtpas_slipFront_tip" text="Wheel slip (%) above which the front differential locks automatically (Enhanced Vehicle). It unlocks at half this threshold. Off = never."/>
-        <text name="vtpas_diff_label" text="Differentials (manual driving)"/>
-        <text name="vtpas_diff_tip" text="With AutoDrive or Courseplay the lock is always automatic. This setting applies when you drive yourself: Automatic = locks when slip exceeds the threshold; Manual = you control the differentials yourself."/>
+        <text name="vtpas_diff_label" text="Differentials and transmission"/>
+        <text name="vtpas_diff_tip" text="Auto = AutoSwitch locks the differentials on slip, picks 2WD / 4WD and releases the locks in turns. Manual = you handle everything; an engaged lock is never released, steering is reduced to its limit (50 % rear, 20 % front, 10 % both). Key: Ctrl + D + Up arrow."/>
         <text name="vtpas_tire_label" text="Tire pressure (manual driving)"/>
         <text name="vtpas_tire_tip" text="With AutoDrive or Courseplay inflating and deflating are always automatic. This setting applies when you drive yourself: Automatic = inflated on roads, deflated in fields; Manual = you use the mod's key."/>
         <text name="vtpas_notifDiff_label" text="Differential notifications"/>
@@ -85,6 +85,13 @@
         <text name="vtpas_wetGrip_extreme" text="Extreme"/>
         <text name="vtpas_auto4wd_label" text="Drive: 2WD on asphalt and concrete, 4WD elsewhere"/>
         <text name="vtpas_auto4wd_tip" text="Automatically switches to two-wheel drive on hard surfaces (asphalt road, concrete) and to four-wheel drive everywhere else: fields, gravel or dirt tracks, grass (Enhanced Vehicle). In 2WD, if the rear axle slips beyond the threshold, 4WD engages first, then the differentials lock if slip continues; on the road it returns to 2WD once grip is back. A manual change is kept until the next ground change."/>
+        <text name="input_AS_DRIVE_MODE" text="Differentials and transmission: Auto / Manual"/>
+        <text name="vtpas_autoOnHelper_label" text="Back to Auto with AutoDrive / Courseplay"/>
+        <text name="vtpas_autoOnHelper_tip" text="In Manual, switches back to Auto as soon as AutoDrive or Courseplay takes over the tractor."/>
+        <text name="vtpas_notif_modeManual" text="Differentials and transmission: MANUAL"/>
+        <text name="vtpas_notif_modeAuto" text="Differentials and transmission: AUTO"/>
+        <text name="vtpas_hud_manual" text="MANUAL"/>
+        <text name="vtpas_hud_auto" text="AUTO"/>
         <text name="input_AS_DUAL_SWITCH" text="Mount / remove dual wheels"/>
         <text name="as_dual_store_function" text="On foot next to the rack, with a stopped tractor nearby: Right Ctrl + I. Full rack = mount dual wheels, empty rack = remove them. 30 min of work (15 min per tire), one tire every 15 min."/>
         <text name="as_dual_mounting" text="Dual wheel mounting started: ready at %s"/>
