@@ -311,13 +311,16 @@ end
 
 -- (v1.0.0.35) tracteur vu de dessus selon l'état Enhanced Vehicle :
 -- 0 rien, 1 pont AV bloqué, 2 pont AR, 3 les deux, +4 en 4x4 (transmission en vert)
--- (v1.0.0.54) icône moissonneuse / ensileuse : hud/vtpas_combine0..7.dds
-function AS_SpeedHint:getDriveOverlay(k, harvester)
+-- (v1.0.0.54) icône moissonneuse : hud/vtpas_combine0..7.dds
+-- (v1.0.0.57) icône ensileuse : hud/vtpas_forage0..7.dds
+local SH_ICON_SETS = { tractor = { "hud/vtpas_drive%d.dds", 0 }, combine = { "hud/vtpas_combine%d.dds", 8 }, forage = { "hud/vtpas_forage%d.dds", 16 } }
+function AS_SpeedHint:getDriveOverlay(k, kind)
     self.driveOverlays = self.driveOverlays or {}
-    local key = harvester and (k + 8) or k
+    local set = SH_ICON_SETS[kind or "tractor"] or SH_ICON_SETS.tractor
+    local key = k + set[2]
     local ov = self.driveOverlays[key]
     if ov == nil then
-        local path = Utils.getFilename(string.format(harvester and "hud/vtpas_combine%d.dds" or "hud/vtpas_drive%d.dds", k), AS_MOD_DIR)
+        local path = Utils.getFilename(string.format(set[1], k), AS_MOD_DIR)
         local ok, o = pcall(createImageOverlay, path)
         if ok and o ~= nil and o ~= 0 then
             ov = o
@@ -454,23 +457,24 @@ function AS_SpeedHint:draw()
         renderText(bx + blockW * 0.5, by + iconH + py(2) + modeSize * 0.15, modeSize, L(manual and "vtpas_hud_manual" or "vtpas_hud_auto"))
 
         local k, frontLocked, rearLocked, frontDriven, rearDriven = shDriveState(vehicle)
-        local harvester = AS.isHarvester(vehicle)
+        local kind = "tractor"
+        if AS.isForage(vehicle) then kind = "forage" elseif AS.isHarvester(vehicle) then kind = "combine" end
         local iconX = bx + labelW
         if drawFilledRect ~= nil then
             drawFilledRect(bx, by, blockW, iconH, 0, 0, 0, 0.35)
         end
-        local ov = self:getDriveOverlay(k, harvester)
+        local ov = self:getDriveOverlay(k, kind)
         if ov ~= nil then
             setOverlayColor(ov, 1, 1, 1, 1)
             renderOverlay(ov, iconX, by, iconW, iconH)
         end
         -- ponts dans l'image (256 px) : tracteur avant à 55 px du haut, arrière à 195 px ;
-        -- moissonneuse avant à 73 px, arrière à 207 px
+        -- moissonneuse avant à 73 px, arrière à 207 px ; ensileuse 95 / 210 px
         local ws = st.wheelVehicle == vehicle and st.wheelSlip or nil
         if ws ~= nil then
             local lpX, lpY = pxw(3), py(1.5)
             local fy, ry = 55, 195
-            if harvester then fy, ry = 73, 207 end
+            if kind == "combine" then fy, ry = 73, 207 elseif kind == "forage" then fy, ry = 95, 210 end
             -- (v1.0.0.42) roues libres (non motrices) : pas de patinage affiché
             local axles = {
                 { y = by + iconH * (1 - fy / 256), l = frontDriven and ws.fl or nil, r = frontDriven and ws.fr or nil, locked = frontLocked and frontDriven },

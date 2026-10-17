@@ -64,6 +64,28 @@ local function isHarvester(v)
     return v.spec_combine ~= nil
 end
 
+-- (v1.0.0.57) ensileuse : moissonneuse « tampon » du jeu, ou catégorie / type ensileuse
+local forageCache = setmetatable({}, { __mode = "k" })
+local function isForage(v)
+    local r = forageCache[v]
+    if r == nil then
+        r = false
+        local c = v.spec_combine
+        if c ~= nil then
+            if c.isBufferCombine == true then
+                r = true
+            elseif string.find(string.lower(tostring(v.typeName or "")), "forage", 1, true) then
+                r = true
+            elseif g_storeManager ~= nil and v.configFileName ~= nil then
+                local ok, item = pcall(g_storeManager.getItemByXMLFilename, g_storeManager, v.configFileName)
+                r = ok and item ~= nil and string.find(string.upper(tostring(item.categoryName or "")), "FORAGE", 1, true) ~= nil
+            end
+        end
+        forageCache[v] = r
+    end
+    return r
+end
+
 -- (v1.0.0.56) AS.is4wd / AS.drivenAxle : voir Transmission.lua
 
 -- Retourne true si le véhicule est dans un champ, false sinon, nil si indéterminable.
@@ -339,6 +361,7 @@ AS.getVtpClass = getVtpClass
 AS.isAutoDriveActive = isAutoDriveActive
 AS.isCourseplayActive = isCourseplayActive
 AS.isHarvester = isHarvester
+AS.isForage = isForage
 AS.isVehicleInField = isVehicleInField
 AS.getVehicles = getVehicles
 AS.getEvClass = getEvClass
