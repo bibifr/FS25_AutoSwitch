@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.45 | Usure des pneus : Real Physics - Tire Wear (Reifenverschleiß 1.2.2.67, requis) remplace Use Your Tyres (plus requis). L'adhérence du sol du jeu est gardée et la perte d'usure s'applique par-dessus ; un pneu usé accroche mieux sur route (effet slick) ; la case usure de Tractor Terrain Dynamics suit Reifenverschleiß |
 | 1.0.0.44 | Correctif urgent de la 1.0.0.43 : le jeu refusait d'enregistrer les véhicules au chargement (« Failed to register vehicle! »). Ne pas sauvegarder une partie chargée avec la 1.0.0.43 |
 | 1.0.0.43 | Palettes de pneus : plus de chute de FPS avec plusieurs palettes côte à côte. La liste des palettes est gardée en mémoire et refaite seulement à l'achat, la pose, la vente ou la suppression d'une palette ; les groupes ne sont recalculés que si une palette a bougé. Pneus des palettes cachés au-delà de 200 m (600 m avant) |
 | 1.0.0.42 | Patinage : chaque roue est comparée à sa propre vitesse au sol (en virage, les roues avant et extérieures ne comptent plus comme patinant, jusqu'à 40 % avant), pour l'affichage et le blocage des différentiels ; en 4x2, pas de patinage affiché sur les roues avant libres |

@@ -2,7 +2,7 @@
 
 # FS25 AutoSwitch
 
-**Version 1.0.0.42** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
+**Version 1.0.0.45** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
 
 ## French
 
@@ -17,7 +17,7 @@ Objectif: Rendre le jeux plus realiste et performant
 | --- | --- |
 | Pression des pneus | Avec AutoDrive / Courseplay : dégonflage au champ, gonflage sur route. En conduite manuelle : Automatique ou Manuel. Le regonflage automatique de VTP à 30 km/h est désactivé. |
 | Différentiels (Enhanced Vehicle) | Blocage AR puis AV selon le patinage (seuils réglables, 15 % et 30 % par défaut), déblocage à la moitié du seuil, 4x2 sur goudron et béton seulement, 4x4 partout ailleurs (champs, chemins), braquage 90 % en 4x4, blocages coupés au-delà de 50 % du braquage (AR seul), 20 % (AV seul) ou 10 % (les deux) et refusés roues braquées, remise à zéro au chargement. |
-| Adhérence (MoreRealistic) | Perte d'adhérence en sol humide (Débutant, Facile, Normal, Dur, Extrême), bonus Variable Tire Pressure en champ ramené à +15 % (+20 % en jumelées), bonus fixe quand les différentiels sont bloqués (+4 % roues AR, +3 % roues AV), usure Use Your Tyres prise en compte. |
+| Adhérence (MoreRealistic) | Perte d'adhérence en sol humide (Débutant, Facile, Normal, Dur, Extrême), bonus Variable Tire Pressure en champ ramené à +15 % (+20 % en jumelées), bonus fixe quand les différentiels sont bloqués (+4 % roues AR, +3 % roues AV), usure de Real Physics - Tire Wear appliquée par-dessus l'adhérence du sol, un pneu usé accroche mieux sur route (effet slick). |
 | Roues jumelées | Largeur réelle prise en compte par Mud System Physics, meilleure adhérence en sol humide, correctif VTP pour les pneus à variantes de marques. |
 | Palettes de jumelées | Palettes AR (BKT 650/65R42, 4 500 €) et AV (BKT 540/65R30, 3 500 €) en boutique et au menu construction. Montage / démontage pneu par pneu (15 min de jeu par pneu), zone de stationnement au sol, repère joueur, minuteur, tracteur verrouillé pendant le chantier. |
 | Affichage | Plage de vitesse conseillée (déplaçable à la souris) et tracteur vu de dessus près du compteur (ponts bloqués, 4x4, patinage de chaque roue ou par pont bloqué), alerte de patinage. |
@@ -51,7 +51,7 @@ Les jumelées doivent exister dans la **même marque de pneus** que ceux du trac
 - [Mud System Physics](https://www.kingmods.net/en/fs25/mods/73208/mud-system-physics) : version 1.3.6.0 minimum
 - [Tractor Terrain Dynamics](https://www.kingmods.net/en/fs25/mods/78890/tractor-terrain-dynamics) : version 1.0.3.7 minimum (bêta)
 - [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025) : version 1.0.1.0 minimum
-- [Use Up Your Tyres](https://www.farming-simulator.com/mod.php?mod_id=321793&title=fs2025) : version 1.1.0.0 minimum
+- Real Physics - Tire Wear (Reifenverschleiß) : version 1.2.2.67 minimum
 - [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases) : version 1.6.0.0 minimum
 - [Crop Destruction Overhaul](https://www.farming-simulator.com/mod.php?mod_id=356527&title=fs2025) : version 1.1.0.0 minimum
 - [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025) : version 2.0.0.8 minimum
@@ -73,7 +73,7 @@ AutoSwitch fait partie d'un ensemble réaliste global : tous ces mods sont oblig
 
 ## English
 
-**Version 1.0.0.42** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
+**Version 1.0.0.45** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
 
 Companion mod that automates **tire pressure and differential locks** and makes **traction realistic** by making Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics and Tractor Terrain Dynamics work together, without modifying any of them. It also adds **dual-wheel racks** mounted tire by tire.
 Objective: Make game more realistic 
@@ -84,7 +84,7 @@ Objective: Make game more realistic
 | --- | --- |
 | Tire pressure | With AutoDrive / Courseplay: deflate in the field, inflate on the road. Manual driving: Automatic or Manual mode. VTP's automatic re-inflation at 30 km/h is disabled. |
 | Differentials (Enhanced Vehicle) | Rear then front lock depending on wheel slip (adjustable thresholds, 15 % and 30 % by default), unlock at half the threshold, 2WD on asphalt and concrete only, 4WD everywhere else (fields, tracks), 90 % steering in 4WD, locks released beyond 50 % of full steering (rear only), 20 % (front only) or 10 % (both) and refused with the wheels turned, reset on game load. |
-| Grip (MoreRealistic) | Grip loss on wet ground (Beginner, Easy, Normal, Hard, Extreme), Variable Tire Pressure field bonus capped at +15 % (+20 % with dual wheels), fixed bonus when differentials are locked (+4 % rear wheels, +3 % front wheels), Use Your Tyres wear taken into account. |
+| Grip (MoreRealistic) | Grip loss on wet ground (Beginner, Easy, Normal, Hard, Extreme), Variable Tire Pressure field bonus capped at +15 % (+20 % with dual wheels), fixed bonus when differentials are locked (+4 % rear wheels, +3 % front wheels), tire wear from Real Physics - Tire Wear applied on top of the ground grip, worn tires grip better on road (slick effect). |
 | Dual wheels | Real width used by Mud System Physics, better grip on wet ground, VTP fix for tires with brand variants. |
 | Dual-wheel racks | Rear (BKT 650/65R42, €4,500) and front (BKT 540/65R30, €3,500) racks in the shop and the construction menu. Mounting / unmounting tire by tire (15 in-game minutes per tire), parking area on the ground, player marker, timer, tractor locked during the job. |
 | Display | Recommended speed range (movable with the mouse) and top view of the tractor next to the speedometer (locked axles, 4WD, slip of each wheel or per locked axle), slip warning. |
@@ -118,7 +118,7 @@ Dual wheels must exist in the **same tire brand** as the tractor's tires. Wheel 
 - [Mud System Physics](https://www.kingmods.net/en/fs25/mods/73208/mud-system-physics): version 1.3.6.0 minimum
 - [Tractor Terrain Dynamics](https://www.kingmods.net/en/fs25/mods/78890/tractor-terrain-dynamics): version 1.0.3.7 minimum (beta)
 - [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025): version 1.0.1.0 minimum
-- [Use Up Your Tyres](https://www.farming-simulator.com/mod.php?mod_id=321793&title=fs2025): version 1.1.0.0 minimum
+- Real Physics - Tire Wear (Reifenverschleiß): version 1.2.2.67 minimum
 - [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases): version 1.6.0.0 minimum
 - [Crop Destruction Overhaul](https://www.farming-simulator.com/mod.php?mod_id=356527&title=fs2025): version 1.1.0.0 minimum
 - [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025): version 2.0.0.8 minimum

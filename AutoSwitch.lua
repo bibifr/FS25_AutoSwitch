@@ -23,6 +23,7 @@
 --   ImplementStabilizer outils stables à l'arrêt (rayon des roues figé)
 --   MudWheelDrag  résistance de boue sur les roues sans frein
 --   TtdBridge     pont MSP -> TTD : humidité locale, pas de résistance en double
+--   TireWear      usure Reifenverschleiß : adhérence du sol gardée, effet slick sur route
 --   TireDirtKeep  la saleté des pneus part moins vite en roulant
 --   SleepPlus     menu Dormir : avancer de X heures ou de X jours
 --   LightRange    lumières des véhicules visibles de plus loin
@@ -33,6 +34,8 @@
 -- (aucun module chargé) et un message l'indique en jeu et dans log.txt.
 -- v1.0.0.30 : la 1.0.0.29 déclarait « introuvables » les mods requis chargés
 -- après AutoSwitch ; seule la version déclarée par le gestionnaire de mods compte.
+-- v1.0.0.45 : Use Your Tyres n'est plus requis, Reifenverschleiß le remplace.
+-- Son nom de mod change à chaque version : il est cherché par le début du nom.
 -- =============================================================================
 
 local modDir = g_currentModDirectory or ""
@@ -58,6 +61,7 @@ local FILES = {
     "scripts/ImplementStabilizer.lua",
     "scripts/MudWheelDrag.lua",
     "scripts/TtdBridge.lua",
+    "scripts/TireWear.lua",
     "scripts/TireDirtKeep.lua",
     "scripts/SleepPlus.lua",
     "scripts/LightRange.lua",
@@ -78,8 +82,20 @@ local REQUIRED = {
     { "FS25_RealisticHarvesting",     "1.6.0.0" },
     { "FS25_CropDestructionOverhaul", "1.1.0.0" },
     { "FS25_MoistureSystem",          "2.0.0.8" },
-    { "FS25_useYourTyres",            "1.1.0.0" },
+    { "FS25_Reifenverschleiss*",      "1.2.2.67", "Real Physics - Tire Wear" },
 }
+
+-- mod chargé dont le nom commence par prefix (nom avec numéro de version)
+local function findModByPrefix(prefix)
+    if g_modManager == nil or type(g_modManager.mods) ~= "table" then return nil end
+    for _, mod in pairs(g_modManager.mods) do
+        if type(mod) == "table" and type(mod.modName) == "string"
+            and string.sub(mod.modName, 1, #prefix) == prefix then
+            return mod
+        end
+    end
+    return nil
+end
 
 -- -1 si a < b, 0 si égales, 1 si a > b ; nil si une version est illisible
 local function compareVersions(a, b)
@@ -104,7 +120,13 @@ local function checkVersions()
     end
     for _, req in ipairs(REQUIRED) do
         local name, minVersion = req[1], req[2]
-        local ok, mod = pcall(g_modManager.getModByName, g_modManager, name)
+        local ok, mod
+        if string.sub(name, -1) == "*" then
+            ok, mod = pcall(findModByPrefix, string.sub(name, 1, -2))
+            name = req[3] or name
+        else
+            ok, mod = pcall(g_modManager.getModByName, g_modManager, name)
+        end
         -- pas de g_modIsLoaded : les mods requis dont le nom vient après FS25_AutoSwitch
         -- ne sont pas encore chargés à ce moment-là (v1.0.0.30)
         if not ok or mod == nil then
