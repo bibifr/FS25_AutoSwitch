@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <modDesc descVersion="106">
     <author>Fabien</author>
-    <version>1.0.0.73</version>
+    <version>1.0.0.75</version>
     <multiplayer supported="true"/>
 
     <title>
@@ -25,7 +25,7 @@
 - Mud drag also on unbraked wheels: Mud System Physics mud slows trailers and implements again with MoreRealistic.
 - Mod arbitration: AutoSwitch blocks or orders the conflicting hooks between MoreRealistic, Use Your Tyres, DynamicDrivePro, Enhanced Vehicle and Recovery Winch itself, without disabling any mod (ModMixer is no longer needed).
 - Display: recommended speed range and top view of the tractor next to the speedometer (locked axles, 4WD, slip of each wheel or per locked axle), slip warning.
-- Lights: headlights, lights and beacons of other vehicles visible 5 times farther and twice as bright (adjustable).
+- Lights: headlights and work lights of all vehicles reach twice as far and twice as bright (adjustable).
 - Sowing: seeding protection, seeder filling with the lid closed, direct re-sowing on crushed strips.
 - Mud: AutoSwitch settings for Mud System Physics + TTD applied automatically.
 
@@ -46,7 +46,7 @@ Required mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, Mor
 - Résistance de la boue aussi sur les roues sans frein : la boue de Mud System Physics freine de nouveau remorques et outils avec MoreRealistic.
 - Arbitrage des mods : AutoSwitch bloque ou ordonne lui-même les crochets en conflit entre MoreRealistic, Use Your Tyres, DynamicDrivePro, Enhanced Vehicle et Recovery Winch, sans désactiver aucun mod (ModMixer n'est plus nécessaire).
 - Affichage : plage de vitesse conseillée et tracteur vu de dessus près du compteur (ponts bloqués, 4x4, patinage de chaque roue ou par pont bloqué), alerte de patinage.
-- Lumières : phares, feux et gyros des autres véhicules visibles 5 fois plus loin et deux fois plus lumineux (réglable).
+- Lumières : les phares et phares de travail de tous les véhicules éclairent deux fois plus loin et deux fois plus fort (réglable).
 - Semis : protection du semis, remplissage du semoir couvercle fermé, ressemis direct sur bandes écrasées.
 - Boue : paramètres Mud System Physics + TTD d'AutoSwitch appliqués automatiquement.
 
@@ -67,7 +67,7 @@ Mods requis : VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, More
 - Schlammwiderstand auch an ungebremsten Rädern: der Schlamm von Mud System Physics bremst Anhänger und Geräte mit MoreRealistic wieder.
 - Mod-Schiedsrichter: AutoSwitch blockiert oder ordnet die widersprüchlichen Hooks zwischen MoreRealistic, Use Your Tyres, DynamicDrivePro, Enhanced Vehicle und Recovery Winch selbst, ohne einen Mod zu deaktivieren (ModMixer wird nicht mehr benötigt).
 - Anzeige: empfohlener Geschwindigkeitsbereich und Traktor von oben neben dem Tacho (gesperrte Achsen, Allrad, Schlupf jedes Rads oder pro gesperrter Achse), Schlupfwarnung.
-- Lichter: Scheinwerfer, Lichter und Rundumleuchten anderer Fahrzeuge 5-mal weiter sichtbar und doppelt so hell (einstellbar).
+- Lichter: Scheinwerfer und Arbeitsscheinwerfer aller Fahrzeuge leuchten doppelt so weit und doppelt so hell (einstellbar).
 - Säen: Saatschutz, Befüllen der Sämaschine bei geschlossenem Deckel, Direktnachsaat auf überfahrenen Streifen.
 - Schlamm: AutoSwitch-Einstellungen für Mud System Physics + TTD werden automatisch angewendet.
 

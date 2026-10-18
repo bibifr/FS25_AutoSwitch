@@ -147,11 +147,7 @@
         <text name="vtpas_sleepText" text="Choose how long to sleep: hours and days."/>
         <text name="vtpas_sleepHoursTitle" text="Time in hours"/>
         <text name="vtpas_sleepDaysTitle" text="Time in days"/>
-        <text name="vtpas_lightRange_label" text="Vehicle lights view distance"/>
-        <text name="vtpas_lightRange_tip" text="Distance at which the headlights, lights and beacons of other vehicles stay visible. x1 = base game. Ground lighting is unchanged."/>
         <text name="vtpas_lightRange_base" text="x1 (base game)"/>
-        <text name="vtpas_lightGlow_label" text="Vehicle lights brightness"/>
-        <text name="vtpas_lightGlow_tip" text="Brightness of the headlight, light and beacon glow of other vehicles. x1 = base game. The driven vehicle and its implements are unchanged."/>
         <text name="vtpas_windSway_label" text="Wind movement"/>
         <text name="vtpas_windSway_tip" text="How strongly trees, crops and grass move in the wind. x1 = base game (at 57 km/h the base game only moves foliage like a breeze). The wind speed itself is unchanged."/>
         <text name="vtpas_overdraft_label" text="Authorised overdraft"/>
@@ -215,5 +211,9 @@
         <text name="vtpas_wx_dir_SW" text="SW"/>
         <text name="vtpas_wx_dir_W" text="W"/>
         <text name="vtpas_wx_dir_NW" text="NW"/>
+        <text name="vtpas_beamRange_label" text="Headlight reach (lit area)"/>
+        <text name="vtpas_beamRange_tip" text="Distance lit by the headlights and work lights of all vehicles, yours included. x1 = base game. Costs some FPS at night."/>
+        <text name="vtpas_beamGlow_label" text="Lit area brightness"/>
+        <text name="vtpas_beamGlow_tip" text="Strength of the ground lighting from the headlights and work lights of all vehicles, yours included. x1 = base game."/>
     </texts>
 </l10n>
