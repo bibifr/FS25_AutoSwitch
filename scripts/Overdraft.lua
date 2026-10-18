@@ -204,6 +204,11 @@ local SCOPES = {
     { "InGameMenuMapFrame",         { "^onclickbuy", "^buyfarmland", "^onyesnobuy" } },
     { "FarmlandStateEvent",         { "^run$" } },
     { "BuyFarmlandEvent",           { "^run$" } },
+    -- v1.0.0.71 (provisoire) : entretien de Realistic Mechanical Systems ; ignoré si RMS absent.
+    -- RMS est chargé après AutoSwitch, dans son propre environnement : enrobé au chargement de la carte.
+    { "RMS_MaintenanceTwoOptionsDialog",   { "^onclickstartservice$" }, "FS25_RealisticMechanicalSystems" },
+    { "RMS_MaintenanceThreeOptionsDialog", { "^onclickstartservice$" }, "FS25_RealisticMechanicalSystems" },
+    { "RMS_FluidWorkshop",                 { "^trystartservice$" },     "FS25_RealisticMechanicalSystems" },
 }
 
 local function matches(name, patterns)
@@ -247,7 +252,12 @@ end
 function AS_Overdraft:installScopes()
     local count = 0
     for _, s in ipairs(SCOPES) do
-        local class = _G[s[1]]
+        local class
+        if s[3] ~= nil then
+            class = AS.modGlobal(s[3], s[1])
+        else
+            class = _G[s[1]]
+        end
         if type(class) == "table" then
             local names = {}
             for k, v in pairs(class) do
