@@ -4,6 +4,7 @@
 local L = AS.L
 
 -------------------------------------------------------------------------------
+-- v1.0.0.62 : mini-météo posée par défaut à gauche de la barre de l'horloge.
 -- v1.0.0.61 : mini-météo à gauche de l'horloge (actuel + prochain changement),
 --   déplaçable à la souris, un clic ouvre la fenêtre ; option dans le menu.
 -- v1.0.0.60 : heures arrondies au quart d'heure, colonne des valeurs décalée,
@@ -595,21 +596,29 @@ end
 --   Déplaçable à la souris (curseur visible), un clic l'ouvre en grand.
 -------------------------------------------------------------------------------
 
--- coin haut-droit de la mini-météo par défaut : bord gauche de l'horloge du jeu
-local function clockAnchor(pxw, py)
+-- position par défaut de la mini-météo : bord droit et centre vertical, juste à gauche
+-- de la barre de l'horloge du jeu. (v1.0.0.62) Le jeu donne le coin haut-droit de sa
+-- barre (vu en jeu : la 1.0.0.61 la posait par-dessus l'argent) ; si x + largeur ou
+-- y + hauteur dépasse l'écran, c'est un bord droit / haut.
+local function clockAnchor(pxw, py, H)
     local gid = g_currentMission ~= nil and g_currentMission.hud ~= nil and g_currentMission.hud.gameInfoDisplay or nil
     if gid ~= nil then
         local ok, x, y = pcall(function()
             if gid.getPosition ~= nil then return gid:getPosition() end
             return gid.x, gid.y
         end)
+        local okW, w = pcall(function() return gid.getWidth ~= nil and gid:getWidth() or nil end)
         local okH, h = pcall(function() return gid.getHeight ~= nil and gid:getHeight() or nil end)
-        if ok and type(x) == "number" and type(y) == "number" and x > 0.3 and x < 1 then
-            local top = (okH and type(h) == "number" and h > 0) and (y + h) or (1 - py(12))
-            return x - pxw(10), math.min(1 - py(4), top)
+        if ok and type(x) == "number" and type(y) == "number" and okW and type(w) == "number" and w > 0 then
+            local left = (x + w > 1.001) and (x - w) or x
+            local hh = (okH and type(h) == "number" and h > 0) and h or H
+            local top = (y + hh > 1.001) and y or (y + hh)
+            if left > 0.1 and left < 1 then
+                return left - pxw(10), top - hh * 0.5 + H * 0.5
+            end
         end
     end
-    return 1 - pxw(470), 1 - py(12)
+    return 1 - pxw(560), 1 - py(20)
 end
 
 function AS_Weather:drawWidget(d)
@@ -658,7 +667,7 @@ function AS_Weather:drawWidget(d)
         x, top = self.WIDGET_X, self.WIDGET_Y + H
     else
         local right
-        right, top = clockAnchor(pxw, py)
+        right, top = clockAnchor(pxw, py, H)
         x = right - W
     end
     x = math.max(0, math.min(1 - W, x))
