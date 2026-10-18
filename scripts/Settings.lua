@@ -112,8 +112,8 @@ function AS_Settings:save()
             setXMLInt(xml, "vtpAutoSwitch.lightRange#glow", self.lightGlow)
             setXMLBool(xml, "vtpAutoSwitch.weatherWidget#enabled", self.weatherWidget)
             if self.weatherPosX ~= nil and self.weatherPosY ~= nil then
-                setXMLFloat(xml, "vtpAutoSwitch.weatherWidget#posX", self.weatherPosX)
-                setXMLFloat(xml, "vtpAutoSwitch.weatherWidget#posY", self.weatherPosY)
+                setXMLFloat(xml, "vtpAutoSwitch.weatherWidget#x", self.weatherPosX)
+                setXMLFloat(xml, "vtpAutoSwitch.weatherWidget#y", self.weatherPosY)
             end
             if self.hintPosX ~= nil and self.hintPosY ~= nil then
                 setXMLFloat(xml, "vtpAutoSwitch.speedHint#posX", self.hintPosX)
@@ -200,8 +200,8 @@ function AS_Settings:load()
                 end
                 local ww = getXMLBool(xml, "vtpAutoSwitch.weatherWidget#enabled")
                 if ww ~= nil then self.weatherWidget = ww end
-                local wx = getXMLFloat(xml, "vtpAutoSwitch.weatherWidget#posX")
-                local wy = getXMLFloat(xml, "vtpAutoSwitch.weatherWidget#posY")
+                local wx = getXMLFloat(xml, "vtpAutoSwitch.weatherWidget#x")
+                local wy = getXMLFloat(xml, "vtpAutoSwitch.weatherWidget#y")
                 if wx ~= nil and wy ~= nil then
                     self.weatherPosX, self.weatherPosY = math.max(0, math.min(1, wx)), math.max(0, math.min(1, wy))
                 end

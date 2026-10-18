@@ -4,6 +4,8 @@
 local L = AS.L
 
 -------------------------------------------------------------------------------
+-- v1.0.0.63 : mini-météo à la place de la météo du jeu (cachée) dans la barre de
+--   l'horloge, ligne du dessous : vent, direction, « Clique-moi ».
 -- v1.0.0.62 : mini-météo posée par défaut à gauche de la barre de l'horloge.
 -- v1.0.0.61 : mini-météo à gauche de l'horloge (actuel + prochain changement),
 --   déplaçable à la souris, un clic ouvre la fenêtre ; option dans le menu.
@@ -596,33 +598,71 @@ end
 --   Déplaçable à la souris (curseur visible), un clic l'ouvre en grand.
 -------------------------------------------------------------------------------
 
--- position par défaut de la mini-météo : bord droit et centre vertical, juste à gauche
--- de la barre de l'horloge du jeu. (v1.0.0.62) Le jeu donne le coin haut-droit de sa
--- barre (vu en jeu : la 1.0.0.61 la posait par-dessus l'argent) ; si x + largeur ou
--- y + hauteur dépasse l'écran, c'est un bord droit / haut.
-local function clockAnchor(pxw, py, H)
-    local gid = g_currentMission ~= nil and g_currentMission.hud ~= nil and g_currentMission.hud.gameInfoDisplay or nil
-    if gid ~= nil then
-        local ok, x, y = pcall(function()
-            if gid.getPosition ~= nil then return gid:getPosition() end
-            return gid.x, gid.y
-        end)
-        local okW, w = pcall(function() return gid.getWidth ~= nil and gid:getWidth() or nil end)
-        local okH, h = pcall(function() return gid.getHeight ~= nil and gid:getHeight() or nil end)
-        if ok and type(x) == "number" and type(y) == "number" and okW and type(w) == "number" and w > 0 then
-            local left = (x + w > 1.001) and (x - w) or x
-            local hh = (okH and type(h) == "number" and h > 0) and h or H
-            local top = (y + hh > 1.001) and y or (y + hh)
-            if left > 0.1 and left < 1 then
-                return left - pxw(10), top - hh * 0.5 + H * 0.5
-            end
+-- (v1.0.0.63) place de la mini-météo : à la place de la météo du jeu, dans la barre de
+-- l'horloge (demande de Fabien). getPosition() de la barre = coin haut-droit (vu en jeu,
+-- comme Enhanced Vehicle qui pose ses blocs sous baseY - infoBgScale.height).
+-- Renvoie le bord droit, le haut et la hauteur du bloc, ou nil si la barre est introuvable.
+local function gameInfo()
+    return g_currentMission ~= nil and g_currentMission.hud ~= nil and g_currentMission.hud.gameInfoDisplay or nil
+end
+
+local function overlayX(o)
+    if type(o) == "table" then
+        if type(o.x) == "number" then return o.x end
+        if o.getPosition ~= nil then
+            local ok, x = pcall(o.getPosition, o)
+            if ok and type(x) == "number" then return x end
         end
     end
-    return 1 - pxw(560), 1 - py(20)
+    return nil
+end
+
+local function clockAnchor()
+    local gid = gameInfo()
+    if gid == nil then return nil end
+    local ok, x, y = pcall(function()
+        if gid.getPosition ~= nil then return gid:getPosition() end
+        return gid.x, gid.y
+    end)
+    if not ok or type(x) ~= "number" or type(y) ~= "number" then return nil end
+    local h = type(gid.infoBgScale) == "table" and tonumber(gid.infoBgScale.height) or nil
+    if h == nil and gid.getHeight ~= nil then
+        local okH, hh = pcall(gid.getHeight, gid)
+        if okH and type(hh) == "number" and hh > 0 then h = hh end
+    end
+    -- bord droit = juste avant le calendrier (la météo du jeu est cachée à sa gauche)
+    local right = overlayX(gid.calendarIcon)
+    if right == nil or right <= 0 or right >= x then return nil end
+    return right, y, h
+end
+
+-- (v1.0.0.63) météo du jeu cachée dans la barre de l'horloge quand la mini-météo est
+-- affichée à sa place : icônes rendues transparentes le temps du dessin du jeu
+-- (Colored Weather Icons et HUD+ les recolorent, d'où le passage à chaque image).
+local GAME_WEATHER_OVERLAYS = { "weatherIcon", "weatherNextIcon" }
+if GameInfoDisplay ~= nil and GameInfoDisplay.draw ~= nil then
+    GameInfoDisplay.draw = Utils.overwrittenFunction(GameInfoDisplay.draw, function(self, superFunc, ...)
+        if not (AS_Weather.WIDGET and AS_Weather.WIDGET_X == nil and AS_Weather.anchored) then
+            return superFunc(self, ...)
+        end
+        local saved = {}
+        for _, name in ipairs(GAME_WEATHER_OVERLAYS) do
+            local o = self[name]
+            if type(o) == "table" and o.setColor ~= nil then
+                saved[name] = { o.r, o.g, o.b, o.a }
+                pcall(o.setColor, o, o.r, o.g, o.b, 0)
+            end
+        end
+        local r = { superFunc(self, ...) }
+        for name, c in pairs(saved) do
+            local o = self[name]
+            pcall(o.setColor, o, c[1], c[2], c[3], c[4])
+        end
+        return unpack(r)
+    end)
 end
 
 function AS_Weather:drawWidget(d)
-    local DAY = self.DAY_MS
     local sc = uiScale()
     local aspect = (g_screenWidth or 1920) / math.max(1, g_screenHeight or 1080)
     local function py(px) return px * sc / 1080 end
@@ -638,9 +678,20 @@ function AS_Weather:drawWidget(d)
         setTextBold(bold == true)
         return getTextWidth(py(size), tostring(s))
     end
+    local function icon(key, x, y, sizePx, rot)
+        local ov = self:getOverlay(key)
+        if ov == nil then return end
+        local w, h = pxw(sizePx), py(sizePx)
+        setOverlayColor(ov, 1, 1, 1, 1)
+        if setOverlayRotation ~= nil then setOverlayRotation(ov, rot or 0, w * 0.5, h * 0.5) end
+        renderOverlay(ov, x, y, w, h)
+    end
 
+    local anchorRight, anchorTop, barH = clockAnchor()
+    self.anchored = anchorRight ~= nil
     local H = py(48)
-    local pad, gap, iconPx = pxw(8), pxw(10), 34
+    if self.WIDGET_X == nil and barH ~= nil and barH > py(30) and barH < py(120) then H = barH end
+    local pad, gap, iconPx = pxw(10), pxw(10), 34
     local iconW = pxw(iconPx)
     -- textes
     local curIcon = typeInfo(d.curType)
@@ -660,48 +711,55 @@ function AS_Weather:drawWidget(d)
     if nextName ~= nil then
         rightW = gap + pxw(1) + gap + pxw(28) + pxw(6) + math.max(width(14, nextName, true), width(12, nextLine))
     end
-    local W = pad + iconW + pxw(6) + leftW + rightW + pad
+    -- (v1.0.0.63) ligne du dessous : vent et direction, « Clique-moi »
+    local windTxt = fmtKmh(d.windSpeed)
+    local from = compassFrom(d.windHeading)
+    if from ~= nil then windTxt = windTxt .. "  " .. string.format(L("vtpas_wx_from"), from) end
+    local hintTxt = L("vtpas_wx_clickMe")
+    local row3H = py(22)
+    local row3W = pxw(18) + pxw(6) + width(12, windTxt) + gap * 2 + width(12, hintTxt)
+    local W = math.max(pad + iconW + pxw(6) + leftW + rightW + pad, pad + row3W + pad)
 
     local x, top
     if self.WIDGET_X ~= nil and self.WIDGET_Y ~= nil then
-        x, top = self.WIDGET_X, self.WIDGET_Y + H
+        x, top = self.WIDGET_X, self.WIDGET_Y + H + row3H
+    elseif anchorRight ~= nil then
+        x, top = anchorRight - pxw(14) - W, anchorTop
     else
-        local right
-        right, top = clockAnchor(pxw, py, H)
-        x = right - W
+        x, top = 1 - pxw(560) - W, 1 - py(20)
     end
     x = math.max(0, math.min(1 - W, x))
-    local y = math.max(0, math.min(1 - H, top - H))
-    self.widgetBox = { x = x, y = y, w = W, h = H }
+    local y = math.max(row3H, math.min(1 - H, top - H))
+    local y3 = y - row3H
+    self.widgetBox = { x = x, y = y3, w = W, h = H + row3H }
 
     drawFilledRect(x, y, W, H, 0, 0, 0, 0.6)
+    drawFilledRect(x, y3, W, row3H, 0, 0, 0, 0.45)
+    local cy = y + H * 0.5    -- milieu de la ligne principale
     local cx = x + pad
-    local ov = self:getOverlay(curIcon)
-    if ov ~= nil then
-        setOverlayColor(ov, 1, 1, 1, 1)
-        if setOverlayRotation ~= nil then setOverlayRotation(ov, 0, iconW * 0.5, py(iconPx) * 0.5) end
-        renderOverlay(ov, cx, y + (H - py(iconPx)) * 0.5, iconW, py(iconPx))
-    end
+    icon(curIcon, cx, cy - py(iconPx) * 0.5, iconPx)
     cx = cx + iconW + pxw(6)
     local tc = C.white
     if d.temp ~= nil and d.temp <= 0 then tc = C.cold elseif d.temp ~= nil and d.temp >= 25 then tc = C.warm end
-    text(cx, y + py(22), 20, tempTxt, tc, nil, true)
-    text(cx, y + py(7), 12, mmTxt, C.gray)
+    text(cx, cy - py(2), 20, tempTxt, tc, nil, true)
+    text(cx, cy - py(17), 12, mmTxt, C.gray)
     cx = cx + leftW
     if nextName ~= nil then
         cx = cx + gap
         drawFilledRect(cx, y + py(8), pxw(1), H - py(16), 1, 1, 1, 0.25)
         cx = cx + pxw(1) + gap
-        local nov = self:getOverlay(nextIcon)
-        if nov ~= nil then
-            setOverlayColor(nov, 1, 1, 1, 1)
-            if setOverlayRotation ~= nil then setOverlayRotation(nov, 0, pxw(14), py(14)) end
-            renderOverlay(nov, cx, y + (H - py(28)) * 0.5, pxw(28), py(28))
-        end
+        icon(nextIcon, cx, cy - py(14), 28)
         cx = cx + pxw(28) + pxw(6)
-        text(cx, y + py(26), 14, nextName, C.white, nil, true)
-        text(cx, y + py(8), 12, nextLine, isPrecipType(d.next.wt) and C.blue or C.gray)
+        text(cx, cy + py(2), 14, nextName, C.white, nil, true)
+        text(cx, cy - py(15), 12, nextLine, isPrecipType(d.next.wt) and C.blue or C.gray)
     end
+    -- ligne du dessous
+    local rx = x + pad
+    if d.windHeading ~= nil then
+        icon("arrow", rx, y3 + py(2), 18, -d.windHeading)
+    end
+    text(rx + pxw(24), y3 + py(6), 12, windTxt, C.white)
+    text(x + W - pad, y3 + py(6), 12, hintTxt, C.title, RenderText.ALIGN_RIGHT, true)
 end
 
 -------------------------------------------------------------------------------

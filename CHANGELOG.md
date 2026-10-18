@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.63 | Mini-météo à la place de la météo du jeu dans la barre de l'horloge (icônes du jeu cachées tant qu'elle est affichée), avec en dessous le vent, sa direction et « Clique-moi » pour ouvrir la fenêtre Météo |
 | 1.0.0.62 | Mini-météo posée par défaut juste à gauche de la barre de l'horloge (la 1.0.0.61 la mettait par-dessus l'argent) |
 | 1.0.0.61 | Mini-météo à gauche de l'horloge du jeu : temps et température actuels, mini / maxi du jour, prochain changement avec son heure et la pluie attendue. Déplaçable à la souris (curseur visible), position gardée ; un clic ouvre la fenêtre Météo. Option dans le menu AutoSwitch pour l'afficher ou la cacher |
 | 1.0.0.60 | Météo : heures arrondies au quart d'heure (13h00 au lieu de 13h01), « Prochain changement » ne chevauche plus sa valeur, jours des changements écrits J+1, J+2..., bouton X en haut à droite pour fermer (le curseur de la souris s'affiche avec la fenêtre) |

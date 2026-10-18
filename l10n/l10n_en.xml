@@ -192,6 +192,7 @@
         <text name="vtpas_wx_noForecast" text="No forecast from the game"/>
         <text name="vtpas_wx_fromTo" text="from %s to %s"/>
         <text name="vtpas_wx_dayPlus" text="D+%d"/>
+        <text name="vtpas_wx_clickMe" text="Click me"/>
         <text name="vtpas_wx_until" text="until %s"/>
         <text name="vtpas_wx_rainDay" text="%s over %s"/>
         <text name="vtpas_wx_dry" text="Dry"/>
