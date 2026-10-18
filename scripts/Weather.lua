@@ -4,6 +4,7 @@
 local L = AS.L
 
 -------------------------------------------------------------------------------
+-- v1.0.0.65 : mini-météo déplacée ailleurs : la case météo vide de la barre est refermée.
 -- v1.0.0.64 : icônes météo du jeu toujours cachées avec la mini-météo (l'un ou l'autre),
 --   la mini-météo s'accroche à sa place quand on la relâche près de la barre.
 -- v1.0.0.63 : mini-météo à la place de la météo du jeu (cachée) dans la barre de
@@ -653,16 +654,32 @@ if GameInfoDisplay ~= nil and GameInfoDisplay.draw ~= nil then
         for _, name in ipairs(GAME_WEATHER_OVERLAYS) do
             local o = self[name]
             if type(o) == "table" and o.setColor ~= nil then
-                saved[name] = { o.r, o.g, o.b, o.a }
+                saved[name] = { o.r, o.g, o.b, o.a, o.width }
                 pcall(o.setColor, o, o.r, o.g, o.b, 0)
             end
         end
-        local r = { superFunc(self, ...) }
+        -- (v1.0.0.65) mini-météo déplacée ailleurs : la case météo de la barre est refermée
+        -- (largeurs des icônes et écarts mis à 0 le temps du dessin ; champs relevés dans
+        -- log.txt le 18/10/2026 : weatherIcon, weatherNextIcon, weatherNextIconOffsetX,
+        -- weatherNextIconSpacing ; le jeu place les éléments au moment du dessin)
+        local savedNum
+        if AS_Weather.WIDGET_X ~= nil then
+            savedNum = { self.weatherNextIconOffsetX, self.weatherNextIconSpacing }
+            for name in pairs(saved) do self[name].width = 0 end
+            if type(self.weatherNextIconOffsetX) == "number" then self.weatherNextIconOffsetX = 0 end
+            if type(self.weatherNextIconSpacing) == "number" then self.weatherNextIconSpacing = 0 end
+        end
+        local r = { pcall(superFunc, self, ...) }
         for name, c in pairs(saved) do
             local o = self[name]
+            o.width = c[5]
             pcall(o.setColor, o, c[1], c[2], c[3], c[4])
         end
-        return unpack(r)
+        if savedNum ~= nil then
+            self.weatherNextIconOffsetX, self.weatherNextIconSpacing = savedNum[1], savedNum[2]
+        end
+        if not r[1] then error(r[2], 0) end
+        return unpack(r, 2)
     end)
 end
 

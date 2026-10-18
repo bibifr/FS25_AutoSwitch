@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.65 | Mini-météo déplacée hors de la barre de l'horloge : la case météo vide de la barre est refermée |
 | 1.0.0.64 | Mini-météo : les icônes météo du jeu restent cachées même quand elle est déplacée (l'un ou l'autre) ; relâchée près de sa place dans la barre de l'horloge, elle s'y accroche |
 | 1.0.0.63 | Mini-météo à la place de la météo du jeu dans la barre de l'horloge (icônes du jeu cachées tant qu'elle est affichée), avec en dessous le vent, sa direction et « Clique-moi » pour ouvrir la fenêtre Météo |
 | 1.0.0.62 | Mini-météo posée par défaut juste à gauche de la barre de l'horloge (la 1.0.0.61 la mettait par-dessus l'argent) |
