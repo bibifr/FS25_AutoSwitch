@@ -128,6 +128,10 @@ function AS_Overdraft:removeBoost()
     local farm = self.boostFarm
     if farm ~= nil and type(farm.money) == "number" then
         farm.money = farm.money - self.boost
+        -- les affichages du solde (magasin, HUD) reprennent le vrai solde
+        if g_messageCenter ~= nil and MessageType ~= nil and MessageType.MONEY_CHANGED ~= nil then
+            pcall(g_messageCenter.publish, g_messageCenter, MessageType.MONEY_CHANGED, farm.farmId, farm.money)
+        end
     end
     self.boostFarm, self.boost = nil, 0
 end
@@ -181,21 +185,23 @@ end
 
 -- Fonctions du jeu qui contrôlent le solde avant un achat : le découvert y est compté.
 -- Les classes absentes ou les fonctions qui n'existent pas sont ignorées.
+-- v1.0.0.70 : seulement les fonctions qui décident de l'achat (clic, confirmation,
+-- événement) ; plus celles qui affichent le solde (updateButtons, listes du magasin...)
+-- sinon le magasin affichait le solde + le découvert.
 local SCOPES = {
     -- classe, motif du nom de fonction (en minuscules)
-    { "ShopConfigScreen",           { "buy", "lease", "purchase", "onclick", "onyesno", "button" } },
-    { "ShopMenu",                   { "buy", "lease", "purchase" } },
-    { "ShopItemsFrame",             { "buy", "lease", "purchase" } },
-    { "ShopController",             { "buy", "lease", "purchase" } },
-    { "BuyVehicleData",             { "^buy$", "isvalid", "check" } },
+    { "ShopConfigScreen",           { "^onclickbuy", "^onclicklease", "^onyesnobuy", "^onyesnolease", "purchase" } },
+    { "ShopMenu",                   { "^buyitem", "^onclickbuy", "^onclicklease" } },
+    { "ShopItemsFrame",             { "^onclickbuy", "^onclicklease" } },
+    { "ShopController",             { "^buy", "^lease", "finalizebuy" } },
+    { "BuyVehicleData",             { "^buy$", "isvalid" } },
     { "BuyVehicleEvent",            { "^run$" } },
     { "BuyHandToolEvent",           { "^run$" } },
     { "BuyObjectEvent",             { "^run$" } },
-    { "ConstructionBrushPlaceable", { "verifyplacement", "onbuttonprimary", "buy" } },
-    { "ConstructionScreen",         { "buy" } },
+    { "ConstructionBrushPlaceable", { "verifyplacement", "onbuttonprimary" } },
     { "BuyPlaceableEvent",          { "^run$" } },
     { "BuyExistingPlaceableEvent",  { "^run$" } },
-    { "InGameMenuMapFrame",         { "buy" } },
+    { "InGameMenuMapFrame",         { "^onclickbuy", "^buyfarmland", "^onyesnobuy" } },
     { "FarmlandStateEvent",         { "^run$" } },
     { "BuyFarmlandEvent",           { "^run$" } },
 }
