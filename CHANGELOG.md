@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.79 | Registre : colonnes « Lieu » (nom du pont-bascule) et « Par » (AutoDrive ou le joueur qui s'est pesé lui-même) dans les pesées ; croix au bout de chaque pesée ou vente pour la supprimer (2e clic pour confirmer) |
 | 1.0.0.78 | Affichages en double des autres mods masqués en jeu (Enhanced Vehicle : blocs « Usure | Peinture » et « Carburant »), sans toucher à leurs fichiers ni réglages. Réglage « Masquer les affichages en double » (Oui par défaut) |
 | 1.0.0.77 | Registre : fenêtre en français (la langue du jeu n'était pas toujours reconnue), onglet sélectionné lisible (fond sombre, titre jaune souligné) |
 | 1.0.0.76 | Découvert : plus appliqué quand on achète avec un financement Trade In. Trade In refusait l'achat tout en versant le crédit ; il finance maintenant toute la somme manquante, comme sans AutoSwitch |

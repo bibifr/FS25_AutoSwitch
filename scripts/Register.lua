@@ -2,6 +2,9 @@
 -- Fichier chargé par AutoSwitch.lua (après Common.lua).
 
 -------------------------------------------------------------------------------
+-- v1.0.0.79 : pesées : colonnes « Lieu » (nom du pont-bascule) et « Par » (AutoDrive ou le
+--   joueur qui s'est arrêté lui-même sur le pont), envoyées par AutoDrive Addon.
+--   Croix au bout de chaque pesée / vente pour la supprimer (2e clic pour confirmer).
 -- v1.0.0.74 : registre gardé avec la partie (AutoSwitch_register.xml dans le dossier
 --   de la sauvegarde).
 --   Ventes : chaque vente du jeu (SellingStation:sellFillType), produit, quantité,
@@ -17,6 +20,7 @@ AS_Register.FILE_NAME   = "AutoSwitch_register.xml"
 AS_Register.MAX_ENTRIES = 1000
 AS_Register.MERGE_MS    = 120000
 AS_Register.ROWS        = 15
+AS_Register.CONFIRM_MS  = 3000   -- délai pour confirmer une suppression
 
 AS_Register.weighings = {}
 AS_Register.sales = {}
@@ -139,6 +143,8 @@ function AS_Register:addWeighing(info)
     if type(info) ~= "table" then return end
     local e = gameDate()
     e.vehicle = tostring(info.vehicle or "?")
+    e.site = info.site ~= nil and tostring(info.site) or nil
+    e.driver = info.driver ~= nil and tostring(info.driver) or nil
     e.fillType = info.fillType
     e.load = tonumber(info.load) or 0
     e.total = tonumber(info.total) or 0
@@ -244,7 +250,7 @@ local function readEntry(xml, key, fields)
     return e
 end
 
-local WEIGH_FIELDS = { vehicle = "s", fillType = "s", load = "f", total = "f" }
+local WEIGH_FIELDS = { vehicle = "s", site = "s", driver = "s", fillType = "s", load = "f", total = "f" }
 local SALE_FIELDS = { fillType = "s", station = "s", liters = "f", kg = "f", money = "f" }
 
 function AS_Register:save()
@@ -331,8 +337,8 @@ function AS_Register:getRows()
         for i = #self.weighings, 1, -1 do
             local e = self.weighings[i]
             if e.farmId == farmId then
-                table.insert(rows, { fmtDate(e), e.vehicle or "?", e.fillType ~= nil and fillTypeTitle(e.fillType) or "-",
-                    fmtTons(e.load), fmtTons(e.total) })
+                table.insert(rows, { fmtDate(e), (e.site ~= nil and e.site ~= "") and e.site or "-", e.driver or "AutoDrive", e.vehicle or "?", e.fillType ~= nil and fillTypeTitle(e.fillType) or "-",
+                    fmtTons(e.load), fmtTons(e.total), entry = e, list = self.weighings })
             end
         end
     elseif self.tab == 2 then
@@ -340,7 +346,7 @@ function AS_Register:getRows()
             local e = self.sales[i]
             if e.farmId == farmId then
                 table.insert(rows, { fmtDate(e), fillTypeTitle(e.fillType), fmtLiters(e.liters) .. "  (" .. fmtTons(e.kg) .. ")",
-                    fmtMoney(e.money), e.station or "?" })
+                    fmtMoney(e.money), e.station or "?", entry = e, list = self.sales })
             end
         end
     else
@@ -405,7 +411,7 @@ function AS_Register:drawPanel()
     end
 
     local rowH = 26
-    local W = pxw(980)
+    local W = pxw(1240)
     local H = py(44 + 40 + 30 + rowH * self.ROWS + 34)
     local x0, y0 = 0.5 - W * 0.5, 0.5 - H * 0.5
     local top = y0 + H
@@ -442,8 +448,8 @@ function AS_Register:drawPanel()
     -- colonnes
     local heads, cols
     if self.tab == 1 then
-        heads = { T("Date", "Date"), T("Véhicule", "Vehicle"), T("Produit", "Product"), T("Chargement", "Load"), T("Poids total", "Total weight") }
-        cols = { 0, 230, 520, 700, 830 }
+        heads = { T("Date", "Date"), T("Lieu", "Place"), T("Par", "By"), T("Véhicule", "Vehicle"), T("Produit", "Product"), T("Chargement", "Load"), T("Poids total", "Total weight") }
+        cols = { 0, 210, 410, 540, 830, 970, 1090 }
     elseif self.tab == 2 then
         heads = { T("Date", "Date"), T("Produit", "Product"), T("Quantité", "Quantity"), T("Montant", "Amount"), T("Point de vente", "Selling point") }
         cols = { 0, 230, 380, 590, 700 }
@@ -463,13 +469,26 @@ function AS_Register:drawPanel()
     if #rows == 0 then
         text(x0 + pad, y - py(rowH), 16, T("Rien d'enregistré pour le moment.", "Nothing recorded yet."), C.gray)
     end
+    -- (v1.0.0.79) croix au bout de la ligne : 1er clic = « Supprimer ? », 2e clic = supprimée
+    self.deleteBoxes = {}
+    if self.armed ~= nil and g_time - self.armedTime > self.CONFIRM_MS then self.armed = nil end
     for r = 1, self.ROWS do
         local row = rows[r + self.scroll]
         if row == nil then break end
         y = y - py(rowH)
         if r % 2 == 0 then drawFilledRect(x0 + pad, y, W - 2 * pad, py(rowH), 1, 1, 1, 0.04) end
+        local armed = row.entry ~= nil and row.entry == self.armed
+        if armed then drawFilledRect(x0 + pad, y, W - 2 * pad, py(rowH), 0.75, 0.18, 0.15, 0.25) end
         for i, v in ipairs(row) do
             text(x0 + pad + pxw(cols[i]), y + py(6), 15, v, row.bold and C.title or C.white, nil, row.bold)
+        end
+        if row.entry ~= nil then
+            local bw = armed and pxw(110) or pxw(24)
+            local bx, by = x0 + W - pad - bw, y + py(2)
+            local hover = self.hover == "del" .. r
+            drawFilledRect(bx, by, bw, py(rowH - 4), 0.75, 0.18, 0.15, (armed or hover) and 1 or 0.55)
+            text(bx + bw * 0.5, by + py(4), 14, armed and T("Supprimer ?", "Delete?") or "X", C.white, RenderText.ALIGN_CENTER, true)
+            self.deleteBoxes[r] = { x = bx, y = by, w = bw, h = py(rowH - 4), entry = row.entry, list = row.list }
         end
     end
 
@@ -509,11 +528,27 @@ function AS_Register:mouseEvent(posX, posY, isDown, isUp, button)
     for i, b in ipairs(self.tabBoxes or {}) do
         if inBox(b, posX, posY) then self.hover = i end
     end
+    local delBox = nil
+    for r, b in pairs(self.deleteBoxes or {}) do
+        if inBox(b, posX, posY) then self.hover, delBox = "del" .. r, b end
+    end
     if isDown and button == Input.MOUSE_BUTTON_LEFT then
-        if self.hover == "close" then
+        if delBox ~= nil then
+            if self.armed == delBox.entry then
+                for i, e in ipairs(delBox.list) do
+                    if e == delBox.entry then
+                        table.remove(delBox.list, i)
+                        break
+                    end
+                end
+                self.armed = nil
+            else
+                self.armed, self.armedTime = delBox.entry, g_time
+            end
+        elseif self.hover == "close" then
             self:setOpen(false)
         elseif type(self.hover) == "number" then
-            self.tab, self.scroll = self.hover, 0
+            self.tab, self.scroll, self.armed = self.hover, 0, nil
         end
     elseif isDown and button == Input.MOUSE_BUTTON_WHEEL_UP then
         self.scroll = math.max(0, self.scroll - 3)
