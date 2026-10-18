@@ -31,6 +31,7 @@
 --   WindSway      vent visible : arbres, cultures et herbe bougent selon la force du vent (x2,2)
 --   Weather       fenêtre Météo (Ctrl droit + M) : prévisions du jeu lisibles
 --   Overdraft     découvert : achat / location jusqu'à un plafond, agios chaque jour
+--   CoopPay       coopératives payées en fin de mois (ventes « À payer » dans le registre)
 --   Register      registre des pesées (AutoDrive Addon) et des ventes (Ctrl droit + R)
 --   HudDedup      affichages en double des autres mods masqués (Enhanced Vehicle...)
 --   Settings      menu Paramètres et sauvegarde des réglages (toujours en dernier)
@@ -86,6 +87,7 @@ local FILES = {
     "scripts/GrassTrample.lua",
     "scripts/Weather.lua",
     "scripts/Overdraft.lua",
+    "scripts/CoopPay.lua",
     "scripts/Register.lua",
     "scripts/HudDedup.lua",
     "scripts/Settings.lua",

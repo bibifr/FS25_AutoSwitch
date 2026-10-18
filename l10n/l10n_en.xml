@@ -159,6 +159,11 @@
         <text name="vtpas_overdraftRate_tip" text="Interest charged every in-game day on the negative balance, prorated over the year (12 months). &quot;Overdraft interest&quot; line in Finances."/>
         <text name="vtpas_overdraftRate_none" text="None"/>
         <text name="finance_asOverdraftInterest" text="Overdraft interest"/>
+        <!-- v1.0.0.81 : coopératives payées en fin de mois -->
+        <text name="vtpas_coopPay_label" text="Co-ops pay at the end of the month"/>
+        <text name="vtpas_coopPay_tip" text='Sales to co-ops (selling points whose name contains "coop") are marked "To be paid" in the register (Right Ctrl + R) and paid at the end of the month, "Co-ops" line in Finances. Editable list: modSettings/FS25_AutoSwitch/cooperatives.xml.'/>
+        <text name="vtpas_coopPay_paid" text="Co-ops: %s paid for the month"/>
+        <text name="finance_asCoopPayment" text="Co-ops"/>
         <!-- v1.0.0.59 : fenêtre Météo -->
         <text name="vtpas_weatherWidget_label" text="Mini weather next to the clock"/>
         <text name="vtpas_weatherWidget_tip" text="Shows the current weather and the next change left of the clock. Drag it with the mouse when the cursor is visible; a click opens the Weather window (Right Ctrl + M)."/>

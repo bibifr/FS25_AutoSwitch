@@ -159,6 +159,11 @@
         <text name="vtpas_overdraftRate_tip" text="Intérêts prélevés chaque jour de jeu sur le solde négatif, au prorata de l'année (12 mois). Ligne « Agios » dans Finances."/>
         <text name="vtpas_overdraftRate_none" text="Aucun"/>
         <text name="finance_asOverdraftInterest" text="Agios"/>
+        <!-- v1.0.0.81 : coopératives payées en fin de mois -->
+        <text name="vtpas_coopPay_label" text="Coopératives payées en fin de mois"/>
+        <text name="vtpas_coopPay_tip" text="Les ventes aux coopératives (point de vente dont le nom contient « coop ») sont notées « À payer » dans le registre (Ctrl droit + R) et versées à la fin du mois, ligne « Coopératives » dans Finances. Liste modifiable : modSettings/FS25_AutoSwitch/cooperatives.xml."/>
+        <text name="vtpas_coopPay_paid" text="Coopératives : %s versés pour le mois"/>
+        <text name="finance_asCoopPayment" text="Coopératives"/>
         <!-- v1.0.0.59 : fenêtre Météo -->
         <text name="vtpas_weatherWidget_label" text="Mini-météo près de l'horloge"/>
         <text name="vtpas_weatherWidget_tip" text="Affiche le temps actuel et le prochain changement à gauche de l'horloge. Déplaçable à la souris quand le curseur est visible ; un clic ouvre la fenêtre Météo (Ctrl droit + M)."/>

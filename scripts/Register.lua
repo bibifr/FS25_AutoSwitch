@@ -8,6 +8,8 @@
 -- v1.0.0.80 : totaux en bas (pesées : nombre et chargement total ; ventes : nombre, tonnes, montant total).
 --   Une page par année : la fenêtre s'ouvre sur l'année en cours (repart à zéro au 1er mois),
 --   flèches < > pour revoir les années précédentes (rien n'est effacé).
+-- v1.0.0.81 : ventes aux coopératives payées en fin de mois (CoopPay.lua) : colonne « Paiement »
+--   (« À payer » puis « Payé fin <mois> »), « dont à payer » dans le total de l'onglet Ventes.
 -- v1.0.0.74 : registre gardé avec la partie (AutoSwitch_register.xml dans le dossier
 --   de la sauvegarde).
 --   Ventes : chaque vente du jeu (SellingStation:sellFillType), produit, quantité,
@@ -157,15 +159,18 @@ function AS_Register:addWeighing(info)
     trim(self.weighings)
 end
 
-function AS_Register:addSale(farmId, fillTypeIndex, liters, money, station)
+function AS_Register:addSale(farmId, fillTypeIndex, liters, money, station, withheld)
     if liters <= 0 then return end
+    withheld = (withheld ~= nil and withheld > 0) and withheld or nil
     local ft = g_fillTypeManager:getFillTypeByIndex(fillTypeIndex)
     if ft == nil then return end
     local kg = liters * (ft.massPerLiter or 0) * 1000
     local last = self.sales[#self.sales]
     if last ~= nil and last.farmId == farmId and last.fillType == ft.name and last.station == station
-        and last.realTime ~= nil and g_time - last.realTime < self.MERGE_MS then
+        and last.realTime ~= nil and g_time - last.realTime < self.MERGE_MS
+        and last.paid == nil and (last.pending ~= nil) == (withheld ~= nil) then
         last.liters = last.liters + liters
+        if withheld ~= nil then last.pending = last.pending + withheld end
         last.kg = last.kg + kg
         last.money = last.money + money
         last.realTime = g_time
@@ -178,6 +183,7 @@ function AS_Register:addSale(farmId, fillTypeIndex, liters, money, station)
     e.kg = kg
     e.money = money
     e.station = station
+    e.pending = withheld
     e.realTime = g_time
     table.insert(self.sales, e)
     trim(self.sales)
@@ -192,6 +198,15 @@ local function stationName(station)
     return station.stationName or "?"
 end
 
+AS_Register.stationName = stationName
+
+-- (v1.0.0.81) versement des coopératives : les ventes « À payer » de la ferme passent en « Payé »
+function AS_Register:markPaid(farmId)
+    for _, e in ipairs(self.sales) do
+        if e.farmId == farmId and e.pending ~= nil and e.paid == nil then e.paid = 1 end
+    end
+end
+
 local function farmMoney(farmId)
     local farm = g_farmManager ~= nil and g_farmManager:getFarmById(farmId) or nil
     return farm ~= nil and farm.money or nil
@@ -201,13 +216,25 @@ if SellingStation ~= nil and SellingStation.sellFillType ~= nil then
     SellingStation.sellFillType = Utils.overwrittenFunction(SellingStation.sellFillType,
         function(self, superFunc, farmId, fillDelta, fillTypeIndex, ...)
             local before = farmMoney(farmId)
+            local name = nil
+            local okBegin, errBegin = pcall(function()
+                name = stationName(self)
+                if AS_CoopPay ~= nil then AS_CoopPay:beginSale(farmId, name) end
+            end)
+            if not okBegin then print("[AS_Register] erreur coopérative : " .. tostring(errBegin)) end
             local moved = superFunc(self, farmId, fillDelta, fillTypeIndex, ...)
             local ok, err = pcall(function()
-                if g_currentMission == nil or not g_currentMission:getIsServer() then return end
-                local liters = tonumber(moved) or 0
                 local after = farmMoney(farmId)
                 local money = (before ~= nil and after ~= nil) and (after - before) or 0
-                AS_Register:addSale(farmId, fillTypeIndex, liters, money, stationName(self))
+                -- (v1.0.0.81) coopérative : argent retenu jusqu'à la fin du mois
+                local withheld = 0
+                if AS_CoopPay ~= nil and AS_CoopPay.active ~= nil then
+                    withheld = AS_CoopPay:endSale(money)
+                    money = withheld
+                end
+                if g_currentMission == nil or not g_currentMission:getIsServer() then return end
+                local liters = tonumber(moved) or 0
+                AS_Register:addSale(farmId, fillTypeIndex, liters, money, name or stationName(self), withheld)
             end)
             if not ok and not AS_Register.loggedSaleError then
                 AS_Register.loggedSaleError = true
@@ -255,7 +282,7 @@ local function readEntry(xml, key, fields)
 end
 
 local WEIGH_FIELDS = { vehicle = "s", site = "s", driver = "s", fillType = "s", load = "f", total = "f" }
-local SALE_FIELDS = { fillType = "s", station = "s", liters = "f", kg = "f", money = "f" }
+local SALE_FIELDS = { fillType = "s", station = "s", liters = "f", kg = "f", money = "f", pending = "f", paid = "f" }
 
 function AS_Register:save()
     local path = savegamePath()
@@ -368,8 +395,12 @@ function AS_Register:getRows()
         for i = #self.sales, 1, -1 do
             local e = self.sales[i]
             if e.farmId == farmId and e.year == year then
+                local payment = ""
+                if e.pending ~= nil then
+                    payment = e.paid ~= nil and (T("Payé fin ", "Paid end of ") .. periodName(e.period or 0)) or T("À payer", "To be paid")
+                end
                 table.insert(rows, { fmtDate(e), fillTypeTitle(e.fillType), fmtLiters(e.liters) .. "  (" .. fmtTons(e.kg) .. ")",
-                    fmtMoney(e.money), e.station or "?", entry = e, list = self.sales })
+                    fmtMoney(e.money), payment, e.station or "?", entry = e, list = self.sales })
             end
         end
     else
@@ -493,8 +524,8 @@ function AS_Register:drawPanel()
         heads = { T("Date", "Date"), T("Lieu", "Place"), T("Par", "By"), T("Véhicule", "Vehicle"), T("Produit", "Product"), T("Chargement", "Load"), T("Poids total", "Total weight") }
         cols = { 0, 210, 410, 540, 830, 970, 1090 }
     elseif self.tab == 2 then
-        heads = { T("Date", "Date"), T("Produit", "Product"), T("Quantité", "Quantity"), T("Montant", "Amount"), T("Point de vente", "Selling point") }
-        cols = { 0, 230, 380, 590, 700 }
+        heads = { T("Date", "Date"), T("Produit", "Product"), T("Quantité", "Quantity"), T("Montant", "Amount"), T("Paiement", "Payment"), T("Point de vente", "Selling point") }
+        cols = { 0, 230, 380, 590, 700, 880 }
     else
         heads = { T("Mois", "Month"), T("Produit", "Product"), T("Litres", "Liters"), T("Poids", "Weight"), T("Montant", "Amount") }
         cols = { 0, 230, 420, 580, 720 }
@@ -535,7 +566,7 @@ function AS_Register:drawPanel()
     end
 
     -- (v1.0.0.80) bas : totaux de l'onglet à gauche, défilement à droite
-    local n, kg, money = 0, 0, 0
+    local n, kg, money, unpaid = 0, 0, 0, 0
     for _, row in ipairs(rows) do
         if row.entry ~= nil then
             n = n + 1
@@ -544,6 +575,7 @@ function AS_Register:drawPanel()
             else
                 kg = kg + (row.entry.kg or 0)
                 money = money + (row.entry.money or 0)
+                if row.entry.pending ~= nil and row.entry.paid == nil then unpaid = unpaid + row.entry.pending end
             end
         end
     end
@@ -554,6 +586,9 @@ function AS_Register:drawPanel()
     elseif self.tab == 2 then
         summary = string.format("%d %s  -  %s : %s  -  %s : %s", n, n > 1 and T("ventes", "sales") or T("vente", "sale"),
             T("Total", "Total"), fmtTons(kg), T("Montant total", "Total amount"), fmtMoney(money))
+        if unpaid > 0 then
+            summary = summary .. string.format("  (%s %s)", T("dont à payer :", "of which to be paid:"), fmtMoney(unpaid))
+        end
     end
     drawFilledRect(x0 + pad, y0 + py(40), W - 2 * pad, py(1), 1, 1, 1, 0.2)
     if summary ~= nil then

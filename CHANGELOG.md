@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.81 | Coopératives payées en fin de mois : une vente à un point de vente dont le nom contient « coop » est notée « À payer » dans le registre (colonne Paiement, « dont à payer » dans le total) et le total du mois est versé au changement de mois, ligne « Coopératives » dans Finances. Liste des points de vente dans modSettings/FS25_AutoSwitch/cooperatives.xml (coop="true" / "false" pour corriger). Option dans le menu AutoSwitch (Oui par défaut). Ce qui reste dû est gardé avec la sauvegarde |
 | 1.0.0.80 | Registre : totaux en bas (nombre de pesées et chargement total ; ventes : tonnes et montant total) ; une page par année (flèches < >), l'année en cours repart à zéro, les anciennes restent consultables |
 | 1.0.0.79 | Registre : colonnes « Lieu » (nom du pont-bascule) et « Par » (AutoDrive ou le joueur qui s'est pesé lui-même) dans les pesées ; croix au bout de chaque pesée ou vente pour la supprimer (2e clic pour confirmer) |
 | 1.0.0.78 | Affichages en double des autres mods masqués en jeu (Enhanced Vehicle : blocs « Usure | Peinture » et « Carburant »), sans toucher à leurs fichiers ni réglages. Réglage « Masquer les affichages en double » (Oui par défaut) |

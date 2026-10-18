@@ -65,6 +65,7 @@ AS_Settings.BEAM_LIST = { 1, 2, 3, 4 }
 AS_Settings.windSway = 22          -- (v1.0.0.73) mouvement du feuillage au vent, en dixièmes (x2,2 ; 10 = jeu de base)
 AS_Settings.WIND_SWAY_LIST = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 }
 AS_Settings.hudDedup = true        -- (v1.0.0.78) affichages en double des autres mods masqués
+AS_Settings.coopPay = true         -- (v1.0.0.81) coopératives payées en fin de mois
 AS_Settings.weatherWidget = true   -- (v1.0.0.61) mini-météo à gauche de l'horloge
 AS_Settings.weatherPosX = nil      -- position déplacée à la souris (nil = par défaut)
 AS_Settings.weatherPosY = nil
@@ -119,6 +120,7 @@ function AS_Settings:save()
             setXMLInt(xml, "vtpAutoSwitch.windSway#factor10", self.windSway)
             setXMLBool(xml, "vtpAutoSwitch.weatherWidget#enabled", self.weatherWidget)
             setXMLBool(xml, "vtpAutoSwitch.hudDedup#enabled", self.hudDedup)
+            setXMLBool(xml, "vtpAutoSwitch.coopPay#enabled", self.coopPay)
             setXMLInt(xml, "vtpAutoSwitch.overdraft#percent", self.overdraftPercent)
             setXMLInt(xml, "vtpAutoSwitch.overdraft#rate", self.overdraftRate)
             if self.weatherPosX ~= nil and self.weatherPosY ~= nil then
@@ -205,6 +207,8 @@ function AS_Settings:load()
                 if bg ~= nil then self.beamGlow = math.max(1, math.min(4, bg)) end
                 local hd = getXMLBool(xml, "vtpAutoSwitch.hudDedup#enabled")
                 if hd ~= nil then self.hudDedup = hd end
+                local cp = getXMLBool(xml, "vtpAutoSwitch.coopPay#enabled")
+                if cp ~= nil then self.coopPay = cp end
                 local ws = getXMLInt(xml, "vtpAutoSwitch.windSway#factor10")
                 if ws ~= nil then self.windSway = math.max(10, math.min(30, ws)) end
                 local hx = getXMLFloat(xml, "vtpAutoSwitch.speedHint#posX")
@@ -272,6 +276,7 @@ function AS_Settings:apply()
     AS_LightRange:setBeams(self.beamRange, self.beamGlow)
     if AS_WindSway ~= nil then AS_WindSway:setFactor(self.windSway / 10) end
     if AS_HudDedup ~= nil then AS_HudDedup:setEnabled(self.hudDedup) end
+    if AS_CoopPay ~= nil then AS_CoopPay.ENABLED = self.coopPay end
     if AS_Overdraft ~= nil then
         AS_Overdraft.PERCENT = self.overdraftPercent
         AS_Overdraft.RATE = self.overdraftRate
@@ -514,6 +519,13 @@ function AS_Settings:onHudDedupChanged(state, element)
     self:apply()
     self:save()
     sprint("affichages en double masqués : %s", tostring(self.hudDedup))
+end
+
+function AS_Settings:onCoopPayChanged(state, element)
+    self.coopPay = (state == 2)
+    self:apply()
+    self:save()
+    sprint("coopératives payées en fin de mois : %s", tostring(self.coopPay))
 end
 
 function AS_Settings:onWindSwayChanged(state, element)
@@ -921,6 +933,14 @@ function AS_Settings:buildUI(frame)
         callback = AS_Settings.onOverdraftRateChanged,
     })
 
+    self.options.coopPay = self:addRow(layout, template, {
+        label = L("vtpas_coopPay_label"),
+        tip = L("vtpas_coopPay_tip"),
+        texts = onOff,
+        state = self.coopPay and 2 or 1,
+        callback = AS_Settings.onCoopPayChanged,
+    })
+
     self.built = true
     layout:invalidateLayout()
     sprint("options ajoutées au menu Paramètres")
@@ -956,6 +976,7 @@ function AS_Settings:refreshStates()
     if o.windSway ~= nil then o.windSway:setState(self:getIndex(self.WIND_SWAY_LIST, self.windSway)) end
     if o.weatherWidget ~= nil then o.weatherWidget:setState(self.weatherWidget and 2 or 1) end
     if o.hudDedup ~= nil then o.hudDedup:setState(self.hudDedup and 2 or 1) end
+    if o.coopPay ~= nil then o.coopPay:setState(self.coopPay and 2 or 1) end
     if o.overdraftPercent ~= nil then o.overdraftPercent:setState(self:getIndex(self.OVERDRAFT_PERCENT_LIST, self.overdraftPercent)) end
     if o.overdraftRate ~= nil then o.overdraftRate:setState(self:getIndex(self.OVERDRAFT_RATE_LIST, self.overdraftRate)) end
 end
