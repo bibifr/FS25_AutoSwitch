@@ -4,6 +4,8 @@
 local L = AS.L
 
 -------------------------------------------------------------------------------
+-- v1.0.0.60 : heures arrondies au quart d'heure, colonne des valeurs décalée,
+--   jours des changements écrits J+1, J+2..., bouton X pour fermer (curseur affiché).
 -- v1.0.0.59 : bulletin météo lisible, ouvert / fermé par une touche.
 --   Les prévisions sont celles du jeu (environment.weather.forecastItems) :
 --   chaque épisode a un début (startDay, startDayTime), une durée, un type
@@ -257,8 +259,10 @@ end
 -- Textes
 -------------------------------------------------------------------------------
 
-local function fmtClock(t, dayMs)
+-- quarter = arrondi au quart d'heure (les épisodes du jeu commencent à 13h01, 15h01...)
+local function fmtClock(t, dayMs, quarter)
     local m = math.floor((t % dayMs) / 60000)
+    if quarter then m = math.floor(m / 15 + 0.5) * 15 end
     return string.format("%02dh%02d", math.floor(m / 60) % 24, m % 60)
 end
 
@@ -269,12 +273,12 @@ local function dayName(offset)
     return string.format(L("vtpas_wx_inDays"), offset)
 end
 
--- « 14h00 » aujourd'hui, sinon « demain 14h00 » (dans une phrase : minuscule)
+-- « 14h00 » aujourd'hui, sinon « J+1 14h00 » (v1.0.0.60, demande de Fabien)
 function AS_Weather:fmtWhen(t, today)
+    t = math.floor(t / 900000 + 0.5) * 900000
     local off = math.floor(t / self.DAY_MS) - today
-    if off <= 0 then return fmtClock(t, self.DAY_MS) end
-    local name = dayName(off)
-    return string.lower(string.sub(name, 1, 1)) .. string.sub(name, 2) .. " " .. fmtClock(t, self.DAY_MS)
+    if off <= 0 then return fmtClock(t, self.DAY_MS, true) end
+    return string.format(L("vtpas_wx_dayPlus"), off) .. " " .. fmtClock(t, self.DAY_MS, true)
 end
 
 local function fmtDuration(ms)
@@ -429,7 +433,14 @@ function AS_Weather:drawPanel(d)
     drawFilledRect(x0, y0, W, H, 0.05, 0.07, 0.10, 0.88)
     drawFilledRect(x0, top - py(44), W, py(44), 0.10, 0.14, 0.20, 0.95)
     text(x0 + pad, top - py(31), 20, L("vtpas_wx_title"), C.title, nil, true)
-    text(x0 + W - pad, top - py(30), 15, dayName(0) .. "  " .. fmtClock(d.now, DAY), C.gray, RenderText.ALIGN_RIGHT)
+    -- (v1.0.0.60) bouton X de fermeture en haut à droite
+    local bs = py(30)
+    local bw = pxw(30)
+    local bx, by = x0 + W - pxw(8) - bw, top - py(7) - bs
+    self.closeBox = { x = bx, y = by, w = bw, h = bs }
+    drawFilledRect(bx, by, bw, bs, 0.75, 0.18, 0.15, self.closeHover and 1 or 0.85)
+    text(bx + bw * 0.5, by + py(7), 18, "X", C.white, RenderText.ALIGN_CENTER, true)
+    text(bx - pxw(12), top - py(30), 15, dayName(0) .. "  " .. fmtClock(d.now, DAY), C.gray, RenderText.ALIGN_RIGHT)
 
     local y = top - py(44)
     local function section(key)
@@ -448,16 +459,16 @@ function AS_Weather:drawPanel(d)
     if d.todayMin ~= nil then
         text(x0 + pad + pxw(104), y + py(16), 14, string.format(L("vtpas_wx_minMax"), fmtTemp(d.todayMin), fmtTemp(d.todayMax)), C.gray)
     end
-    local cx = x0 + pad + pxw(330)
+    local cx = x0 + pad + pxw(310)
     local lineY = { 92, 66, 40, 14 }
     -- vent
     local windTxt = fmtKmh(d.windSpeed)
     local from = compassFrom(d.windHeading)
     if from ~= nil then windTxt = windTxt .. "  " .. string.format(L("vtpas_wx_from"), from) end
     text(cx, y + py(lineY[1]), 16, L("vtpas_wx_wind"), C.gray)
-    text(cx + pxw(150), y + py(lineY[1]), 16, windTxt, C.white)
+    text(cx + pxw(185), y + py(lineY[1]), 16, windTxt, C.white)
     if d.windHeading ~= nil then
-        icon("arrow", cx + pxw(150) + getTextWidth(py(16), windTxt) + pxw(8), y + py(lineY[1] - 3), 20, -d.windHeading)
+        icon("arrow", cx + pxw(185) + getTextWidth(py(16), windTxt) + pxw(8), y + py(lineY[1] - 3), 20, -d.windHeading)
     end
     -- précipitations
     local precipTxt = L("vtpas_wx_none")
@@ -474,10 +485,10 @@ function AS_Weather:drawPanel(d)
         precipCol = C.blue
     end
     text(cx, y + py(lineY[2]), 16, L("vtpas_wx_precip"), C.gray)
-    text(cx + pxw(150), y + py(lineY[2]), 16, precipTxt, precipCol)
+    text(cx + pxw(185), y + py(lineY[2]), 16, precipTxt, precipCol)
     -- sol
     text(cx, y + py(lineY[3]), 16, L("vtpas_wx_ground"), C.gray)
-    text(cx + pxw(150), y + py(lineY[3]), 16, d.ground ~= nil and string.format("%d %%", math.floor(num(d.ground, 0) * 100 + 0.5)) or "--", C.white)
+    text(cx + pxw(185), y + py(lineY[3]), 16, d.ground ~= nil and string.format("%d %%", math.floor(num(d.ground, 0) * 100 + 0.5)) or "--", C.white)
     -- fin de l'épisode / prochain changement
     local changeTxt
     if d.next ~= nil then
@@ -489,7 +500,7 @@ function AS_Weather:drawPanel(d)
         changeTxt = L("vtpas_wx_noForecast")
     end
     text(cx, y + py(lineY[4]), 16, L("vtpas_wx_change"), C.gray)
-    text(cx + pxw(150), y + py(lineY[4]), 16, changeTxt, C.white)
+    text(cx + pxw(185), y + py(lineY[4]), 16, changeTxt, C.white)
 
     -- 2. prochaines 24 h
     section("vtpas_wx_next24")
@@ -572,9 +583,33 @@ end
 -- Touche (à pied et en véhicule)
 -------------------------------------------------------------------------------
 
+-- (v1.0.0.60) fenêtre ouverte : curseur de la souris affiché pour cliquer sur le X,
+-- remis comme avant à la fermeture
+function AS_Weather:setOpen(open)
+    if open == self.isOpen then return end
+    self.isOpen = open
+    self.data = nil
+    self.closeBox, self.closeHover = nil, false
+    if g_inputBinding == nil or g_inputBinding.setShowMouseCursor == nil then return end
+    if open then
+        self.cursorBefore = g_inputBinding.getShowMouseCursor ~= nil and g_inputBinding:getShowMouseCursor() == true
+        if not self.cursorBefore then pcall(g_inputBinding.setShowMouseCursor, g_inputBinding, true) end
+    elseif self.cursorBefore == false then
+        pcall(g_inputBinding.setShowMouseCursor, g_inputBinding, false)
+    end
+end
+
 function AS_Weather.onToggle()
-    AS_Weather.isOpen = not AS_Weather.isOpen
-    AS_Weather.data = nil
+    AS_Weather:setOpen(not AS_Weather.isOpen)
+end
+
+function AS_Weather:mouseEvent(posX, posY, isDown, isUp, button)
+    local b = self.closeBox
+    if not self.isOpen or b == nil then return end
+    self.closeHover = posX >= b.x and posX <= b.x + b.w and posY >= b.y and posY <= b.y + b.h
+    if self.closeHover and isDown and button == Input.MOUSE_BUTTON_LEFT then
+        self:setOpen(false)
+    end
 end
 
 local function registerToggle()
@@ -609,6 +644,7 @@ end
 
 function AS_Weather:delete()
     self.isOpen = false
+    self.closeBox = nil
     self.data = nil
     self.actionEventId = nil
     for _, ov in pairs(self.overlays) do

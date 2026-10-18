@@ -189,6 +189,7 @@
         <text name="vtpas_wx_endAt" text="Fin à %s"/>
         <text name="vtpas_wx_noForecast" text="Pas de prévision du jeu"/>
         <text name="vtpas_wx_fromTo" text="de %s à %s"/>
+        <text name="vtpas_wx_dayPlus" text="J+%d"/>
         <text name="vtpas_wx_until" text="jusqu'à %s"/>
         <text name="vtpas_wx_rainDay" text="%s en %s"/>
         <text name="vtpas_wx_dry" text="Sec"/>
