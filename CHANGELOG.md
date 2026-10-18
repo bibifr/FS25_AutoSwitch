@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.78 | Affichages en double des autres mods masqués en jeu (Enhanced Vehicle : blocs « Usure | Peinture » et « Carburant »), sans toucher à leurs fichiers ni réglages. Réglage « Masquer les affichages en double » (Oui par défaut) |
 | 1.0.0.77 | Registre : fenêtre en français (la langue du jeu n'était pas toujours reconnue), onglet sélectionné lisible (fond sombre, titre jaune souligné) |
 | 1.0.0.76 | Découvert : plus appliqué quand on achète avec un financement Trade In. Trade In refusait l'achat tout en versant le crédit ; il finance maintenant toute la somme manquante, comme sans AutoSwitch |
 | 1.0.0.75 | Lumières : les phares et phares de travail de tous les véhicules éclairent 2 fois plus loin et 2 fois plus fort (deux réglages dans le menu, x1 = jeu de base). Réglages de distance et de luminosité des halos (1.0.0.37 / 1.0.0.38) retirés, sans effet visible |

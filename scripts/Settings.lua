@@ -64,6 +64,7 @@ AS_Settings.beamGlow = 2           -- (v1.0.0.75) luminosité de la zone éclair
 AS_Settings.BEAM_LIST = { 1, 2, 3, 4 }
 AS_Settings.windSway = 22          -- (v1.0.0.73) mouvement du feuillage au vent, en dixièmes (x2,2 ; 10 = jeu de base)
 AS_Settings.WIND_SWAY_LIST = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 }
+AS_Settings.hudDedup = true        -- (v1.0.0.78) affichages en double des autres mods masqués
 AS_Settings.weatherWidget = true   -- (v1.0.0.61) mini-météo à gauche de l'horloge
 AS_Settings.weatherPosX = nil      -- position déplacée à la souris (nil = par défaut)
 AS_Settings.weatherPosY = nil
@@ -117,6 +118,7 @@ function AS_Settings:save()
             setXMLInt(xml, "vtpAutoSwitch.lightRange#beamGlow", self.beamGlow)
             setXMLInt(xml, "vtpAutoSwitch.windSway#factor10", self.windSway)
             setXMLBool(xml, "vtpAutoSwitch.weatherWidget#enabled", self.weatherWidget)
+            setXMLBool(xml, "vtpAutoSwitch.hudDedup#enabled", self.hudDedup)
             setXMLInt(xml, "vtpAutoSwitch.overdraft#percent", self.overdraftPercent)
             setXMLInt(xml, "vtpAutoSwitch.overdraft#rate", self.overdraftRate)
             if self.weatherPosX ~= nil and self.weatherPosY ~= nil then
@@ -201,6 +203,8 @@ function AS_Settings:load()
                 if br ~= nil then self.beamRange = math.max(1, math.min(4, br)) end
                 local bg = getXMLInt(xml, "vtpAutoSwitch.lightRange#beamGlow")
                 if bg ~= nil then self.beamGlow = math.max(1, math.min(4, bg)) end
+                local hd = getXMLBool(xml, "vtpAutoSwitch.hudDedup#enabled")
+                if hd ~= nil then self.hudDedup = hd end
                 local ws = getXMLInt(xml, "vtpAutoSwitch.windSway#factor10")
                 if ws ~= nil then self.windSway = math.max(10, math.min(30, ws)) end
                 local hx = getXMLFloat(xml, "vtpAutoSwitch.speedHint#posX")
@@ -267,6 +271,7 @@ function AS_Settings:apply()
     AS_SpeedHint.ICON_X, AS_SpeedHint.ICON_Y = self.iconPosX, self.iconPosY
     AS_LightRange:setBeams(self.beamRange, self.beamGlow)
     if AS_WindSway ~= nil then AS_WindSway:setFactor(self.windSway / 10) end
+    if AS_HudDedup ~= nil then AS_HudDedup:setEnabled(self.hudDedup) end
     if AS_Overdraft ~= nil then
         AS_Overdraft.PERCENT = self.overdraftPercent
         AS_Overdraft.RATE = self.overdraftRate
@@ -502,6 +507,13 @@ function AS_Settings:onOverdraftRateChanged(state, element)
         self:save()
         sprint("agios : %d %% par an", v)
     end
+end
+
+function AS_Settings:onHudDedupChanged(state, element)
+    self.hudDedup = (state == 2)
+    self:apply()
+    self:save()
+    sprint("affichages en double masqués : %s", tostring(self.hudDedup))
 end
 
 function AS_Settings:onWindSwayChanged(state, element)
@@ -878,6 +890,14 @@ function AS_Settings:buildUI(frame)
         callback = AS_Settings.onWeatherWidgetChanged,
     })
 
+    self.options.hudDedup = self:addRow(layout, template, {
+        label = L("vtpas_hudDedup_label"),
+        tip = L("vtpas_hudDedup_tip"),
+        texts = onOff,
+        state = self.hudDedup and 2 or 1,
+        callback = AS_Settings.onHudDedupChanged,
+    })
+
     local odTexts = {}
     for i, v in ipairs(self.OVERDRAFT_PERCENT_LIST) do
         odTexts[i] = (v == 0) and L("vtpas_overdraft_off") or (v .. " %")
@@ -935,6 +955,7 @@ function AS_Settings:refreshStates()
     if o.beamGlow ~= nil then o.beamGlow:setState(self:getIndex(self.BEAM_LIST, self.beamGlow)) end
     if o.windSway ~= nil then o.windSway:setState(self:getIndex(self.WIND_SWAY_LIST, self.windSway)) end
     if o.weatherWidget ~= nil then o.weatherWidget:setState(self.weatherWidget and 2 or 1) end
+    if o.hudDedup ~= nil then o.hudDedup:setState(self.hudDedup and 2 or 1) end
     if o.overdraftPercent ~= nil then o.overdraftPercent:setState(self:getIndex(self.OVERDRAFT_PERCENT_LIST, self.overdraftPercent)) end
     if o.overdraftRate ~= nil then o.overdraftRate:setState(self:getIndex(self.OVERDRAFT_RATE_LIST, self.overdraftRate)) end
 end

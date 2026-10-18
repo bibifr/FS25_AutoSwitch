@@ -150,6 +150,8 @@
         <text name="vtpas_lightRange_base" text="x1 (base game)"/>
         <text name="vtpas_windSway_label" text="Wind movement"/>
         <text name="vtpas_windSway_tip" text="How strongly trees, crops and grass move in the wind. x1 = base game (at 57 km/h the base game only moves foliage like a breeze). The wind speed itself is unchanged."/>
+        <text name="vtpas_hudDedup_label" text="Hide duplicate displays"/>
+        <text name="vtpas_hudDedup_tip" text="Hides info other mods repeat (e.g. Enhanced Vehicle: Wear | Paint and Fuel). Those mods' settings are not changed."/>
         <text name="vtpas_overdraft_label" text="Authorised overdraft"/>
         <text name="vtpas_overdraft_tip" text="Buying and leasing allowed with a negative balance, down to this percentage of the resale value of what you own (purchased equipment, land, buildings). Off = base game."/>
         <text name="vtpas_overdraft_off" text="Off"/>

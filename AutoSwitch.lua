@@ -32,6 +32,7 @@
 --   Weather       fenêtre Météo (Ctrl droit + M) : prévisions du jeu lisibles
 --   Overdraft     découvert : achat / location jusqu'à un plafond, agios chaque jour
 --   Register      registre des pesées (AutoDrive Addon) et des ventes (Ctrl droit + R)
+--   HudDedup      affichages en double des autres mods masqués (Enhanced Vehicle...)
 --   Settings      menu Paramètres et sauvegarde des réglages (toujours en dernier)
 --
 -- v1.0.0.29 : contrôle des versions. Chaque mod requis doit être au moins à la
@@ -86,6 +87,7 @@ local FILES = {
     "scripts/Weather.lua",
     "scripts/Overdraft.lua",
     "scripts/Register.lua",
+    "scripts/HudDedup.lua",
     "scripts/Settings.lua",
 }
 

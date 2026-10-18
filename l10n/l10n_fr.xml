@@ -150,6 +150,8 @@
         <text name="vtpas_lightRange_base" text="x1 (jeu de base)"/>
         <text name="vtpas_windSway_label" text="Mouvement du vent"/>
         <text name="vtpas_windSway_tip" text="Force du mouvement des arbres, cultures et herbe au vent. x1 = jeu de base (à 57 km/h le jeu ne bouge le feuillage que comme une brise). La vitesse du vent ne change pas."/>
+        <text name="vtpas_hudDedup_label" text="Masquer les affichages en double"/>
+        <text name="vtpas_hudDedup_tip" text="Cache les infos que d'autres mods répètent (ex. Enhanced Vehicle : Usure | Peinture et Carburant). Les réglages de ces mods ne sont pas modifiés."/>
         <text name="vtpas_overdraft_label" text="Découvert autorisé"/>
         <text name="vtpas_overdraft_tip" text="Achat et location possibles avec le compte dans le rouge, jusqu'à ce pourcentage de la valeur de revente de ce que tu possèdes (matériel acheté, terres, bâtiments). Désactivé = jeu de base."/>
         <text name="vtpas_overdraft_off" text="Désactivé"/>
