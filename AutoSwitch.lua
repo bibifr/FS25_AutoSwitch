@@ -43,6 +43,10 @@
 -- v1.0.0.46 : Crop Destruction Overhaul n'est plus requis.
 -- v1.0.0.47 : herbe piétinée corrigée (setParallelogramWorldCoords), stade le plus bas coupé.
 -- v1.0.0.48 : herbe piétinée plus douce (sec dès 11 km/h, humide dès 7 km/h, un stade).
+-- v1.0.0.58 : TTD accepté sous son nom ModHub (FS25_TractorTerrainDynamics) ou sous
+-- le nom de la bêta KingMods (FS25_TTD_v3_7_BETA...). Retiré des dépendances du
+-- modDesc : le jeu réclamait la version ModHub 1.0.0.0 en plus de la bêta.
+-- Si les deux sont installés, la version la plus récente est retenue.
 -- =============================================================================
 
 local modDir = g_currentModDirectory or ""
@@ -85,7 +89,7 @@ local REQUIRED = {
     { "FS25_EnhancedVehicle",         "1.1.7.1" },
     { "FS25_MudSystemPhysics",        "1.3.6.0" },
     { "FS25_DynamicDrivePro",         "1.0.1.0" },
-    { "FS25_TractorTerrainDynamics",  "1.0.3.7" },
+    { { "FS25_TractorTerrainDynamics", "FS25_TTD*" }, "1.0.3.7", "Tractor Terrain Dynamics" },
     { "MoreRealistic",                "0.26.09.13" },
     { "moreRealisticXmlDatabank",     "1.0.0.1" },
     { "FS25_RealisticHarvesting",     "1.6.0.0" },
@@ -119,6 +123,27 @@ local function compareVersions(a, b)
     return 0
 end
 
+-- mod requis correspondant à req[1] : un nom, un début de nom (« * ») ou une liste
+-- de noms ; dans une liste, la version la plus récente l'emporte (v1.0.0.58)
+local function findRequired(req)
+    local names = type(req[1]) == "table" and req[1] or { req[1] }
+    local best
+    for _, name in ipairs(names) do
+        local ok, mod
+        if string.sub(name, -1) == "*" then
+            ok, mod = pcall(findModByPrefix, string.sub(name, 1, -2))
+        elseif g_modManager ~= nil and g_modManager.getModByName ~= nil then
+            ok, mod = pcall(g_modManager.getModByName, g_modManager, name)
+        end
+        if ok and type(mod) == "table" then
+            if best == nil or (compareVersions(mod.version, best.version) or 0) > 0 then
+                best = mod
+            end
+        end
+    end
+    return best, req[3] or names[1]
+end
+
 -- Liste des mods trop anciens ou absents : { name, title, found, required }
 local function checkVersions()
     local bad = {}
@@ -127,17 +152,11 @@ local function checkVersions()
         return bad
     end
     for _, req in ipairs(REQUIRED) do
-        local name, minVersion = req[1], req[2]
-        local ok, mod
-        if string.sub(name, -1) == "*" then
-            ok, mod = pcall(findModByPrefix, string.sub(name, 1, -2))
-            name = req[3] or name
-        else
-            ok, mod = pcall(g_modManager.getModByName, g_modManager, name)
-        end
+        local minVersion = req[2]
+        local mod, name = findRequired(req)
         -- pas de g_modIsLoaded : les mods requis dont le nom vient après FS25_AutoSwitch
         -- ne sont pas encore chargés à ce moment-là (v1.0.0.30)
-        if not ok or mod == nil then
+        if mod == nil then
             bad[#bad + 1] = { name = name, title = name, found = nil, required = minVersion }
         else
             local cmp = compareVersions(mod.version, minVersion)
@@ -154,6 +173,15 @@ local function text(key, fallback)
         return g_i18n:getText(key)
     end
     return fallback
+end
+
+-- Nom du mod TTD réellement installé, pour les modules qui lisent son environnement
+AS_TTD_MOD_NAME = "FS25_TractorTerrainDynamics"
+do
+    local ok, ttdMod = pcall(findRequired, { { "FS25_TractorTerrainDynamics", "FS25_TTD*" } })
+    if ok and ttdMod ~= nil and type(ttdMod.modName) == "string" then
+        AS_TTD_MOD_NAME = ttdMod.modName
+    end
 end
 
 local badMods = checkVersions()
@@ -213,17 +241,10 @@ function AS_ModCheck:update(dt)
     self.done = true
     local lines = {}
     for _, req in ipairs(REQUIRED) do
-        local name = req[1]
-        local mod
-        if string.sub(name, -1) == "*" then
-            mod = findModByPrefix(string.sub(name, 1, -2))
-        elseif g_modManager ~= nil and g_modManager.getModByName ~= nil then
-            local ok, m = pcall(g_modManager.getModByName, g_modManager, name)
-            if ok then mod = m end
-        end
+        local mod, name = findRequired(req)
         local modName = mod ~= nil and mod.modName or name
         if g_modIsLoaded[modName] ~= true then
-            local title = (mod ~= nil and mod.title) or req[3] or name
+            local title = (mod ~= nil and mod.title) or name
             print(string.format("[AutoSwitch] ATTENTION : %s (%s) n'est pas activé dans cette partie", tostring(title), modName))
             lines[#lines + 1] = string.format(text("vtpas_modNotActiveLine", "%s : pas activé dans cette partie"), tostring(title))
         end

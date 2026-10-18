@@ -34,7 +34,7 @@ local function msp(name)
 end
 
 local function ttd(name)
-    return AS.modGlobal("FS25_TractorTerrainDynamics", name)
+    return AS.modGlobal(AS_TTD_MOD_NAME or "FS25_TractorTerrainDynamics", name)
 end
 
 local function clamp01(v)

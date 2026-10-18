@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <modDesc descVersion="106">
     <author>Fabien</author>
-    <version>1.0.0.57</version>
+    <version>1.0.0.58</version>
     <multiplayer supported="true"/>
 
     <title>
@@ -89,7 +89,6 @@ Benötigte Mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, M
         <dependency>FS25_EnhancedVehicle</dependency>
         <dependency>FS25_MudSystemPhysics</dependency>
         <dependency>FS25_DynamicDrivePro</dependency>
-        <dependency>FS25_TractorTerrainDynamics</dependency>
         <dependency>MoreRealistic</dependency>
         <dependency>moreRealisticXmlDatabank</dependency>
         <dependency>FS25_RealisticHarvesting</dependency>

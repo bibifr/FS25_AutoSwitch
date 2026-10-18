@@ -309,7 +309,7 @@ end
 local function ttdGet(name)
     local v = _G[name]
     if v ~= nil then return v end
-    local env = FS25_TractorTerrainDynamics
+    local env = _G[AS_TTD_MOD_NAME or "FS25_TractorTerrainDynamics"]
     if type(env) == "table" then return env[name] end
     return nil
 end
