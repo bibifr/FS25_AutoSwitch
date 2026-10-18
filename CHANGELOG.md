@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.72 | Finances : la ligne des agios affiche « Agios » (elle affichait « Missing 'finance_asOverdraftInterest' ») |
 | 1.0.0.71 | Découvert compté aussi pour l'entretien de Realistic Mechanical Systems (fenêtres d'entretien et atelier), en provisoire ; sans effet si RMS n'est pas installé |
 | 1.0.0.70 | Découvert : le magasin affiche de nouveau le vrai solde (il montrait le solde + le découvert) ; le découvert ne compte plus qu'au moment de l'achat ou de la location |
 | 1.0.0.69 | Découvert : les boutons Acheter et Louer de la boutique appelaient encore la fonction du jeu lue au démarrage ; ils passent maintenant par le contrôle du découvert |

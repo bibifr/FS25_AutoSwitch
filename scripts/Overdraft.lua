@@ -32,6 +32,18 @@ if FinanceStats ~= nil and FinanceStats.statNames ~= nil and FinanceStats.statNa
     FinanceStats.statNameToIndex[STAT_NAME] = #FinanceStats.statNames
 end
 
+-- v1.0.0.72 : le menu Finances du jeu lit le texte sans le nom du mod et affichait
+-- « Missing 'finance_asOverdraftInterest' » : ce texte est cherché dans les fichiers d'AutoSwitch.
+local MOD_NAME = g_currentModName or "FS25_AutoSwitch"
+if I18N ~= nil and I18N.getText ~= nil then
+    I18N.getText = Utils.overwrittenFunction(I18N.getText, function(i18n, superFunc, text, modEnv, ...)
+        if modEnv == nil and text == "finance_" .. STAT_NAME then
+            return superFunc(i18n, text, MOD_NAME, ...)
+        end
+        return superFunc(i18n, text, modEnv, ...)
+    end)
+end
+
 local function getMoneyType()
     if AS_Overdraft.moneyType == nil and MoneyType ~= nil and MoneyType.register ~= nil then
         local ok, mt = pcall(MoneyType.register, STAT_NAME, "finance_" .. STAT_NAME)
