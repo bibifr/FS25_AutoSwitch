@@ -28,6 +28,7 @@
 --   SleepPlus     menu Dormir : avancer de X heures ou de X jours
 --   LightRange    lumières des véhicules visibles de plus loin
 --   GrassTrample  herbe piétinée : recul de pousse au lieu du fauchage de Mud System Physics
+--   WindSway      vent visible : arbres, cultures et herbe bougent selon la force du vent (x2,2)
 --   Weather       fenêtre Météo (Ctrl droit + M) : prévisions du jeu lisibles
 --   Overdraft     découvert : achat / location jusqu'à un plafond, agios chaque jour
 --   Settings      menu Paramètres et sauvegarde des réglages (toujours en dernier)
@@ -79,6 +80,7 @@ local FILES = {
     "scripts/TireDirtKeep.lua",
     "scripts/SleepPlus.lua",
     "scripts/LightRange.lua",
+    "scripts/WindSway.lua",
     "scripts/GrassTrample.lua",
     "scripts/Weather.lua",
     "scripts/Overdraft.lua",

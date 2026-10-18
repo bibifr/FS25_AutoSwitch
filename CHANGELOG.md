@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.73 | Vent visible : arbres, cultures et herbe bougent selon la vraie force du vent (le jeu de base ne les bougeait que comme une brise, même à 57 km/h). Réglage « Mouvement du vent » dans le menu AutoSwitch, de x1 (jeu de base) à x3, x2,2 par défaut. La vitesse du vent elle-même ne change pas |
 | 1.0.0.72 | Finances : la ligne des agios affiche « Agios » (elle affichait « Missing 'finance_asOverdraftInterest' ») |
 | 1.0.0.71 | Découvert compté aussi pour l'entretien de Realistic Mechanical Systems (fenêtres d'entretien et atelier), en provisoire ; sans effet si RMS n'est pas installé |
 | 1.0.0.70 | Découvert : le magasin affiche de nouveau le vrai solde (il montrait le solde + le découvert) ; le découvert ne compte plus qu'au moment de l'achat ou de la location |

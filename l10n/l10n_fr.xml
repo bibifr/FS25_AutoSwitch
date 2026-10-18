@@ -152,6 +152,8 @@
         <text name="vtpas_lightRange_base" text="x1 (jeu de base)"/>
         <text name="vtpas_lightGlow_label" text="Luminosité des feux des véhicules"/>
         <text name="vtpas_lightGlow_tip" text="Luminosité des halos des phares, feux et gyros des autres véhicules. x1 = jeu de base. Le véhicule conduit et ses outils ne changent pas."/>
+        <text name="vtpas_windSway_label" text="Mouvement du vent"/>
+        <text name="vtpas_windSway_tip" text="Force du mouvement des arbres, cultures et herbe au vent. x1 = jeu de base (à 57 km/h le jeu ne bouge le feuillage que comme une brise). La vitesse du vent ne change pas."/>
         <text name="vtpas_overdraft_label" text="Découvert autorisé"/>
         <text name="vtpas_overdraft_tip" text="Achat et location possibles avec le compte dans le rouge, jusqu'à ce pourcentage de la valeur de revente de ce que tu possèdes (matériel acheté, terres, bâtiments). Désactivé = jeu de base."/>
         <text name="vtpas_overdraft_off" text="Désactivé"/>

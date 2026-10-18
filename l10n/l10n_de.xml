@@ -152,6 +152,8 @@
         <text name="vtpas_lightRange_base" text="x1 (Basisspiel)"/>
         <text name="vtpas_lightGlow_label" text="Helligkeit der Fahrzeuglichter"/>
         <text name="vtpas_lightGlow_tip" text="Helligkeit des Scheinwerfer-, Licht- und Rundumleuchtenscheins anderer Fahrzeuge. x1 = Basisspiel. Das gefahrene Fahrzeug und seine Geräte bleiben unverändert."/>
+        <text name="vtpas_windSway_label" text="Windbewegung"/>
+        <text name="vtpas_windSway_tip" text="Wie stark sich Bäume, Feldfrüchte und Gras im Wind bewegen. x1 = Basisspiel (bei 57 km/h bewegt das Basisspiel die Vegetation nur wie bei einer Brise). Die Windgeschwindigkeit selbst bleibt unverändert."/>
         <text name="vtpas_overdraft_label" text="Dispositionskredit"/>
         <text name="vtpas_overdraft_tip" text="Kaufen und Leasen auch mit negativem Kontostand, bis zu diesem Prozentsatz des Wiederverkaufswerts deines Besitzes (gekaufte Maschinen, Land, Gebäude). Aus = Basisspiel."/>
         <text name="vtpas_overdraft_off" text="Aus"/>

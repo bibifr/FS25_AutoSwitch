@@ -63,6 +63,8 @@ AS_Settings.lightRange = 5         -- (v1.0.0.37) distance d'affichage des feux 
 AS_Settings.LIGHT_RANGE_LIST = { 1, 2, 3, 4, 5, 6, 8, 10 }
 AS_Settings.lightGlow = 2          -- (v1.0.0.38) luminosité des halos des feux (x1 = jeu de base)
 AS_Settings.LIGHT_GLOW_LIST = { 1, 2, 3, 4, 5 }
+AS_Settings.windSway = 22          -- (v1.0.0.73) mouvement du feuillage au vent, en dixièmes (x2,2 ; 10 = jeu de base)
+AS_Settings.WIND_SWAY_LIST = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 }
 AS_Settings.weatherWidget = true   -- (v1.0.0.61) mini-météo à gauche de l'horloge
 AS_Settings.weatherPosX = nil      -- position déplacée à la souris (nil = par défaut)
 AS_Settings.weatherPosY = nil
@@ -114,6 +116,7 @@ function AS_Settings:save()
             setXMLInt(xml, "vtpAutoSwitch.notifDuration#alert", self.durAlert)
             setXMLInt(xml, "vtpAutoSwitch.lightRange#factor", self.lightRange)
             setXMLInt(xml, "vtpAutoSwitch.lightRange#glow", self.lightGlow)
+            setXMLInt(xml, "vtpAutoSwitch.windSway#factor10", self.windSway)
             setXMLBool(xml, "vtpAutoSwitch.weatherWidget#enabled", self.weatherWidget)
             setXMLInt(xml, "vtpAutoSwitch.overdraft#percent", self.overdraftPercent)
             setXMLInt(xml, "vtpAutoSwitch.overdraft#rate", self.overdraftRate)
@@ -199,6 +202,8 @@ function AS_Settings:load()
                 if lr ~= nil then self.lightRange = math.max(1, math.min(10, lr)) end
                 local lg = getXMLInt(xml, "vtpAutoSwitch.lightRange#glow")
                 if lg ~= nil then self.lightGlow = math.max(1, math.min(5, lg)) end
+                local ws = getXMLInt(xml, "vtpAutoSwitch.windSway#factor10")
+                if ws ~= nil then self.windSway = math.max(10, math.min(30, ws)) end
                 local hx = getXMLFloat(xml, "vtpAutoSwitch.speedHint#posX")
                 local hy = getXMLFloat(xml, "vtpAutoSwitch.speedHint#posY")
                 if hx ~= nil and hy ~= nil then
@@ -263,6 +268,7 @@ function AS_Settings:apply()
     AS_SpeedHint.ICON_X, AS_SpeedHint.ICON_Y = self.iconPosX, self.iconPosY
     AS_LightRange:setFactor(self.lightRange)
     AS_LightRange:setGlow(self.lightGlow)
+    if AS_WindSway ~= nil then AS_WindSway:setFactor(self.windSway / 10) end
     if AS_Overdraft ~= nil then
         AS_Overdraft.PERCENT = self.overdraftPercent
         AS_Overdraft.RATE = self.overdraftRate
@@ -517,6 +523,16 @@ function AS_Settings:onLightGlowChanged(state, element)
         self:apply()
         self:save()
         sprint("luminosité des feux : x%d", v)
+    end
+end
+
+function AS_Settings:onWindSwayChanged(state, element)
+    local v = self.WIND_SWAY_LIST[state]
+    if v ~= nil then
+        self.windSway = v
+        self:apply()
+        self:save()
+        sprint("mouvement du vent : x%.1f", v / 10)
     end
 end
 
@@ -850,6 +866,17 @@ function AS_Settings:buildUI(frame)
         state = self:getIndex(self.LIGHT_GLOW_LIST, self.lightGlow),
         callback = AS_Settings.onLightGlowChanged,
     })
+    local windTexts = {}
+    for i, v in ipairs(self.WIND_SWAY_LIST) do
+        windTexts[i] = (v == 10) and L("vtpas_lightRange_base") or string.format("x%.1f", v / 10)
+    end
+    self.options.windSway = self:addRow(layout, template, {
+        label = L("vtpas_windSway_label"),
+        tip = L("vtpas_windSway_tip"),
+        texts = windTexts,
+        state = self:getIndex(self.WIND_SWAY_LIST, self.windSway),
+        callback = AS_Settings.onWindSwayChanged,
+    })
 
     self.options.weatherWidget = self:addRow(layout, template, {
         label = L("vtpas_weatherWidget_label"),
@@ -914,6 +941,7 @@ function AS_Settings:refreshStates()
     if o.speedHint ~= nil then o.speedHint:setState(self.speedHint and 2 or 1) end
     if o.lightRange ~= nil then o.lightRange:setState(self:getIndex(self.LIGHT_RANGE_LIST, self.lightRange)) end
     if o.lightGlow ~= nil then o.lightGlow:setState(self:getIndex(self.LIGHT_GLOW_LIST, self.lightGlow)) end
+    if o.windSway ~= nil then o.windSway:setState(self:getIndex(self.WIND_SWAY_LIST, self.windSway)) end
     if o.weatherWidget ~= nil then o.weatherWidget:setState(self.weatherWidget and 2 or 1) end
     if o.overdraftPercent ~= nil then o.overdraftPercent:setState(self:getIndex(self.OVERDRAFT_PERCENT_LIST, self.overdraftPercent)) end
     if o.overdraftRate ~= nil then o.overdraftRate:setState(self:getIndex(self.OVERDRAFT_RATE_LIST, self.overdraftRate)) end

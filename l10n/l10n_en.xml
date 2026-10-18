@@ -152,6 +152,8 @@
         <text name="vtpas_lightRange_base" text="x1 (base game)"/>
         <text name="vtpas_lightGlow_label" text="Vehicle lights brightness"/>
         <text name="vtpas_lightGlow_tip" text="Brightness of the headlight, light and beacon glow of other vehicles. x1 = base game. The driven vehicle and its implements are unchanged."/>
+        <text name="vtpas_windSway_label" text="Wind movement"/>
+        <text name="vtpas_windSway_tip" text="How strongly trees, crops and grass move in the wind. x1 = base game (at 57 km/h the base game only moves foliage like a breeze). The wind speed itself is unchanged."/>
         <text name="vtpas_overdraft_label" text="Authorised overdraft"/>
         <text name="vtpas_overdraft_tip" text="Buying and leasing allowed with a negative balance, down to this percentage of the resale value of what you own (purchased equipment, land, buildings). Off = base game."/>
         <text name="vtpas_overdraft_off" text="Off"/>
