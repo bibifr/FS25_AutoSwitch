@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.69 | Découvert : les boutons Acheter et Louer de la boutique appelaient encore la fonction du jeu lue au démarrage ; ils passent maintenant par le contrôle du découvert |
 | 1.0.0.68 | Découvert : l'achat restait refusé (« pas assez d'argent ») car le jeu lit le solde directement ; le solde est maintenant augmenté du plafond pendant le contrôle d'achat, puis remis. Diagnostic dans log.txt si un refus apparaît encore |
 | 1.0.0.67 | Découvert : achat et location possibles avec le compte dans le rouge, jusqu'à 20 % (réglable de 10 à 100 %, ou désactivé) de la valeur de revente de ce que la ferme possède (matériel acheté, terres, bâtiments). Agios prélevés chaque jour de jeu sur le solde négatif, 10 % par an par défaut (réglable), au prorata des jours de l'année ; ligne « Agios » dans Finances |
 | 1.0.0.65 | Mini-météo déplacée hors de la barre de l'horloge : la case météo vide de la barre est refermée |

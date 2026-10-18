@@ -153,7 +153,8 @@ local function isNoMoneyText(text)
     for _, k in ipairs(NO_MONEY_KEYS) do
         if g_i18n.hasText ~= nil and g_i18n:hasText(k) and g_i18n:getText(k) == text then return true end
     end
-    return false
+    local low = string.lower(text)
+    return string.find(low, "argent", 1, true) ~= nil or string.find(low, "money", 1, true) ~= nil
 end
 local function traceNoMoney(where, text)
     if isNoMoneyText(text) and debug ~= nil and debug.traceback ~= nil then
@@ -167,6 +168,11 @@ if InfoDialog ~= nil and InfoDialog.show ~= nil then
         traceNoMoney("InfoDialog.show", text)
     end)
 end
+if YesNoDialog ~= nil and YesNoDialog.show ~= nil then
+    YesNoDialog.show = Utils.prependedFunction(YesNoDialog.show, function(callback, target, text, ...)
+        traceNoMoney("YesNoDialog.show", text)
+    end)
+end
 if Gui ~= nil and Gui.showInfoDialog ~= nil then
     Gui.showInfoDialog = Utils.prependedFunction(Gui.showInfoDialog, function(gui, args, ...)
         traceNoMoney("Gui.showInfoDialog", type(args) == "table" and args.text or args)
@@ -177,7 +183,7 @@ end
 -- Les classes absentes ou les fonctions qui n'existent pas sont ignorées.
 local SCOPES = {
     -- classe, motif du nom de fonction (en minuscules)
-    { "ShopConfigScreen",           { "buy", "lease", "purchase", "onclickok", "onyesno", "button" } },
+    { "ShopConfigScreen",           { "buy", "lease", "purchase", "onclick", "onyesno", "button" } },
     { "ShopMenu",                   { "buy", "lease", "purchase" } },
     { "ShopItemsFrame",             { "buy", "lease", "purchase" } },
     { "ShopController",             { "buy", "lease", "purchase" } },
@@ -209,6 +215,7 @@ local function leave(...)
 end
 
 local wrapped = {}   -- fonction d'AutoSwitch -> true (pas de double enrobage)
+local origToWrap = {} -- fonction du jeu -> fonction d'AutoSwitch
 
 local function wrapScope(className, class, funcName)
     local orig = class[funcName]
@@ -226,6 +233,7 @@ local function wrapScope(className, class, funcName)
         return leave(orig(...))
     end
     wrapped[f] = true
+    origToWrap[orig] = f
     class[funcName] = f
     return true
 end
@@ -245,6 +253,35 @@ function AS_Overdraft:installScopes()
                 if wrapScope(s[1], class, k) then count = count + 1 end
             end
         end
+    end
+    return count
+end
+
+-- v1.0.0.69 : les boutons des écrans (Acheter, Louer...) gardent la fonction du jeu
+-- qu'ils ont lue au démarrage : la 1.0.0.68 n'était jamais appelée au clic sur Acheter.
+-- Les écrans et leurs éléments sont parcourus une fois, et chaque fonction du jeu
+-- enrobée est remplacée par la version d'AutoSwitch.
+function AS_Overdraft:rebindCallbacks()
+    local seen, count = {}, 0
+    local function walk(t, level)
+        if type(t) ~= "table" or seen[t] or level > 8 then return end
+        seen[t] = true
+        for k, v in pairs(t) do
+            if type(v) == "function" then
+                local w = origToWrap[v]
+                if w ~= nil then
+                    t[k] = w
+                    count = count + 1
+                end
+            elseif type(v) == "table" and k ~= "parent" then
+                walk(v, level + 1)
+            end
+        end
+    end
+    local roots = { g_gui, g_shopConfigScreen, g_shopMenu, g_inGameMenu, g_constructionScreen }
+    for _, r in pairs(roots) do
+        local ok, err = pcall(walk, r, 0)
+        if not ok then print("[AutoSwitch] Découvert : parcours des écrans : " .. tostring(err)) end
     end
     return count
 end
@@ -278,7 +315,8 @@ end
 function AS_Overdraft:loadMap()
     getMoneyType()
     self.scopeCount = self.scopeCount + self:installScopes()
-    print(string.format("[AutoSwitch] Découvert : %d contrôles d'achat du jeu suivis", self.scopeCount))
+    local rebound = self:rebindCallbacks()
+    print(string.format("[AutoSwitch] Découvert : %d contrôles d'achat du jeu suivis, %d boutons reliés", self.scopeCount, rebound))
 end
 
 function AS_Overdraft:update(dt)
