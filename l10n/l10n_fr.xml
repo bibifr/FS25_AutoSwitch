@@ -152,5 +152,54 @@
         <text name="vtpas_lightRange_base" text="x1 (jeu de base)"/>
         <text name="vtpas_lightGlow_label" text="Luminosité des feux des véhicules"/>
         <text name="vtpas_lightGlow_tip" text="Luminosité des halos des phares, feux et gyros des autres véhicules. x1 = jeu de base. Le véhicule conduit et ses outils ne changent pas."/>
+        <!-- v1.0.0.59 : fenêtre Météo -->
+        <text name="input_AS_WEATHER" text="Météo : ouvrir / fermer"/>
+        <text name="vtpas_wx_title" text="Météo"/>
+        <text name="vtpas_wx_now" text="Maintenant"/>
+        <text name="vtpas_wx_nowShort" text="Maint."/>
+        <text name="vtpas_wx_next24" text="Prochaines 24 h"/>
+        <text name="vtpas_wx_events" text="Changements à venir"/>
+        <text name="vtpas_wx_days" text="Prochains jours"/>
+        <text name="vtpas_wx_sun" text="Ensoleillé"/>
+        <text name="vtpas_wx_partly" text="Éclaircies"/>
+        <text name="vtpas_wx_cloudy" text="Nuageux"/>
+        <text name="vtpas_wx_rain" text="Pluie"/>
+        <text name="vtpas_wx_snow" text="Neige"/>
+        <text name="vtpas_wx_hail" text="Grêle"/>
+        <text name="vtpas_wx_thunder" text="Orage"/>
+        <text name="vtpas_wx_twister" text="Tornade"/>
+        <text name="vtpas_wx_unknown" text="Inconnu"/>
+        <text name="vtpas_wx_today" text="Aujourd'hui"/>
+        <text name="vtpas_wx_tomorrow" text="Demain"/>
+        <text name="vtpas_wx_afterTomorrow" text="Après-demain"/>
+        <text name="vtpas_wx_inDays" text="Dans %d jours"/>
+        <text name="vtpas_wx_durDays" text="%d j %d h"/>
+        <text name="vtpas_wx_minMax" text="Mini %s / maxi %s"/>
+        <text name="vtpas_wx_wind" text="Vent"/>
+        <text name="vtpas_wx_from" text="secteur %s"/>
+        <text name="vtpas_wx_precip" text="Précipitations"/>
+        <text name="vtpas_wx_none" text="Aucune"/>
+        <text name="vtpas_wx_light" text="faible"/>
+        <text name="vtpas_wx_moderate" text="modérée"/>
+        <text name="vtpas_wx_heavy" text="forte"/>
+        <text name="vtpas_wx_mmPerHour" text="environ %.1f mm/h"/>
+        <text name="vtpas_wx_ground" text="Humidité du sol"/>
+        <text name="vtpas_wx_change" text="Prochain changement"/>
+        <text name="vtpas_wx_nextChange" text="%s à %s (dans %s)"/>
+        <text name="vtpas_wx_endAt" text="Fin à %s"/>
+        <text name="vtpas_wx_noForecast" text="Pas de prévision du jeu"/>
+        <text name="vtpas_wx_fromTo" text="de %s à %s"/>
+        <text name="vtpas_wx_until" text="jusqu'à %s"/>
+        <text name="vtpas_wx_rainDay" text="%s en %s"/>
+        <text name="vtpas_wx_dry" text="Sec"/>
+        <text name="vtpas_wx_footer" text="Prévisions du jeu sur %s. Quantités estimées d'après l'intensité. * = jour pas entièrement prévu"/>
+        <text name="vtpas_wx_dir_N" text="N"/>
+        <text name="vtpas_wx_dir_NE" text="NE"/>
+        <text name="vtpas_wx_dir_E" text="E"/>
+        <text name="vtpas_wx_dir_SE" text="SE"/>
+        <text name="vtpas_wx_dir_S" text="S"/>
+        <text name="vtpas_wx_dir_SW" text="SO"/>
+        <text name="vtpas_wx_dir_W" text="O"/>
+        <text name="vtpas_wx_dir_NW" text="NO"/>
     </texts>
 </l10n>

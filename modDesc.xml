@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <modDesc descVersion="106">
     <author>Fabien</author>
-    <version>1.0.0.58</version>
+    <version>1.0.0.59</version>
     <multiplayer supported="true"/>
 
     <title>
@@ -104,6 +104,7 @@ Benötigte Mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, M
     <actions>
         <action name="AS_DUAL_SWITCH" category="ONFOOT"/>
         <action name="AS_DRIVE_MODE" category="VEHICLE"/>
+        <action name="AS_WEATHER" category="ONFOOT VEHICLE"/>
     </actions>
     <inputBinding>
         <actionBinding action="AS_DUAL_SWITCH">
@@ -111,6 +112,9 @@ Benötigte Mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, M
         </actionBinding>
         <actionBinding action="AS_DRIVE_MODE">
             <binding device="KB_MOUSE_DEFAULT" input="KEY_rctrl KEY_up"/>
+        </actionBinding>
+        <actionBinding action="AS_WEATHER">
+            <binding device="KB_MOUSE_DEFAULT" input="KEY_rctrl KEY_m"/>
         </actionBinding>
     </inputBinding>
     <extraSourceFiles>
