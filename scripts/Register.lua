@@ -5,6 +5,9 @@
 -- v1.0.0.79 : pesées : colonnes « Lieu » (nom du pont-bascule) et « Par » (AutoDrive ou le
 --   joueur qui s'est arrêté lui-même sur le pont), envoyées par AutoDrive Addon.
 --   Croix au bout de chaque pesée / vente pour la supprimer (2e clic pour confirmer).
+-- v1.0.0.80 : totaux en bas (pesées : nombre et chargement total ; ventes : nombre, tonnes, montant total).
+--   Une page par année : la fenêtre s'ouvre sur l'année en cours (repart à zéro au 1er mois),
+--   flèches < > pour revoir les années précédentes (rien n'est effacé).
 -- v1.0.0.74 : registre gardé avec la partie (AutoSwitch_register.xml dans le dossier
 --   de la sauvegarde).
 --   Ventes : chaque vente du jeu (SellingStation:sellFillType), produit, quantité,
@@ -17,7 +20,7 @@
 -------------------------------------------------------------------------------
 AS_Register = {}
 AS_Register.FILE_NAME   = "AutoSwitch_register.xml"
-AS_Register.MAX_ENTRIES = 1000
+AS_Register.MAX_ENTRIES = 5000
 AS_Register.MERGE_MS    = 120000
 AS_Register.ROWS        = 15
 AS_Register.CONFIRM_MS  = 3000   -- délai pour confirmer une suppression
@@ -27,6 +30,7 @@ AS_Register.sales = {}
 AS_Register.isOpen = false
 AS_Register.tab = 1
 AS_Register.scroll = 0
+AS_Register.year = nil   -- année affichée (nil = année en cours)
 AS_Register.actionEventId = nil
 AS_Register.loaded = false
 
@@ -329,14 +333,33 @@ local function uiScale()
     return s
 end
 
+-- années présentes dans le registre (+ l'année en cours), dans l'ordre
+function AS_Register:getYears()
+    local farmId = currentFarmId()
+    local set, list = {}, {}
+    local function add(y)
+        if y ~= nil and not set[y] then set[y] = true; table.insert(list, y) end
+    end
+    add(gameDate().year)
+    for _, e in ipairs(self.weighings) do if e.farmId == farmId then add(e.year) end end
+    for _, e in ipairs(self.sales) do if e.farmId == farmId then add(e.year) end end
+    table.sort(list)
+    return list
+end
+
+function AS_Register:getShownYear()
+    return self.year or gameDate().year
+end
+
 -- lignes de l'onglet : { colonnes... }, du plus récent au plus ancien
 function AS_Register:getRows()
     local farmId = currentFarmId()
+    local year = self:getShownYear()
     local rows = {}
     if self.tab == 1 then
         for i = #self.weighings, 1, -1 do
             local e = self.weighings[i]
-            if e.farmId == farmId then
+            if e.farmId == farmId and e.year == year then
                 table.insert(rows, { fmtDate(e), (e.site ~= nil and e.site ~= "") and e.site or "-", e.driver or "AutoDrive", e.vehicle or "?", e.fillType ~= nil and fillTypeTitle(e.fillType) or "-",
                     fmtTons(e.load), fmtTons(e.total), entry = e, list = self.weighings })
             end
@@ -344,7 +367,7 @@ function AS_Register:getRows()
     elseif self.tab == 2 then
         for i = #self.sales, 1, -1 do
             local e = self.sales[i]
-            if e.farmId == farmId then
+            if e.farmId == farmId and e.year == year then
                 table.insert(rows, { fmtDate(e), fillTypeTitle(e.fillType), fmtLiters(e.liters) .. "  (" .. fmtTons(e.kg) .. ")",
                     fmtMoney(e.money), e.station or "?", entry = e, list = self.sales })
             end
@@ -353,7 +376,7 @@ function AS_Register:getRows()
         -- totaux par mois (le plus récent d'abord) puis par produit
         local groups, order = {}, {}
         for _, e in ipairs(self.sales) do
-            if e.farmId == farmId then
+            if e.farmId == farmId and e.year == year then
                 local mk = (e.year or 0) * 100 + (e.period or 0)
                 local g = groups[mk]
                 if g == nil then
@@ -412,7 +435,7 @@ function AS_Register:drawPanel()
 
     local rowH = 26
     local W = pxw(1240)
-    local H = py(44 + 40 + 30 + rowH * self.ROWS + 34)
+    local H = py(44 + 40 + 30 + rowH * self.ROWS + 52)
     local x0, y0 = 0.5 - W * 0.5, 0.5 - H * 0.5
     local top = y0 + H
     local pad = pxw(18)
@@ -444,6 +467,25 @@ function AS_Register:drawPanel()
         self.tabBoxes[i] = { x = tx, y = ty, w = tw, h = py(30) }
         tx = tx + tw + pxw(8)
     end
+
+    -- (v1.0.0.80) année affichée : < Année N >
+    local years = self:getYears()
+    local shown = self:getShownYear()
+    local idx = 1
+    for i, yv in ipairs(years) do if yv == shown then idx = i end end
+    local aw, lw = pxw(34), pxw(150)
+    local ax = x0 + W - pad - aw
+    self.yearBoxes = {}
+    local function arrow(key, x, label, enabled)
+        local a = enabled and ((self.hover == key) and 0.30 or 0.12) or 0.03
+        drawFilledRect(x, ty, aw, py(30), a, a * 1.3, a * 1.8, 0.95)
+        text(x + aw * 0.5, ty + py(7), 17, label, enabled and C.white or C.gray, RenderText.ALIGN_CENTER, true)
+        if enabled then self.yearBoxes[key] = { x = x, y = ty, w = aw, h = py(30) } end
+    end
+    arrow("ynext", ax, ">", idx < #years)
+    text(ax - lw * 0.5, ty + py(7), 17, T("Année ", "Year ") .. tostring(shown), C.title, RenderText.ALIGN_CENTER, true)
+    arrow("yprev", ax - lw - aw, "<", idx > 1)
+    self.yearList, self.yearIndex = years, idx
 
     -- colonnes
     local heads, cols
@@ -492,16 +534,41 @@ function AS_Register:drawPanel()
         end
     end
 
-    -- bas : nombre de lignes / défilement
-    local info = string.format("%d %s", #rows, T("lignes", "rows"))
-    if maxScroll > 0 then info = info .. "  -  " .. T("molette pour défiler", "scroll with the mouse wheel") end
-    text(x0 + W - pad, y0 + py(12), 14, info, C.gray, RenderText.ALIGN_RIGHT)
+    -- (v1.0.0.80) bas : totaux de l'onglet à gauche, défilement à droite
+    local n, kg, money = 0, 0, 0
+    for _, row in ipairs(rows) do
+        if row.entry ~= nil then
+            n = n + 1
+            if self.tab == 1 then
+                kg = kg + (row.entry.load or 0)
+            else
+                kg = kg + (row.entry.kg or 0)
+                money = money + (row.entry.money or 0)
+            end
+        end
+    end
+    local summary = nil
+    if self.tab == 1 then
+        summary = string.format("%d %s  -  %s : %s", n, n > 1 and T("pesées", "weighings") or T("pesée", "weighing"),
+            T("Chargement total", "Total load"), fmtTons(kg))
+    elseif self.tab == 2 then
+        summary = string.format("%d %s  -  %s : %s  -  %s : %s", n, n > 1 and T("ventes", "sales") or T("vente", "sale"),
+            T("Total", "Total"), fmtTons(kg), T("Montant total", "Total amount"), fmtMoney(money))
+    end
+    drawFilledRect(x0 + pad, y0 + py(40), W - 2 * pad, py(1), 1, 1, 1, 0.2)
+    if summary ~= nil then
+        text(x0 + pad, y0 + py(12), 17, summary, C.title, nil, true)
+    end
+    if maxScroll > 0 then
+        text(x0 + W - pad, y0 + py(12), 14, T("molette pour défiler", "scroll with the mouse wheel"), C.gray, RenderText.ALIGN_RIGHT)
+    end
 end
 
 function AS_Register:setOpen(open)
     if open == self.isOpen then return end
     self.isOpen = open
     self.scroll = 0
+    self.year = nil
     self.closeBox, self.tabBoxes, self.hover = nil, nil, nil
     if g_inputBinding == nil or g_inputBinding.setShowMouseCursor == nil then return end
     if open then
@@ -529,6 +596,9 @@ function AS_Register:mouseEvent(posX, posY, isDown, isUp, button)
         if inBox(b, posX, posY) then self.hover = i end
     end
     local delBox = nil
+    for k, b in pairs(self.yearBoxes or {}) do
+        if inBox(b, posX, posY) then self.hover = k end
+    end
     for r, b in pairs(self.deleteBoxes or {}) do
         if inBox(b, posX, posY) then self.hover, delBox = "del" .. r, b end
     end
@@ -544,6 +614,13 @@ function AS_Register:mouseEvent(posX, posY, isDown, isUp, button)
                 self.armed = nil
             else
                 self.armed, self.armedTime = delBox.entry, g_time
+            end
+        elseif (self.hover == "yprev" or self.hover == "ynext") and self.yearList ~= nil then
+            local i = self.yearIndex + (self.hover == "yprev" and -1 or 1)
+            local yv = self.yearList[i]
+            if yv ~= nil then
+                self.year = (yv ~= gameDate().year) and yv or nil
+                self.scroll, self.armed = 0, nil
             end
         elseif self.hover == "close" then
             self:setOpen(false)
