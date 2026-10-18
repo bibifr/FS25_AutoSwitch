@@ -105,6 +105,7 @@ Benötigte Mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, M
         <action name="AS_DUAL_SWITCH" category="ONFOOT"/>
         <action name="AS_DRIVE_MODE" category="VEHICLE"/>
         <action name="AS_WEATHER" category="ONFOOT VEHICLE"/>
+        <action name="AS_REGISTER" category="ONFOOT VEHICLE"/>
     </actions>
     <inputBinding>
         <actionBinding action="AS_DUAL_SWITCH">
@@ -115,6 +116,9 @@ Benötigte Mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, M
         </actionBinding>
         <actionBinding action="AS_WEATHER">
             <binding device="KB_MOUSE_DEFAULT" input="KEY_rctrl KEY_m"/>
+        </actionBinding>
+        <actionBinding action="AS_REGISTER">
+            <binding device="KB_MOUSE_DEFAULT" input="KEY_rctrl KEY_r"/>
         </actionBinding>
     </inputBinding>
     <extraSourceFiles>

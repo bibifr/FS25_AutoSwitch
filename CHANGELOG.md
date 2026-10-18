@@ -3,6 +3,7 @@
 | Version | Changements |
 | --- | --- |
 | 1.0.0.75 | Lumières : les phares et phares de travail de tous les véhicules éclairent 2 fois plus loin et 2 fois plus fort (deux réglages dans le menu, x1 = jeu de base). Réglages de distance et de luminosité des halos (1.0.0.37 / 1.0.0.38) retirés, sans effet visible |
+| 1.0.0.74 | Registre (Ctrl droit + R, à pied ou en véhicule) : pesées faites par AutoDrive Addon sur un pont-bascule (date, véhicule, produit, chargement, poids total) et toutes les ventes de la ferme (date, produit, quantité, montant, point de vente ; le déchargement d'une benne compte pour une seule vente). Onglets Pesées, Ventes et Totaux par mois et par produit, molette pour défiler. Gardé avec la sauvegarde (AutoSwitch_register.xml) |
 | 1.0.0.73 | Vent visible : arbres, cultures et herbe bougent selon la vraie force du vent (le jeu de base ne les bougeait que comme une brise, même à 57 km/h). Réglage « Mouvement du vent » dans le menu AutoSwitch, de x1 (jeu de base) à x3, x2,2 par défaut. La vitesse du vent elle-même ne change pas |
 | 1.0.0.72 | Finances : la ligne des agios affiche « Agios » (elle affichait « Missing 'finance_asOverdraftInterest' ») |
 | 1.0.0.71 | Découvert compté aussi pour l'entretien de Realistic Mechanical Systems (fenêtres d'entretien et atelier), en provisoire ; sans effet si RMS n'est pas installé |
