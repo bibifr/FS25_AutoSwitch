@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.58 | Tractor Terrain Dynamics accepté sous le nom de la bêta KingMods (FS25_TTD_v3_7_BETA.zip) : plus besoin de le renommer. TTD retiré des dépendances du modDesc (le jeu réclamait en plus la version ModHub 1.0.0.0, refusée ensuite par le contrôle de version). Si deux TTD sont installés, le plus récent est utilisé |
 | 1.0.0.57 | Icône d'ensileuse sur le HUD (dessin de Fabien), la moissonneuse garde la sienne |
 | 1.0.0.56 | Transmission réelle de chaque machine lue dans les différentiels utilisés par le jeu (après MoreRealistic) : 4x4, pont avant seul ou pont arrière seul. Chaque machine est notée dans modSettings/FS25_AutoSwitch/transmissions.xml, l'attribut forced (4x4 / front / rear) corrige une machine à la main. Remplace la règle « moissonneuses en pont avant seul » de la 1.0.0.55 |
 | 1.0.0.55 | Moissonneuses et ensileuses toujours gérées en pont avant seul, même si le mod déclare un 4x4 (Lexion 6900 : l'arrière restait à 0 % de patinage en 4x4) |
