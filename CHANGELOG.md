@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.67 | Découvert : achat et location possibles avec le compte dans le rouge, jusqu'à 20 % (réglable de 10 à 100 %, ou désactivé) de la valeur de revente de ce que la ferme possède (matériel acheté, terres, bâtiments). Agios prélevés chaque jour de jeu sur le solde négatif, 10 % par an par défaut (réglable), au prorata des jours de l'année ; ligne « Agios » dans Finances |
 | 1.0.0.65 | Mini-météo déplacée hors de la barre de l'horloge : la case météo vide de la barre est refermée |
 | 1.0.0.64 | Mini-météo : les icônes météo du jeu restent cachées même quand elle est déplacée (l'un ou l'autre) ; relâchée près de sa place dans la barre de l'horloge, elle s'y accroche |
 | 1.0.0.63 | Mini-météo à la place de la météo du jeu dans la barre de l'horloge (icônes du jeu cachées tant qu'elle est affichée), avec en dessous le vent, sa direction et « Clique-moi » pour ouvrir la fenêtre Météo |

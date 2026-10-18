@@ -4,6 +4,7 @@
 local L = AS.L
 
 -------------------------------------------------------------------------------
+-- v1.0.0.66 : mini-météo, petit titre « Prévision » au-dessus du prochain changement.
 -- v1.0.0.65 : mini-météo déplacée ailleurs : la case météo vide de la barre est refermée.
 -- v1.0.0.64 : icônes météo du jeu toujours cachées avec la mini-météo (l'un ou l'autre),
 --   la mini-météo s'accroche à sa place quand on la relâche près de la barre.
@@ -775,6 +776,8 @@ function AS_Weather:drawWidget(d)
         cx = cx + pxw(1) + gap
         icon(nextIcon, cx, cy - py(14), 28)
         cx = cx + pxw(28) + pxw(6)
+        -- (v1.0.0.66) petit titre « Prévision » pour ne pas confondre avec le temps actuel
+        text(cx, cy + py(18), 9, L("vtpas_wx_forecastShort"), C.gray)
         text(cx, cy + py(2), 14, nextName, C.white, nil, true)
         text(cx, cy - py(15), 12, nextLine, isPrecipType(d.next.wt) and C.blue or C.gray)
     end

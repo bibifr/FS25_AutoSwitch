@@ -152,6 +152,13 @@
         <text name="vtpas_lightRange_base" text="x1 (Basisspiel)"/>
         <text name="vtpas_lightGlow_label" text="Helligkeit der Fahrzeuglichter"/>
         <text name="vtpas_lightGlow_tip" text="Helligkeit des Scheinwerfer-, Licht- und Rundumleuchtenscheins anderer Fahrzeuge. x1 = Basisspiel. Das gefahrene Fahrzeug und seine Geräte bleiben unverändert."/>
+        <text name="vtpas_overdraft_label" text="Dispositionskredit"/>
+        <text name="vtpas_overdraft_tip" text="Kaufen und Leasen auch mit negativem Kontostand, bis zu diesem Prozentsatz des Wiederverkaufswerts deines Besitzes (gekaufte Maschinen, Land, Gebäude). Aus = Basisspiel."/>
+        <text name="vtpas_overdraft_off" text="Aus"/>
+        <text name="vtpas_overdraftRate_label" text="Überziehungszinsen (jährlich)"/>
+        <text name="vtpas_overdraftRate_tip" text="Zinsen werden an jedem Spieltag auf den negativen Kontostand berechnet, anteilig über das Jahr (12 Monate). Zeile „Überziehungszinsen“ in den Finanzen."/>
+        <text name="vtpas_overdraftRate_none" text="Keine"/>
+        <text name="finance_asOverdraftInterest" text="Überziehungszinsen"/>
         <!-- v1.0.0.59 : fenêtre Météo -->
         <text name="vtpas_weatherWidget_label" text="Mini-Wetter neben der Uhr"/>
         <text name="vtpas_weatherWidget_tip" text="Zeigt das aktuelle Wetter und den nächsten Wechsel links neben der Uhr. Mit sichtbarem Mauszeiger verschiebbar; ein Klick öffnet das Wetterfenster (Strg rechts + M)."/>
@@ -193,6 +200,7 @@
         <text name="vtpas_wx_fromTo" text="von %s bis %s"/>
         <text name="vtpas_wx_dayPlus" text="T+%d"/>
         <text name="vtpas_wx_clickMe" text="Klick mich"/>
+        <text name="vtpas_wx_forecastShort" text="Vorhersage"/>
         <text name="vtpas_wx_until" text="bis %s"/>
         <text name="vtpas_wx_rainDay" text="%s in %s"/>
         <text name="vtpas_wx_dry" text="Trocken"/>

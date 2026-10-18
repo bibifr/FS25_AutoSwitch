@@ -152,6 +152,13 @@
         <text name="vtpas_lightRange_base" text="x1 (jeu de base)"/>
         <text name="vtpas_lightGlow_label" text="Luminosité des feux des véhicules"/>
         <text name="vtpas_lightGlow_tip" text="Luminosité des halos des phares, feux et gyros des autres véhicules. x1 = jeu de base. Le véhicule conduit et ses outils ne changent pas."/>
+        <text name="vtpas_overdraft_label" text="Découvert autorisé"/>
+        <text name="vtpas_overdraft_tip" text="Achat et location possibles avec le compte dans le rouge, jusqu'à ce pourcentage de la valeur de revente de ce que tu possèdes (matériel acheté, terres, bâtiments). Désactivé = jeu de base."/>
+        <text name="vtpas_overdraft_off" text="Désactivé"/>
+        <text name="vtpas_overdraftRate_label" text="Agios (taux annuel)"/>
+        <text name="vtpas_overdraftRate_tip" text="Intérêts prélevés chaque jour de jeu sur le solde négatif, au prorata de l'année (12 mois). Ligne « Agios » dans Finances."/>
+        <text name="vtpas_overdraftRate_none" text="Aucun"/>
+        <text name="finance_asOverdraftInterest" text="Agios"/>
         <!-- v1.0.0.59 : fenêtre Météo -->
         <text name="vtpas_weatherWidget_label" text="Mini-météo près de l'horloge"/>
         <text name="vtpas_weatherWidget_tip" text="Affiche le temps actuel et le prochain changement à gauche de l'horloge. Déplaçable à la souris quand le curseur est visible ; un clic ouvre la fenêtre Météo (Ctrl droit + M)."/>
@@ -193,6 +200,7 @@
         <text name="vtpas_wx_fromTo" text="de %s à %s"/>
         <text name="vtpas_wx_dayPlus" text="J+%d"/>
         <text name="vtpas_wx_clickMe" text="Clique-moi"/>
+        <text name="vtpas_wx_forecastShort" text="Prévision"/>
         <text name="vtpas_wx_until" text="jusqu'à %s"/>
         <text name="vtpas_wx_rainDay" text="%s en %s"/>
         <text name="vtpas_wx_dry" text="Sec"/>

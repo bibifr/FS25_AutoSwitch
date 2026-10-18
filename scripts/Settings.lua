@@ -66,6 +66,10 @@ AS_Settings.LIGHT_GLOW_LIST = { 1, 2, 3, 4, 5 }
 AS_Settings.weatherWidget = true   -- (v1.0.0.61) mini-météo à gauche de l'horloge
 AS_Settings.weatherPosX = nil      -- position déplacée à la souris (nil = par défaut)
 AS_Settings.weatherPosY = nil
+AS_Settings.overdraftPercent = 20  -- (v1.0.0.67) découvert : plafond en % de la valeur de revente des biens (0 = jeu de base)
+AS_Settings.OVERDRAFT_PERCENT_LIST = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 }
+AS_Settings.overdraftRate = 10     -- (v1.0.0.67) agios : taux annuel en %
+AS_Settings.OVERDRAFT_RATE_LIST = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 }
 
 local function sprint(fmt, ...)
     -- (v1.25) seules les erreurs sont écrites dans le journal
@@ -111,6 +115,8 @@ function AS_Settings:save()
             setXMLInt(xml, "vtpAutoSwitch.lightRange#factor", self.lightRange)
             setXMLInt(xml, "vtpAutoSwitch.lightRange#glow", self.lightGlow)
             setXMLBool(xml, "vtpAutoSwitch.weatherWidget#enabled", self.weatherWidget)
+            setXMLInt(xml, "vtpAutoSwitch.overdraft#percent", self.overdraftPercent)
+            setXMLInt(xml, "vtpAutoSwitch.overdraft#rate", self.overdraftRate)
             if self.weatherPosX ~= nil and self.weatherPosY ~= nil then
                 setXMLFloat(xml, "vtpAutoSwitch.weatherWidget#x", self.weatherPosX)
                 setXMLFloat(xml, "vtpAutoSwitch.weatherWidget#y", self.weatherPosY)
@@ -198,6 +204,10 @@ function AS_Settings:load()
                 if hx ~= nil and hy ~= nil then
                     self.hintPosX, self.hintPosY = math.max(0, math.min(1, hx)), math.max(0, math.min(1, hy))
                 end
+                local odp = getXMLInt(xml, "vtpAutoSwitch.overdraft#percent")
+                if odp ~= nil then self.overdraftPercent = math.max(0, math.min(100, odp)) end
+                local odr = getXMLInt(xml, "vtpAutoSwitch.overdraft#rate")
+                if odr ~= nil then self.overdraftRate = math.max(0, math.min(20, odr)) end
                 local ww = getXMLBool(xml, "vtpAutoSwitch.weatherWidget#enabled")
                 if ww ~= nil then self.weatherWidget = ww end
                 local wx = getXMLFloat(xml, "vtpAutoSwitch.weatherWidget#x")
@@ -253,6 +263,10 @@ function AS_Settings:apply()
     AS_SpeedHint.ICON_X, AS_SpeedHint.ICON_Y = self.iconPosX, self.iconPosY
     AS_LightRange:setFactor(self.lightRange)
     AS_LightRange:setGlow(self.lightGlow)
+    if AS_Overdraft ~= nil then
+        AS_Overdraft.PERCENT = self.overdraftPercent
+        AS_Overdraft.RATE = self.overdraftRate
+    end
     if AS_Weather ~= nil then
         AS_Weather.WIDGET = self.weatherWidget
         AS_Weather.WIDGET_X, AS_Weather.WIDGET_Y = self.weatherPosX, self.weatherPosY
@@ -474,6 +488,26 @@ function AS_Settings:onWeatherWidgetChanged(state, element)
     self:apply()
     self:save()
     sprint("mini-météo : %s", self.weatherWidget and "affichée" or "masquée")
+end
+
+function AS_Settings:onOverdraftPercentChanged(state, element)
+    local v = self.OVERDRAFT_PERCENT_LIST[state]
+    if v ~= nil then
+        self.overdraftPercent = v
+        self:apply()
+        self:save()
+        sprint("découvert : %d %% des biens", v)
+    end
+end
+
+function AS_Settings:onOverdraftRateChanged(state, element)
+    local v = self.OVERDRAFT_RATE_LIST[state]
+    if v ~= nil then
+        self.overdraftRate = v
+        self:apply()
+        self:save()
+        sprint("agios : %d %% par an", v)
+    end
 end
 
 function AS_Settings:onLightGlowChanged(state, element)
@@ -825,6 +859,29 @@ function AS_Settings:buildUI(frame)
         callback = AS_Settings.onWeatherWidgetChanged,
     })
 
+    local odTexts = {}
+    for i, v in ipairs(self.OVERDRAFT_PERCENT_LIST) do
+        odTexts[i] = (v == 0) and L("vtpas_overdraft_off") or (v .. " %")
+    end
+    self.options.overdraftPercent = self:addRow(layout, template, {
+        label = L("vtpas_overdraft_label"),
+        tip = L("vtpas_overdraft_tip"),
+        texts = odTexts,
+        state = self:getIndex(self.OVERDRAFT_PERCENT_LIST, self.overdraftPercent),
+        callback = AS_Settings.onOverdraftPercentChanged,
+    })
+    local rateTexts = {}
+    for i, v in ipairs(self.OVERDRAFT_RATE_LIST) do
+        rateTexts[i] = (v == 0) and L("vtpas_overdraftRate_none") or (v .. " %")
+    end
+    self.options.overdraftRate = self:addRow(layout, template, {
+        label = L("vtpas_overdraftRate_label"),
+        tip = L("vtpas_overdraftRate_tip"),
+        texts = rateTexts,
+        state = self:getIndex(self.OVERDRAFT_RATE_LIST, self.overdraftRate),
+        callback = AS_Settings.onOverdraftRateChanged,
+    })
+
     self.built = true
     layout:invalidateLayout()
     sprint("options ajoutées au menu Paramètres")
@@ -858,6 +915,8 @@ function AS_Settings:refreshStates()
     if o.lightRange ~= nil then o.lightRange:setState(self:getIndex(self.LIGHT_RANGE_LIST, self.lightRange)) end
     if o.lightGlow ~= nil then o.lightGlow:setState(self:getIndex(self.LIGHT_GLOW_LIST, self.lightGlow)) end
     if o.weatherWidget ~= nil then o.weatherWidget:setState(self.weatherWidget and 2 or 1) end
+    if o.overdraftPercent ~= nil then o.overdraftPercent:setState(self:getIndex(self.OVERDRAFT_PERCENT_LIST, self.overdraftPercent)) end
+    if o.overdraftRate ~= nil then o.overdraftRate:setState(self:getIndex(self.OVERDRAFT_RATE_LIST, self.overdraftRate)) end
 end
 
 function AS_Settings:onSettingsFrameOpen(frame)

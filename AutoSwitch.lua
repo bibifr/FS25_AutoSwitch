@@ -29,6 +29,7 @@
 --   LightRange    lumières des véhicules visibles de plus loin
 --   GrassTrample  herbe piétinée : recul de pousse au lieu du fauchage de Mud System Physics
 --   Weather       fenêtre Météo (Ctrl droit + M) : prévisions du jeu lisibles
+--   Overdraft     découvert : achat / location jusqu'à un plafond, agios chaque jour
 --   Settings      menu Paramètres et sauvegarde des réglages (toujours en dernier)
 --
 -- v1.0.0.29 : contrôle des versions. Chaque mod requis doit être au moins à la
@@ -80,6 +81,7 @@ local FILES = {
     "scripts/LightRange.lua",
     "scripts/GrassTrample.lua",
     "scripts/Weather.lua",
+    "scripts/Overdraft.lua",
     "scripts/Settings.lua",
 }
 
