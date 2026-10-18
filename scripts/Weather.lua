@@ -4,6 +4,8 @@
 local L = AS.L
 
 -------------------------------------------------------------------------------
+-- v1.0.0.64 : icônes météo du jeu toujours cachées avec la mini-météo (l'un ou l'autre),
+--   la mini-météo s'accroche à sa place quand on la relâche près de la barre.
 -- v1.0.0.63 : mini-météo à la place de la météo du jeu (cachée) dans la barre de
 --   l'horloge, ligne du dessous : vent, direction, « Clique-moi ».
 -- v1.0.0.62 : mini-météo posée par défaut à gauche de la barre de l'horloge.
@@ -642,7 +644,9 @@ end
 local GAME_WEATHER_OVERLAYS = { "weatherIcon", "weatherNextIcon" }
 if GameInfoDisplay ~= nil and GameInfoDisplay.draw ~= nil then
     GameInfoDisplay.draw = Utils.overwrittenFunction(GameInfoDisplay.draw, function(self, superFunc, ...)
-        if not (AS_Weather.WIDGET and AS_Weather.WIDGET_X == nil and AS_Weather.anchored) then
+        -- (v1.0.0.64) l'un ou l'autre : icônes du jeu cachées dès que la mini-météo est
+        -- affichée, même déplacée ailleurs
+        if not (AS_Weather.WIDGET and AS_Weather.anchored) then
             return superFunc(self, ...)
         end
         local saved = {}
@@ -690,7 +694,7 @@ function AS_Weather:drawWidget(d)
     local anchorRight, anchorTop, barH = clockAnchor()
     self.anchored = anchorRight ~= nil
     local H = py(48)
-    if self.WIDGET_X == nil and barH ~= nil and barH > py(30) and barH < py(120) then H = barH end
+    if barH ~= nil and barH > py(30) and barH < py(120) then H = barH end
     local pad, gap, iconPx = pxw(10), pxw(10), 34
     local iconW = pxw(iconPx)
     -- textes
@@ -720,13 +724,17 @@ function AS_Weather:drawWidget(d)
     local row3W = pxw(18) + pxw(6) + width(12, windTxt) + gap * 2 + width(12, hintTxt)
     local W = math.max(pad + iconW + pxw(6) + leftW + rightW + pad, pad + row3W + pad)
 
+    -- place d'origine (dans la barre de l'horloge), gardée pour l'aimantation
     local x, top
-    if self.WIDGET_X ~= nil and self.WIDGET_Y ~= nil then
-        x, top = self.WIDGET_X, self.WIDGET_Y + H + row3H
-    elseif anchorRight ~= nil then
+    if anchorRight ~= nil then
         x, top = anchorRight - pxw(14) - W, anchorTop
     else
         x, top = 1 - pxw(560) - W, 1 - py(20)
+    end
+    self.homeX, self.homeY = math.max(0, math.min(1 - W, x)), math.max(row3H, math.min(1 - H, top - H)) - row3H
+    self.snapDX, self.snapDY = pxw(40), py(40)
+    if self.WIDGET_X ~= nil and self.WIDGET_Y ~= nil then
+        x, top = self.WIDGET_X, self.WIDGET_Y + H + row3H
     end
     x = math.max(0, math.min(1 - W, x))
     local y = math.max(row3H, math.min(1 - H, top - H))
@@ -825,6 +833,11 @@ function AS_Weather:mouseEvent(posX, posY, isDown, isUp, button)
         if isUp then
             self.dragging = false
             if self.dragMoved then
+                -- (v1.0.0.64) relâchée près de sa place d'origine : elle s'y accroche
+                if self.homeX ~= nil and math.abs(self.WIDGET_X - self.homeX) < (self.snapDX or 0.02)
+                    and math.abs(self.WIDGET_Y - self.homeY) < (self.snapDY or 0.04) then
+                    self.WIDGET_X, self.WIDGET_Y = nil, nil
+                end
                 if AS_Settings ~= nil then
                     AS_Settings.weatherPosX, AS_Settings.weatherPosY = self.WIDGET_X, self.WIDGET_Y
                     AS_Settings:save()
