@@ -153,6 +153,8 @@
         <text name="vtpas_lightGlow_label" text="Helligkeit der Fahrzeuglichter"/>
         <text name="vtpas_lightGlow_tip" text="Helligkeit des Scheinwerfer-, Licht- und Rundumleuchtenscheins anderer Fahrzeuge. x1 = Basisspiel. Das gefahrene Fahrzeug und seine Geräte bleiben unverändert."/>
         <!-- v1.0.0.59 : fenêtre Météo -->
+        <text name="vtpas_weatherWidget_label" text="Mini-Wetter neben der Uhr"/>
+        <text name="vtpas_weatherWidget_tip" text="Zeigt das aktuelle Wetter und den nächsten Wechsel links neben der Uhr. Mit sichtbarem Mauszeiger verschiebbar; ein Klick öffnet das Wetterfenster (Strg rechts + M)."/>
         <text name="input_AS_WEATHER" text="Wetter: öffnen / schließen"/>
         <text name="vtpas_wx_title" text="Wetter"/>
         <text name="vtpas_wx_now" text="Jetzt"/>

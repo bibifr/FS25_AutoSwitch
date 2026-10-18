@@ -63,6 +63,9 @@ AS_Settings.lightRange = 5         -- (v1.0.0.37) distance d'affichage des feux 
 AS_Settings.LIGHT_RANGE_LIST = { 1, 2, 3, 4, 5, 6, 8, 10 }
 AS_Settings.lightGlow = 2          -- (v1.0.0.38) luminosité des halos des feux (x1 = jeu de base)
 AS_Settings.LIGHT_GLOW_LIST = { 1, 2, 3, 4, 5 }
+AS_Settings.weatherWidget = true   -- (v1.0.0.61) mini-météo à gauche de l'horloge
+AS_Settings.weatherPosX = nil      -- position déplacée à la souris (nil = par défaut)
+AS_Settings.weatherPosY = nil
 
 local function sprint(fmt, ...)
     -- (v1.25) seules les erreurs sont écrites dans le journal
@@ -107,6 +110,11 @@ function AS_Settings:save()
             setXMLInt(xml, "vtpAutoSwitch.notifDuration#alert", self.durAlert)
             setXMLInt(xml, "vtpAutoSwitch.lightRange#factor", self.lightRange)
             setXMLInt(xml, "vtpAutoSwitch.lightRange#glow", self.lightGlow)
+            setXMLBool(xml, "vtpAutoSwitch.weatherWidget#enabled", self.weatherWidget)
+            if self.weatherPosX ~= nil and self.weatherPosY ~= nil then
+                setXMLFloat(xml, "vtpAutoSwitch.weatherWidget#posX", self.weatherPosX)
+                setXMLFloat(xml, "vtpAutoSwitch.weatherWidget#posY", self.weatherPosY)
+            end
             if self.hintPosX ~= nil and self.hintPosY ~= nil then
                 setXMLFloat(xml, "vtpAutoSwitch.speedHint#posX", self.hintPosX)
                 setXMLFloat(xml, "vtpAutoSwitch.speedHint#posY", self.hintPosY)
@@ -190,6 +198,13 @@ function AS_Settings:load()
                 if hx ~= nil and hy ~= nil then
                     self.hintPosX, self.hintPosY = math.max(0, math.min(1, hx)), math.max(0, math.min(1, hy))
                 end
+                local ww = getXMLBool(xml, "vtpAutoSwitch.weatherWidget#enabled")
+                if ww ~= nil then self.weatherWidget = ww end
+                local wx = getXMLFloat(xml, "vtpAutoSwitch.weatherWidget#posX")
+                local wy = getXMLFloat(xml, "vtpAutoSwitch.weatherWidget#posY")
+                if wx ~= nil and wy ~= nil then
+                    self.weatherPosX, self.weatherPosY = math.max(0, math.min(1, wx)), math.max(0, math.min(1, wy))
+                end
                 local ix = getXMLFloat(xml, "vtpAutoSwitch.slipIcon#posX")
                 local iy = getXMLFloat(xml, "vtpAutoSwitch.slipIcon#posY")
                 if ix ~= nil and iy ~= nil then
@@ -238,6 +253,10 @@ function AS_Settings:apply()
     AS_SpeedHint.ICON_X, AS_SpeedHint.ICON_Y = self.iconPosX, self.iconPosY
     AS_LightRange:setFactor(self.lightRange)
     AS_LightRange:setGlow(self.lightGlow)
+    if AS_Weather ~= nil then
+        AS_Weather.WIDGET = self.weatherWidget
+        AS_Weather.WIDGET_X, AS_Weather.WIDGET_Y = self.weatherPosX, self.weatherPosY
+    end
 end
 
 function AS_Settings:getStateForValue(v)
@@ -448,6 +467,13 @@ function AS_Settings:onLightRangeChanged(state, element)
         self:save()
         sprint("distance des feux : x%d", v)
     end
+end
+
+function AS_Settings:onWeatherWidgetChanged(state, element)
+    self.weatherWidget = (state == 2)
+    self:apply()
+    self:save()
+    sprint("mini-météo : %s", self.weatherWidget and "affichée" or "masquée")
 end
 
 function AS_Settings:onLightGlowChanged(state, element)
@@ -791,6 +817,14 @@ function AS_Settings:buildUI(frame)
         callback = AS_Settings.onLightGlowChanged,
     })
 
+    self.options.weatherWidget = self:addRow(layout, template, {
+        label = L("vtpas_weatherWidget_label"),
+        tip = L("vtpas_weatherWidget_tip"),
+        texts = onOff,
+        state = self.weatherWidget and 2 or 1,
+        callback = AS_Settings.onWeatherWidgetChanged,
+    })
+
     self.built = true
     layout:invalidateLayout()
     sprint("options ajoutées au menu Paramètres")
@@ -823,6 +857,7 @@ function AS_Settings:refreshStates()
     if o.speedHint ~= nil then o.speedHint:setState(self.speedHint and 2 or 1) end
     if o.lightRange ~= nil then o.lightRange:setState(self:getIndex(self.LIGHT_RANGE_LIST, self.lightRange)) end
     if o.lightGlow ~= nil then o.lightGlow:setState(self:getIndex(self.LIGHT_GLOW_LIST, self.lightGlow)) end
+    if o.weatherWidget ~= nil then o.weatherWidget:setState(self.weatherWidget and 2 or 1) end
 end
 
 function AS_Settings:onSettingsFrameOpen(frame)

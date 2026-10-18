@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.61 | Mini-météo à gauche de l'horloge du jeu : temps et température actuels, mini / maxi du jour, prochain changement avec son heure et la pluie attendue. Déplaçable à la souris (curseur visible), position gardée ; un clic ouvre la fenêtre Météo. Option dans le menu AutoSwitch pour l'afficher ou la cacher |
 | 1.0.0.60 | Météo : heures arrondies au quart d'heure (13h00 au lieu de 13h01), « Prochain changement » ne chevauche plus sa valeur, jours des changements écrits J+1, J+2..., bouton X en haut à droite pour fermer (le curseur de la souris s'affiche avec la fenêtre) |
 | 1.0.0.59 | Fenêtre Météo (Ctrl droit + M, à pied ou en véhicule, modifiable dans les commandes) : temps actuel (température, vent et direction, pluie en cours, humidité du sol, prochain changement), les 24 prochaines heures par tranches de 3 h, les changements à venir avec leur heure, leur durée et la pluie attendue, et les jours suivants (mini / maxi, cumul de pluie). Prévisions réelles du jeu ; les millimètres sont estimés d'après l'intensité |
 | 1.0.0.58 | Tractor Terrain Dynamics accepté sous le nom de la bêta KingMods (FS25_TTD_v3_7_BETA.zip) : plus besoin de le renommer. TTD retiré des dépendances du modDesc (le jeu réclamait en plus la version ModHub 1.0.0.0, refusée ensuite par le contrôle de version). Si deux TTD sont installés, le plus récent est utilisé |

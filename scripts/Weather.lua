@@ -4,6 +4,8 @@
 local L = AS.L
 
 -------------------------------------------------------------------------------
+-- v1.0.0.61 : mini-météo à gauche de l'horloge (actuel + prochain changement),
+--   déplaçable à la souris, un clic ouvre la fenêtre ; option dans le menu.
 -- v1.0.0.60 : heures arrondies au quart d'heure, colonne des valeurs décalée,
 --   jours des changements écrits J+1, J+2..., bouton X pour fermer (curseur affiché).
 -- v1.0.0.59 : bulletin météo lisible, ouvert / fermé par une touche.
@@ -30,6 +32,10 @@ AS_Weather.SLOTS        = 8
 AS_Weather.MAX_EVENTS   = 6
 AS_Weather.MAX_DAYS     = 7
 AS_Weather.REFRESH_MS   = 1000    -- données recalculées une fois par seconde, fenêtre ouverte
+AS_Weather.WIDGET_REFRESH_MS = 5000 -- (v1.0.0.61) mini-météo seule : toutes les 5 s
+AS_Weather.WIDGET   = true        -- mini-météo à gauche de l'horloge (menu AutoSwitch)
+AS_Weather.WIDGET_X = nil         -- position déplacée à la souris (nil = à gauche de l'horloge)
+AS_Weather.WIDGET_Y = nil
 
 AS_Weather.isOpen  = false
 AS_Weather.data    = nil
@@ -362,9 +368,13 @@ local function uiScale()
 end
 
 function AS_Weather:draw()
-    if not self.isOpen or g_currentMission == nil then return end
+    self.widgetBox = nil
+    if g_currentMission == nil or not (self.isOpen or self.WIDGET) then return end
     if g_gui ~= nil and g_gui.getIsGuiVisible ~= nil and g_gui:getIsGuiVisible() then return end
-    if g_time - self.lastCompute >= self.REFRESH_MS or self.data == nil then
+    local hud = g_currentMission.hud
+    if not self.isOpen and hud ~= nil and hud.getIsVisible ~= nil and not hud:getIsVisible() then return end
+    local refresh = self.isOpen and self.REFRESH_MS or self.WIDGET_REFRESH_MS
+    if g_time - self.lastCompute >= refresh or self.data == nil then
         self.lastCompute = g_time
         local ok, d = pcall(self.compute, self)
         if ok then
@@ -376,7 +386,7 @@ function AS_Weather:draw()
     end
     local d = self.data
     if d == nil then return end
-    local ok, err = pcall(self.drawPanel, self, d)
+    local ok, err = pcall(self.isOpen and self.drawPanel or self.drawWidget, self, d)
     if not ok and not self.loggedDrawError then
         self.loggedDrawError = true
         print("[AS_Weather] erreur d'affichage : " .. tostring(err))
@@ -580,6 +590,112 @@ function AS_Weather:drawPanel(d)
 end
 
 -------------------------------------------------------------------------------
+-- (v1.0.0.61) mini-météo à gauche de l'horloge du jeu :
+--   [icône] 16°C / mini-maxi du jour | [icône] prochain changement, heure, pluie.
+--   Déplaçable à la souris (curseur visible), un clic l'ouvre en grand.
+-------------------------------------------------------------------------------
+
+-- coin haut-droit de la mini-météo par défaut : bord gauche de l'horloge du jeu
+local function clockAnchor(pxw, py)
+    local gid = g_currentMission ~= nil and g_currentMission.hud ~= nil and g_currentMission.hud.gameInfoDisplay or nil
+    if gid ~= nil then
+        local ok, x, y = pcall(function()
+            if gid.getPosition ~= nil then return gid:getPosition() end
+            return gid.x, gid.y
+        end)
+        local okH, h = pcall(function() return gid.getHeight ~= nil and gid:getHeight() or nil end)
+        if ok and type(x) == "number" and type(y) == "number" and x > 0.3 and x < 1 then
+            local top = (okH and type(h) == "number" and h > 0) and (y + h) or (1 - py(12))
+            return x - pxw(10), math.min(1 - py(4), top)
+        end
+    end
+    return 1 - pxw(470), 1 - py(12)
+end
+
+function AS_Weather:drawWidget(d)
+    local DAY = self.DAY_MS
+    local sc = uiScale()
+    local aspect = (g_screenWidth or 1920) / math.max(1, g_screenHeight or 1080)
+    local function py(px) return px * sc / 1080 end
+    local function pxw(px) return py(px) / aspect end
+    local function text(x, y, size, s, col, align, bold)
+        setTextAlignment(align or RenderText.ALIGN_LEFT)
+        setTextBold(bold == true)
+        local c = col or C.white
+        setTextColor(c[1], c[2], c[3], c[4])
+        renderText(x, y, py(size), tostring(s))
+    end
+    local function width(size, s, bold)
+        setTextBold(bold == true)
+        return getTextWidth(py(size), tostring(s))
+    end
+
+    local H = py(48)
+    local pad, gap, iconPx = pxw(8), pxw(10), 34
+    local iconW = pxw(iconPx)
+    -- textes
+    local curIcon = typeInfo(d.curType)
+    local tempTxt = fmtTemp(d.temp)
+    local mmTxt = d.todayMin ~= nil and (fmtTemp(d.todayMin) .. " / " .. fmtTemp(d.todayMax)) or ""
+    local leftW = math.max(width(20, tempTxt, true), width(12, mmTxt))
+    local nextIcon, nextName, nextLine
+    if d.next ~= nil then
+        local nk
+        nextIcon, nk = typeInfo(d.next.wt)
+        nextName = L(nk)
+        nextLine = self:fmtWhen(d.next.s, d.today)
+        local p = fmtPrecip(d.next.sum ~= nil and d.next.sum.mm or 0, d.next.sum ~= nil and d.next.sum.cm or 0)
+        if p ~= nil then nextLine = nextLine .. "  ~ " .. p end
+    end
+    local rightW = 0
+    if nextName ~= nil then
+        rightW = gap + pxw(1) + gap + pxw(28) + pxw(6) + math.max(width(14, nextName, true), width(12, nextLine))
+    end
+    local W = pad + iconW + pxw(6) + leftW + rightW + pad
+
+    local x, top
+    if self.WIDGET_X ~= nil and self.WIDGET_Y ~= nil then
+        x, top = self.WIDGET_X, self.WIDGET_Y + H
+    else
+        local right
+        right, top = clockAnchor(pxw, py)
+        x = right - W
+    end
+    x = math.max(0, math.min(1 - W, x))
+    local y = math.max(0, math.min(1 - H, top - H))
+    self.widgetBox = { x = x, y = y, w = W, h = H }
+
+    drawFilledRect(x, y, W, H, 0, 0, 0, 0.6)
+    local cx = x + pad
+    local ov = self:getOverlay(curIcon)
+    if ov ~= nil then
+        setOverlayColor(ov, 1, 1, 1, 1)
+        if setOverlayRotation ~= nil then setOverlayRotation(ov, 0, iconW * 0.5, py(iconPx) * 0.5) end
+        renderOverlay(ov, cx, y + (H - py(iconPx)) * 0.5, iconW, py(iconPx))
+    end
+    cx = cx + iconW + pxw(6)
+    local tc = C.white
+    if d.temp ~= nil and d.temp <= 0 then tc = C.cold elseif d.temp ~= nil and d.temp >= 25 then tc = C.warm end
+    text(cx, y + py(22), 20, tempTxt, tc, nil, true)
+    text(cx, y + py(7), 12, mmTxt, C.gray)
+    cx = cx + leftW
+    if nextName ~= nil then
+        cx = cx + gap
+        drawFilledRect(cx, y + py(8), pxw(1), H - py(16), 1, 1, 1, 0.25)
+        cx = cx + pxw(1) + gap
+        local nov = self:getOverlay(nextIcon)
+        if nov ~= nil then
+            setOverlayColor(nov, 1, 1, 1, 1)
+            if setOverlayRotation ~= nil then setOverlayRotation(nov, 0, pxw(14), py(14)) end
+            renderOverlay(nov, cx, y + (H - py(28)) * 0.5, pxw(28), py(28))
+        end
+        cx = cx + pxw(28) + pxw(6)
+        text(cx, y + py(26), 14, nextName, C.white, nil, true)
+        text(cx, y + py(8), 12, nextLine, isPrecipType(d.next.wt) and C.blue or C.gray)
+    end
+end
+
+-------------------------------------------------------------------------------
 -- Touche (à pied et en véhicule)
 -------------------------------------------------------------------------------
 
@@ -603,12 +719,53 @@ function AS_Weather.onToggle()
     AS_Weather:setOpen(not AS_Weather.isOpen)
 end
 
+local function inBox(b, px, py_)
+    return b ~= nil and px >= b.x and px <= b.x + b.w and py_ >= b.y and py_ <= b.y + b.h
+end
+
 function AS_Weather:mouseEvent(posX, posY, isDown, isUp, button)
-    local b = self.closeBox
-    if not self.isOpen or b == nil then return end
-    self.closeHover = posX >= b.x and posX <= b.x + b.w and posY >= b.y and posY <= b.y + b.h
-    if self.closeHover and isDown and button == Input.MOUSE_BUTTON_LEFT then
-        self:setOpen(false)
+    if self.isOpen then
+        self.dragging = false
+        local b = self.closeBox
+        if b == nil then return end
+        self.closeHover = inBox(b, posX, posY)
+        if self.closeHover and isDown and button == Input.MOUSE_BUTTON_LEFT then
+            self:setOpen(false)
+        end
+        return
+    end
+    -- (v1.0.0.61) mini-météo : glisser pour déplacer, simple clic pour ouvrir en grand
+    if not self.WIDGET or g_inputBinding == nil or g_inputBinding.getShowMouseCursor == nil
+        or g_inputBinding:getShowMouseCursor() ~= true then
+        self.dragging = false
+        return
+    end
+    local b = self.widgetBox
+    if isDown and button == Input.MOUSE_BUTTON_LEFT and inBox(b, posX, posY) then
+        self.dragging, self.dragMoved = true, false
+        self.dragStartX, self.dragStartY = posX, posY
+        self.dragDX, self.dragDY = posX - b.x, posY - b.y
+        return
+    end
+    if self.dragging then
+        if math.abs(posX - self.dragStartX) > 0.003 or math.abs(posY - self.dragStartY) > 0.005 then
+            self.dragMoved = true
+        end
+        if self.dragMoved and b ~= nil then
+            self.WIDGET_X = math.max(0, math.min(1 - b.w, posX - self.dragDX))
+            self.WIDGET_Y = math.max(0, math.min(1 - b.h, posY - self.dragDY))
+        end
+        if isUp then
+            self.dragging = false
+            if self.dragMoved then
+                if AS_Settings ~= nil then
+                    AS_Settings.weatherPosX, AS_Settings.weatherPosY = self.WIDGET_X, self.WIDGET_Y
+                    AS_Settings:save()
+                end
+            else
+                self:setOpen(true)
+            end
+        end
     end
 end
 

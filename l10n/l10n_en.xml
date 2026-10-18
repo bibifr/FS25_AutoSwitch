@@ -153,6 +153,8 @@
         <text name="vtpas_lightGlow_label" text="Vehicle lights brightness"/>
         <text name="vtpas_lightGlow_tip" text="Brightness of the headlight, light and beacon glow of other vehicles. x1 = base game. The driven vehicle and its implements are unchanged."/>
         <!-- v1.0.0.59 : fenêtre Météo -->
+        <text name="vtpas_weatherWidget_label" text="Mini weather next to the clock"/>
+        <text name="vtpas_weatherWidget_tip" text="Shows the current weather and the next change left of the clock. Drag it with the mouse when the cursor is visible; a click opens the Weather window (Right Ctrl + M)."/>
         <text name="input_AS_WEATHER" text="Weather: open / close"/>
         <text name="vtpas_wx_title" text="Weather"/>
         <text name="vtpas_wx_now" text="Now"/>
