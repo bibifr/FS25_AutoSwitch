@@ -127,7 +127,19 @@ local function getFarm(farmId)
     return nil
 end
 
+-- v1.0.0.76 : financement Trade In choisi (ou en cours) -> pas de découvert pour cet achat.
+-- Trade In calculait le montant à financer avec le solde augmenté, puis revérifiait
+-- avec le vrai solde : achat refusé alors que le crédit était déjà versé.
+-- Sans le découvert, Trade In finance toute la somme manquante, comme sans AutoSwitch.
+local function isTradeInFinancing()
+    local mod = g_currentMission ~= nil and g_currentMission.tradeInMod or nil
+    local finance = type(mod) == "table" and mod.finance or nil
+    if type(finance) ~= "table" then return false end
+    return finance.pending ~= nil or finance.purchaseInProgress == true
+end
+
 function AS_Overdraft:applyBoost()
+    if isTradeInFinancing() then return end
     local farm = getFarm(currentFarmId())
     if farm == nil or type(farm.money) ~= "number" then return end
     local limit = self:getLimit(farm.farmId)
