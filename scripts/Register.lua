@@ -26,8 +26,32 @@ AS_Register.scroll = 0
 AS_Register.actionEventId = nil
 AS_Register.loaded = false
 
+-- Langue du jeu : plusieurs sources (g_languageShortName n'est pas toujours défini),
+-- lue au moment de l'affichage puis gardée
+local frenchCache = nil
 local function isFrench()
-    return g_languageShortName == "fr" or (g_i18n ~= nil and g_i18n.languageShort == "fr")
+    if frenchCache ~= nil then return frenchCache end
+    local french, known = false, false
+    if getLanguage ~= nil and getLanguageCode ~= nil then
+        local ok, code = pcall(function() return getLanguageCode(getLanguage()) end)
+        if ok and type(code) == "string" then
+            known = true
+            french = code:lower():sub(1, 2) == "fr"
+        end
+    end
+    if not french and g_languageShortName ~= nil then
+        known = true
+        french = g_languageShortName == "fr"
+    end
+    if not french and g_i18n ~= nil and g_i18n.getText ~= nil then
+        local ok, t = pcall(g_i18n.getText, g_i18n, "ui_yes")
+        if ok and type(t) == "string" and not t:find("Missing") then
+            known = true
+            french = t == "Oui"
+        end
+    end
+    if known and g_currentMission ~= nil then frenchCache = french end
+    return french
 end
 local function T(fr, en)
     if isFrench() then return fr end
@@ -406,9 +430,11 @@ function AS_Register:drawPanel()
     for i, name in ipairs(tabs) do
         local tw = pxw(200)
         local active = i == self.tab
-        drawFilledRect(tx, ty, tw, py(30), active and 0.25 or 0.12, active and 0.35 or 0.16, active and 0.50 or 0.22,
-            (active or self.hover == i) and 1 or 0.8)
-        text(tx + tw * 0.5, ty + py(8), 16, name, active and C.title or C.white, RenderText.ALIGN_CENTER, active)
+        -- (couleurs sombres : à l'écran le jeu les éclaircit beaucoup)
+        local shade = active and 0.10 or (self.hover == i and 0.07 or 0.03)
+        drawFilledRect(tx, ty, tw, py(30), shade, shade * 1.3, shade * 1.8, 0.95)
+        if active then drawFilledRect(tx, ty, tw, py(3), 1.00, 0.80, 0.30, 1) end
+        text(tx + tw * 0.5, ty + py(8), 16, name, active and C.title or C.gray, RenderText.ALIGN_CENTER, active)
         self.tabBoxes[i] = { x = tx, y = ty, w = tw, h = py(30) }
         tx = tx + tw + pxw(8)
     end
