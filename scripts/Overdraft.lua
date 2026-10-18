@@ -99,23 +99,77 @@ local function currentFarmId()
     return nil
 end
 
--- Solde lu par le jeu : + plafond seulement pendant un contrôle d'achat
-if FSBaseMission ~= nil and FSBaseMission.getMoney ~= nil then
-    FSBaseMission.getMoney = Utils.overwrittenFunction(FSBaseMission.getMoney, function(mission, superFunc, farmId, ...)
-        local money = superFunc(mission, farmId, ...)
-        if AS_Overdraft.depth > 0 and type(money) == "number" then
-            return money + AS_Overdraft:getLimit(farmId or currentFarmId())
+-- v1.0.0.68 : la 1.0.0.67 augmentait seulement getMoney / getBalance, mais le jeu lit
+-- aussi farm.money directement : l'achat restait refusé. Désormais, pendant un
+-- contrôle d'achat, le champ farm.money lui-même est augmenté du plafond, puis remis.
+-- Tout mouvement d'argent pendant ce temps (Farm.changeBalance) se fait sur le vrai
+-- solde : l'affichage et la sauvegarde ne voient jamais le solde augmenté.
+AS_Overdraft.boostFarm = nil   -- ferme dont farm.money est augmenté
+AS_Overdraft.boost     = 0     -- montant ajouté
+
+local function getFarm(farmId)
+    if g_farmManager ~= nil and g_farmManager.getFarmById ~= nil and farmId ~= nil then
+        local ok, farm = pcall(g_farmManager.getFarmById, g_farmManager, farmId)
+        if ok then return farm end
+    end
+    return nil
+end
+
+function AS_Overdraft:applyBoost()
+    local farm = getFarm(currentFarmId())
+    if farm == nil or type(farm.money) ~= "number" then return end
+    local limit = self:getLimit(farm.farmId)
+    if limit <= 0 then return end
+    self.boostFarm, self.boost = farm, limit
+    farm.money = farm.money + limit
+end
+
+function AS_Overdraft:removeBoost()
+    local farm = self.boostFarm
+    if farm ~= nil and type(farm.money) == "number" then
+        farm.money = farm.money - self.boost
+    end
+    self.boostFarm, self.boost = nil, 0
+end
+
+if Farm ~= nil and Farm.changeBalance ~= nil then
+    Farm.changeBalance = Utils.overwrittenFunction(Farm.changeBalance, function(farm, superFunc, ...)
+        if farm ~= nil and farm == AS_Overdraft.boostFarm then
+            local boost = AS_Overdraft.boost
+            farm.money = farm.money - boost
+            superFunc(farm, ...)
+            farm.money = farm.money + boost
+            return
         end
-        return money
+        return superFunc(farm, ...)
     end)
 end
-if Farm ~= nil and Farm.getBalance ~= nil then
-    Farm.getBalance = Utils.overwrittenFunction(Farm.getBalance, function(farm, superFunc, ...)
-        local money = superFunc(farm, ...)
-        if AS_Overdraft.depth > 0 and type(money) == "number" then
-            return money + AS_Overdraft:getLimit(farm.farmId)
-        end
-        return money
+
+-- Diagnostic : si le jeu affiche « pas assez d'argent », log.txt dit d'où vient le refus
+local NO_MONEY_KEYS = { "shop_messageNotEnoughMoneyToBuy", "shop_messageNotEnoughMoneyToLease",
+    "shop_messageNotEnoughMoney", "ui_notEnoughMoney", "warning_notEnoughMoney" }
+local function isNoMoneyText(text)
+    if type(text) ~= "string" or g_i18n == nil then return false end
+    for _, k in ipairs(NO_MONEY_KEYS) do
+        if g_i18n.hasText ~= nil and g_i18n:hasText(k) and g_i18n:getText(k) == text then return true end
+    end
+    return false
+end
+local function traceNoMoney(where, text)
+    if isNoMoneyText(text) and debug ~= nil and debug.traceback ~= nil then
+        print(string.format("[AutoSwitch] Découvert DIAG : refus « %s » (%s), depth=%d, boost=%d",
+            tostring(text), where, AS_Overdraft.depth, math.floor(AS_Overdraft.boost or 0)))
+        print(debug.traceback())
+    end
+end
+if InfoDialog ~= nil and InfoDialog.show ~= nil then
+    InfoDialog.show = Utils.prependedFunction(InfoDialog.show, function(text, ...)
+        traceNoMoney("InfoDialog.show", text)
+    end)
+end
+if Gui ~= nil and Gui.showInfoDialog ~= nil then
+    Gui.showInfoDialog = Utils.prependedFunction(Gui.showInfoDialog, function(gui, args, ...)
+        traceNoMoney("Gui.showInfoDialog", type(args) == "table" and args.text or args)
     end)
 end
 
@@ -150,6 +204,7 @@ end
 
 local function leave(...)
     AS_Overdraft.depth = math.max(0, AS_Overdraft.depth - 1)
+    if AS_Overdraft.depth == 0 then AS_Overdraft:removeBoost() end
     return ...
 end
 
@@ -162,9 +217,10 @@ local function wrapScope(className, class, funcName)
     local f = function(...)
         if AS_Overdraft.PERCENT <= 0 then return orig(...) end
         AS_Overdraft.depth = AS_Overdraft.depth + 1
+        if AS_Overdraft.depth == 1 then AS_Overdraft:applyBoost() end
         if not AS_Overdraft.logged[label] then
             AS_Overdraft.logged[label] = true
-            if AS_VERBOSE then print("[AutoSwitch] Découvert compté dans " .. label) end
+            print("[AutoSwitch] Découvert compté dans " .. label)
         end
         -- pas de pcall : une erreur garde sa trace d'origine ; depth est remis à 0 à chaque image
         return leave(orig(...))
@@ -226,7 +282,11 @@ function AS_Overdraft:loadMap()
 end
 
 function AS_Overdraft:update(dt)
-    self.depth = 0
+    -- sécurité : une erreur dans un contrôle d'achat a pu laisser le solde augmenté
+    if self.depth > 0 or self.boostFarm ~= nil then
+        self.depth = 0
+        self:removeBoost()
+    end
     local mission = g_currentMission
     if mission == nil or not mission:getIsServer() then return end
     local env = mission.environment
@@ -248,6 +308,7 @@ function AS_Overdraft:deleteMap()
     self.cache = {}
     self.lastDay = nil
     self.depth = 0
+    self.boostFarm, self.boost = nil, 0
 end
 
 addModEventListener(AS_Overdraft)
