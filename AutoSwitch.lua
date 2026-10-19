@@ -34,6 +34,7 @@
 --   CoopPay       coopératives payées en fin de mois (ventes « À payer » dans le registre)
 --   Register      registre des pesées (AutoDrive Addon) et des ventes (Ctrl droit + R)
 --   HudDedup      affichages en double des autres mods masqués (Enhanced Vehicle...)
+--   NoOvertake    les voitures du trafic ne doublent plus les tracteurs
 --   Settings      menu Paramètres et sauvegarde des réglages (toujours en dernier)
 --
 -- v1.0.0.29 : contrôle des versions. Chaque mod requis doit être au moins à la
@@ -90,6 +91,7 @@ local FILES = {
     "scripts/CoopPay.lua",
     "scripts/Register.lua",
     "scripts/HudDedup.lua",
+    "scripts/NoOvertake.lua",
     "scripts/Settings.lua",
 }
 

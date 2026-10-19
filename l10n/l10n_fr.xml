@@ -164,6 +164,8 @@
         <text name="vtpas_coopPay_tip" text="Les ventes aux coopératives (point de vente dont le nom contient « coop ») sont notées « À payer » dans le registre (Ctrl droit + R) et versées à la fin du mois, ligne « Coopératives » dans Finances. Liste modifiable : modSettings/FS25_AutoSwitch/cooperatives.xml."/>
         <text name="vtpas_coopPay_paid" text="Coopératives : %s versés pour le mois"/>
         <text name="finance_asCoopPayment" text="Coopératives"/>
+        <text name="vtpas_noOvertake_label" text="Interdire de doubler les tracteurs"/>
+        <text name="vtpas_noOvertake_tip" text="Les voitures du trafic restent derrière les tracteurs (AutoDrive ou conduits) qui roulent sur la route. Elles peuvent passer si le tracteur est arrêté depuis 10 s ou a les warnings allumés."/>
         <!-- v1.0.0.59 : fenêtre Météo -->
         <text name="vtpas_weatherWidget_label" text="Mini-météo près de l'horloge"/>
         <text name="vtpas_weatherWidget_tip" text="Affiche le temps actuel et le prochain changement à gauche de l'horloge. Déplaçable à la souris quand le curseur est visible ; un clic ouvre la fenêtre Météo (Ctrl droit + M)."/>

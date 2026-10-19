@@ -164,6 +164,8 @@
         <text name="vtpas_coopPay_tip" text='Verkäufe an Genossenschaften (Verkaufsstellen mit "coop" im Namen) werden im Register (Strg rechts + R) als "Offen" vermerkt und am Monatsende ausgezahlt, Zeile "Genossenschaften" in den Finanzen. Liste: modSettings/FS25_AutoSwitch/cooperatives.xml.'/>
         <text name="vtpas_coopPay_paid" text="Genossenschaften: %s für den Monat ausgezahlt"/>
         <text name="finance_asCoopPayment" text="Genossenschaften"/>
+        <text name="vtpas_noOvertake_label" text="Traktoren nicht überholen"/>
+        <text name="vtpas_noOvertake_tip" text="Verkehrsautos bleiben hinter Traktoren (AutoDrive oder gefahren) auf der Straße. Sie dürfen vorbei, wenn der Traktor seit 10 s steht oder die Warnblinker an sind."/>
         <!-- v1.0.0.59 : fenêtre Météo -->
         <text name="vtpas_weatherWidget_label" text="Mini-Wetter neben der Uhr"/>
         <text name="vtpas_weatherWidget_tip" text="Zeigt das aktuelle Wetter und den nächsten Wechsel links neben der Uhr. Mit sichtbarem Mauszeiger verschiebbar; ein Klick öffnet das Wetterfenster (Strg rechts + M)."/>
