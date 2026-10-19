@@ -268,8 +268,9 @@ function AS_DualRack:findTarget(vehicle, mode)
     local cur = items[idx]
     local toDual = not isTwinItem(cur)
 
-    -- retour : uniquement si les jumelées ont été montées avec une palette
-    -- (configuration d'origine mémorisée). Tracteur arrivé déjà en jumelées : refusé.
+    -- retour : configuration d'origine si les jumelées ont été montées avec une palette.
+    -- (1.0.0.89) tracteur arrivé déjà en jumelées : roues simples les plus proches
+    -- (même marque et même pneu en priorité), puisque le magasin ne vend plus de jumelées
     if not toDual then
         local prev = self.memory[vehicle:getUniqueId()]
         if prev ~= nil then
@@ -277,7 +278,27 @@ function AS_DualRack:findTarget(vehicle, mode)
                 if it.saveId == prev then return i, false, cur end
             end
         end
-        return nil, false, cur, "alreadyTwin"
+        local curBrand = AS_DualRack.getTireBrand(cur)
+        local curModel = cur.tireCombination ~= nil and cur.tireCombination.wheelSaveId or nil
+        local curTok = tokens(cur.saveId)
+        local best, bestScore = nil, -math.huge
+        for i, it in ipairs(items) do
+            if i ~= idx and (it.isSelectable ~= false or it.__asShopHidden) and not isTwinItem(it) then
+                local score = 0
+                local t = tokens(it.saveId)
+                for w in pairs(t) do
+                    if curTok[w] then score = score + 10 else score = score - 1 end
+                end
+                for w in pairs(curTok) do
+                    if not t[w] then score = score - 1 end
+                end
+                local b = AS_DualRack.getTireBrand(it)
+                if curBrand ~= nil and b == curBrand then score = score + 50 end
+                if curModel ~= nil and it.tireCombination ~= nil and it.tireCombination.wheelSaveId == curModel then score = score + 20 end
+                if score > bestScore then best, bestScore = i, score end
+            end
+        end
+        return best, false, cur
     end
 
     -- (v2.9) jumelées obligatoirement dans la marque des pneus actuels du tracteur
@@ -287,7 +308,7 @@ function AS_DualRack:findTarget(vehicle, mode)
     local curTok = tokens(cur.saveId)
     local best, bestScore = nil, -math.huge
     for i, it in ipairs(items) do
-        if i ~= idx and it.isSelectable ~= false and isTwinItem(it) then
+        if i ~= idx and (it.isSelectable ~= false or it.__asShopHidden) and isTwinItem(it) then
             local back = isBackItem(it)
             local ok = mode == "ANY" or (mode == "BACK" and back) or (mode == "ALL" and not back)
             local b = AS_DualRack.getTireBrand(it)
@@ -1405,6 +1426,7 @@ function AS_DualRack:loadMap()
 end
 
 function AS_DualRack:deleteMap()
+    self:restoreShopTwins()
     for rack, _ in pairs(self.markers) do pcall(self.removeMarker, self, rack) end
     self.markers = {}
     self.cache = nil
@@ -1487,6 +1509,59 @@ if FSCareerMissionInfo ~= nil and FSCareerMissionInfo.saveToXMLFile ~= nil then
         local ok, err = pcall(AS_DualRack.saveMemory, AS_DualRack)
         if not ok then print("[AS_DualRack] ERREUR sauvegarde : " .. tostring(err)) end
     end)
+end
+
+-- (1.0.0.89) magasin et atelier : les roues jumelées ne sont plus proposées, elles se montent
+-- par palette. Elles sont rendues non sélectionnables seulement pendant que l'écran de
+-- configuration est ouvert, puis remises comme avant (findTarget les garde via __asShopHidden).
+AS_DualRack.shopBlockTwins = true
+AS_DualRack.shopHidden = {}
+
+function AS_DualRack:hideShopTwins(storeItem, vehicle)
+    if not self.shopBlockTwins or type(storeItem) ~= "table" then return end
+    local items = storeItem.configurations ~= nil and storeItem.configurations.wheel or nil
+    if items == nil then return end
+    local curIdx = type(vehicle) == "table" and vehicle.configurations ~= nil and vehicle.configurations.wheel or nil
+    -- au moins une roue simple doit rester, sinon on ne touche à rien
+    local single = false
+    for _, it in ipairs(items) do
+        if it.isSelectable ~= false and not isTwinItem(it) then single = true break end
+    end
+    if not single then return end
+    for i, it in ipairs(items) do
+        -- la configuration actuelle du tracteur reste affichée (reconfiguration en atelier)
+        if i ~= curIdx and it.isSelectable ~= false and isTwinItem(it) then
+            it.isSelectable = false
+            it.__asShopHidden = true
+            table.insert(self.shopHidden, it)
+        end
+    end
+end
+
+function AS_DualRack:restoreShopTwins()
+    for _, it in ipairs(self.shopHidden) do
+        it.isSelectable = true
+        it.__asShopHidden = nil
+    end
+    self.shopHidden = {}
+end
+
+if ShopConfigScreen ~= nil then
+    if ShopConfigScreen.setStoreItem ~= nil then
+        ShopConfigScreen.setStoreItem = Utils.overwrittenFunction(ShopConfigScreen.setStoreItem, function(screen, superFunc, storeItem, vehicle, ...)
+            AS_DualRack:restoreShopTwins()
+            local ok, err = pcall(AS_DualRack.hideShopTwins, AS_DualRack, storeItem, vehicle)
+            if not ok then print("[AS_DualRack] ERREUR magasin : " .. tostring(err)) end
+            return superFunc(screen, storeItem, vehicle, ...)
+        end)
+    end
+    if ShopConfigScreen.onClose ~= nil then
+        ShopConfigScreen.onClose = Utils.overwrittenFunction(ShopConfigScreen.onClose, function(screen, superFunc, ...)
+            local r1, r2 = superFunc(screen, ...)
+            AS_DualRack:restoreShopTwins()
+            return r1, r2
+        end)
+    end
 end
 
 addModEventListener(AS_DualRack)

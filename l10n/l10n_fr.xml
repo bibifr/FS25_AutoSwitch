@@ -165,6 +165,8 @@
         <text name="finance_asCoopPayment" text="Coopératives"/>
         <text name="vtpas_noOvertake_label" text="Interdire de doubler les tracteurs"/>
         <text name="vtpas_noOvertake_tip" text="Les voitures du trafic restent derrière les tracteurs (AutoDrive ou conduits) qui roulent sur la route. Elles peuvent passer si le tracteur est arrêté depuis 10 s ou a les warnings allumés."/>
+        <text name="vtpas_shopBlockTwins_label" text="Jumelées bloquées en magasin"/>
+        <text name="vtpas_shopBlockTwins_tip" text="Le magasin et l'atelier ne proposent plus les roues jumelées : elles se montent avec les palettes de pneus. Les tracteurs déjà en jumelées les gardent et la palette peut les remettre en roues simples."/>
         <!-- v1.0.0.59 : fenêtre Météo -->
         <text name="vtpas_weatherWidget_label" text="Mini-météo près de l'horloge"/>
         <text name="vtpas_weatherWidget_tip" text="Affiche le temps actuel et le prochain changement à gauche de l'horloge. Déplaçable à la souris quand le curseur est visible ; un clic ouvre la fenêtre Météo (Ctrl droit + M)."/>

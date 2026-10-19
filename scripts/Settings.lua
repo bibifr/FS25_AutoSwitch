@@ -70,6 +70,7 @@ AS_Settings.WIND_SWAY_LIST = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 2
 AS_Settings.hudDedup = true        -- (v1.0.0.78) affichages en double des autres mods masqués
 AS_Settings.coopPay = true         -- (v1.0.0.81) coopératives payées en fin de mois
 AS_Settings.noOvertake = true      -- (v1.0.0.84) les voitures du trafic ne doublent plus les tracteurs
+AS_Settings.shopBlockTwins = true  -- (v1.0.0.89) roues jumelées retirées du magasin (montage par palette)
 AS_Settings.weatherWidget = true   -- (v1.0.0.61) mini-météo à gauche de l'horloge
 AS_Settings.weatherPosX = nil      -- position déplacée à la souris (nil = par défaut)
 AS_Settings.weatherPosY = nil
@@ -128,6 +129,7 @@ function AS_Settings:save()
             setXMLBool(xml, "vtpAutoSwitch.hudDedup#enabled", self.hudDedup)
             setXMLBool(xml, "vtpAutoSwitch.coopPay#enabled", self.coopPay)
             setXMLBool(xml, "vtpAutoSwitch.noOvertake#enabled", self.noOvertake)
+            setXMLBool(xml, "vtpAutoSwitch.shopTwins#blocked", self.shopBlockTwins)
             setXMLInt(xml, "vtpAutoSwitch.overdraft#percent", self.overdraftPercent)
             setXMLInt(xml, "vtpAutoSwitch.overdraft#rate", self.overdraftRate)
             if self.weatherPosX ~= nil and self.weatherPosY ~= nil then
@@ -222,6 +224,8 @@ function AS_Settings:load()
                 if cp ~= nil then self.coopPay = cp end
                 local no = getXMLBool(xml, "vtpAutoSwitch.noOvertake#enabled")
                 if no ~= nil then self.noOvertake = no end
+                local sb = getXMLBool(xml, "vtpAutoSwitch.shopTwins#blocked")
+                if sb ~= nil then self.shopBlockTwins = sb end
                 local ws = getXMLInt(xml, "vtpAutoSwitch.windSway#factor10")
                 if ws ~= nil then self.windSway = math.max(10, math.min(30, ws)) end
                 local hx = getXMLFloat(xml, "vtpAutoSwitch.speedHint#posX")
@@ -293,6 +297,7 @@ function AS_Settings:apply()
     if AS_HudDedup ~= nil then AS_HudDedup:setEnabled(self.hudDedup) end
     if AS_CoopPay ~= nil then AS_CoopPay.ENABLED = self.coopPay end
     if AS_NoOvertake ~= nil then AS_NoOvertake:setEnabled(self.noOvertake) end
+    if AS_DualRack ~= nil then AS_DualRack.shopBlockTwins = self.shopBlockTwins end
     if AS_Overdraft ~= nil then
         AS_Overdraft.PERCENT = self.overdraftPercent
         AS_Overdraft.RATE = self.overdraftRate
@@ -549,6 +554,13 @@ function AS_Settings:onNoOvertakeChanged(state, element)
     self:apply()
     self:save()
     sprint("voitures sans dépassement des tracteurs : %s", tostring(self.noOvertake))
+end
+
+function AS_Settings:onShopBlockTwinsChanged(state, element)
+    self.shopBlockTwins = (state == 2)
+    self:apply()
+    self:save()
+    sprint("roues jumelées retirées du magasin : %s", tostring(self.shopBlockTwins))
 end
 
 function AS_Settings:onWindSwayChanged(state, element)
@@ -1008,6 +1020,14 @@ function AS_Settings:buildUI(frame)
         callback = AS_Settings.onNoOvertakeChanged,
     })
 
+    self.options.shopBlockTwins = self:addRow(layout, template, {
+        label = L("vtpas_shopBlockTwins_label"),
+        tip = L("vtpas_shopBlockTwins_tip"),
+        texts = onOff,
+        state = self.shopBlockTwins and 2 or 1,
+        callback = AS_Settings.onShopBlockTwinsChanged,
+    })
+
     self.built = true
     layout:invalidateLayout()
     sprint("options ajoutées au menu Paramètres")
@@ -1047,6 +1067,7 @@ function AS_Settings:refreshStates()
     if o.hudDedup ~= nil then o.hudDedup:setState(self.hudDedup and 2 or 1) end
     if o.coopPay ~= nil then o.coopPay:setState(self.coopPay and 2 or 1) end
     if o.noOvertake ~= nil then o.noOvertake:setState(self.noOvertake and 2 or 1) end
+    if o.shopBlockTwins ~= nil then o.shopBlockTwins:setState(self.shopBlockTwins and 2 or 1) end
     if o.overdraftPercent ~= nil then o.overdraftPercent:setState(self:getIndex(self.OVERDRAFT_PERCENT_LIST, self.overdraftPercent)) end
     if o.overdraftRate ~= nil then o.overdraftRate:setState(self:getIndex(self.OVERDRAFT_RATE_LIST, self.overdraftRate)) end
 end

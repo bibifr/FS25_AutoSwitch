@@ -165,6 +165,8 @@
         <text name="finance_asCoopPayment" text="Genossenschaften"/>
         <text name="vtpas_noOvertake_label" text="Traktoren nicht überholen"/>
         <text name="vtpas_noOvertake_tip" text="Verkehrsautos bleiben hinter Traktoren (AutoDrive oder gefahren) auf der Straße. Sie dürfen vorbei, wenn der Traktor seit 10 s steht oder die Warnblinker an sind."/>
+        <text name="vtpas_shopBlockTwins_label" text="Zwillingsräder im Shop gesperrt"/>
+        <text name="vtpas_shopBlockTwins_tip" text="Shop und Werkstatt bieten keine Zwillingsräder mehr an: sie werden mit den Reifenpaletten montiert. Traktoren mit Zwillingsrädern behalten sie, eine Palette kann sie auf Einzelräder zurückrüsten."/>
         <!-- v1.0.0.59 : fenêtre Météo -->
         <text name="vtpas_weatherWidget_label" text="Mini-Wetter neben der Uhr"/>
         <text name="vtpas_weatherWidget_tip" text="Zeigt das aktuelle Wetter und den nächsten Wechsel links neben der Uhr. Mit sichtbarem Mauszeiger verschiebbar; ein Klick öffnet das Wetterfenster (Strg rechts + M)."/>
