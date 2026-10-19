@@ -1,5 +1,5 @@
-### LAST VERSION AUTOSWITCH https://github.com/bibifr/FS25_AutoSwitch/releases/latest/download/FS25_AutoSwitch.zip
-### ADDON Autodrive for some Forget function https://github.com/bibifr/FS25_AutoDriveAddon/releases
+## LAST VERSION AUTOSWITCH https://github.com/bibifr/FS25_AutoSwitch/releases/latest/download/FS25_AutoSwitch.zip
+## ADDON Autodrive for some Forget function https://github.com/bibifr/FS25_AutoDriveAddon/releases
 
 # FS25 AutoSwitch
 
