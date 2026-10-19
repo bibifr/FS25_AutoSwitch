@@ -18,6 +18,7 @@ local getMudClass, getVehicles = AS.getMudClass, AS.getVehicles
 --   roues ne comptent pas tant qu'il n'est pas reparti depuis PASS_MS.
 --   Les autres cultures restent gérées par Mud System Physics. Aucun fichier de
 --   Mud System Physics n'est modifié.
+--   1.0.0.85 : plus de lignes [AS_Grass] dans le log, sauf les erreurs.
 -------------------------------------------------------------------------------
 AS_GrassTrample = {}
 AS_GrassTrample.ENABLED = true
@@ -34,18 +35,10 @@ AS_GrassTrample.RAIN = 0.1
 AS_GrassTrample.CURVE = { { 11, 10 }, { 15, 15 }, { 25, 30 }, { 36, 50 } }
 AS_GrassTrample.WET_MUL = 1.5
 AS_GrassTrample.VERY_WET_STAGES = 1
-AS_GrassTrample.LOG_MAX = 15
 
 AS_GrassTrample.cells = {}
 AS_GrassTrample.cellCount = 0
-AS_GrassTrample.logCount = 0
 
-local function gtLog(fmt, ...)
-    local self = AS_GrassTrample
-    if self.logCount >= self.LOG_MAX then return end
-    self.logCount = self.logCount + 1
-    print(string.format("[AS_Grass] " .. fmt, ...))
-end
 
 -- Chance (%) de reculer d'un stade par temps sec
 function AS_GrassTrample:dryChance(kph)
@@ -71,7 +64,6 @@ function AS_GrassTrample:hookMsp()
         if AS_GrassTrample.ENABLED then return end
     end
     self.mspHooked = true
-    print("[AS_Grass] fauchage de l'herbe par Mud System Physics coupé")
 end
 
 -------------------------------------------------------------------------------
@@ -98,8 +90,6 @@ function AS_GrassTrample:loadGrassTypes()
                     index = index, desc = desc, maxState = maxState, floor = floor,
                     modifier = modifier, filter = filter,
                 })
-                print(string.format("[AS_Grass] %s : stades %d à %d, coupé = %s",
-                    tostring(desc.name), floor, maxState, tostring(desc.cutState)))
             end
         end
     end
@@ -183,7 +173,6 @@ function AS_GrassTrample:processCell(cx, cz, rootId, now, kph, wetLevel, wet)
     local x0, z0, x1, z1, x2, z2 = self:cellCoords(cx, cz)
     if kph >= self.CUT_KPH then
         self:cutCell(x0, z0, x1, z1, x2, z2)
-        gtLog("coupée à ras : %.0f km/h", kph)
         return
     end
 
@@ -198,7 +187,6 @@ function AS_GrassTrample:processCell(cx, cz, rootId, now, kph, wetLevel, wet)
     end
     if math.random() * 100 >= chance then return end
     self:regressCell(x0, z0, x1, z1, x2, z2, stages)
-    gtLog("recul de %d stade(s) : %.0f km/h, humidité %.0f %%, chance %.0f %%", stages, kph, wet * 100, chance)
 end
 
 function AS_GrassTrample:processVehicle(vehicle, now)
