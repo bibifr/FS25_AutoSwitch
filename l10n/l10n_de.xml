@@ -136,6 +136,7 @@
         <text name="vtpas_adRoad_label" text="AutoDrive: Geschwindigkeit auf der Straße"/>
         <text name="vtpas_adRoad_tip" text="Geschwindigkeit für AutoDrive auf asphaltierten Straßen. Ohne Begrenzung: Höchstgeschwindigkeit des Traktors."/>
         <text name="vtpas_adNoLimit" text="Ohne Begrenzung"/>
+        <text name="vtpas_tabTitle" text="AutoSwitch"/>
         <text name="vtpas_reqTitle" text="Benötigte Mods"/>
         <text name="vtpas_reqTip" text="Mindestversion: %s"/>
         <text name="vtpas_reqOk" text="OK (%s)"/>

@@ -136,6 +136,7 @@
         <text name="vtpas_adRoad_label" text="AutoDrive: speed on roads"/>
         <text name="vtpas_adRoad_tip" text="Speed imposed on AutoDrive on paved roads. No limit: the tractor's maximum speed."/>
         <text name="vtpas_adNoLimit" text="No limit"/>
+        <text name="vtpas_tabTitle" text="AutoSwitch"/>
         <text name="vtpas_reqTitle" text="Required mods"/>
         <text name="vtpas_reqTip" text="Minimum version: %s"/>
         <text name="vtpas_reqOk" text="OK (%s)"/>

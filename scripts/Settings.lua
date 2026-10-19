@@ -669,7 +669,9 @@ function AS_Settings:addRow(layout, template, def)
     return option
 end
 
--- (v1.0.0.92) onglet AUTOSWITCH dans la barre des Paramètres (à côté de Paramètres généraux,
+-- (v1.0.0.92) onglet AUTOSWITCH dans la barre des Paramètres
+-- (v1.0.0.93) clic sur l'onglet réparé : la barre de pages a pour textes les numéros de
+-- page (comme BetterContracts) ; en-tête, défilement et fond alterné de notre page. (à côté de Paramètres généraux,
 -- comme Additional Settings) : la page « Paramètres généraux » et son onglet sont clonés,
 -- la copie est vidée puis remplie avec les options d'AutoSwitch. Si la structure du menu
 -- n'est pas celle attendue, les options restent dans « Paramètres généraux » comme avant.
@@ -743,22 +745,64 @@ function AS_Settings:createTab(frame)
 
     table.insert(pages, page)
     table.insert(tabs, tab)
-    local newIndex = #pages
-    if paging ~= nil and type(paging.texts) == "table" and paging.setTexts ~= nil then
+    local pageNr = #pages
+    if frame.updateAbsolutePosition ~= nil then pcall(frame.updateAbsolutePosition, frame) end
+
+    -- (v1.0.0.93) la barre (subCategoryPaging) a pour textes les numéros des pages
+    -- affichées : on y ajoute le nôtre (le jeu le refait ensuite à chaque ouverture)
+    local function ensureState()
+        if paging == nil or type(paging.texts) ~= "table" then return nil end
+        for state, val in ipairs(paging.texts) do
+            if tonumber(val) == pageNr then return state end
+        end
         local texts = {}
         for i, t in ipairs(paging.texts) do texts[i] = t end
-        texts[newIndex] = "AutoSwitch"
+        texts[#texts + 1] = tostring(pageNr)
         pcall(paging.setTexts, paging, texts)
+        return #texts
     end
+    ensureState()
+
+    -- en-tête de la page : icône et titre
+    local SC = InGameMenuSettingsFrame ~= nil and InGameMenuSettingsFrame.SUB_CATEGORY or nil
+    if SC ~= nil then SC.AUTOSWITCH = pageNr end
+    if InGameMenuSettingsFrame ~= nil then
+        local slices, titles = InGameMenuSettingsFrame.HEADER_SLICES, InGameMenuSettingsFrame.HEADER_TITLES
+        if type(slices) == "table" then slices[pageNr] = slices[index] end
+        if type(titles) == "table" then titles[pageNr] = "vtpas_tabTitle" end
+    end
+
+    -- clic sur l'onglet : la barre passe sur notre page
     tab.target = nil
     tab.onClickCallback = function()
-        if paging ~= nil and paging.setState ~= nil then
-            pcall(paging.setState, paging, newIndex, true)
+        local state = ensureState()
+        if state ~= nil then pcall(paging.setState, paging, state, true) end
+    end
+
+    -- changement de page : la barre de défilement suit notre liste
+    if paging ~= nil and paging.onClickCallback ~= nil then
+        local superFunc = paging.onClickCallback
+        paging.onClickCallback = function(target, state, ...)
+            local r = superFunc(target, state, ...)
+            local f = type(target) == "table" and target or frame
+            if paging.texts ~= nil and tonumber(paging.texts[state]) == pageNr then
+                page:setVisible(true)
+                if f.settingsSlider ~= nil and f.settingsSlider.setDataElement ~= nil then
+                    pcall(f.settingsSlider.setDataElement, f.settingsSlider, layout)
+                end
+                if f.updateAlternatingElements ~= nil then pcall(f.updateAlternatingElements, f, layout) end
+            end
+            return r
         end
     end
     if srcTab.parent ~= nil and srcTab.parent.invalidateLayout ~= nil then
         pcall(srcTab.parent.invalidateLayout, srcTab.parent)
     end
+    if FocusManager ~= nil and FocusManager.loadElementFromCustomValues ~= nil then
+        pcall(FocusManager.loadElementFromCustomValues, FocusManager, page)
+        pcall(FocusManager.loadElementFromCustomValues, FocusManager, tab)
+    end
+    local newIndex = pageNr
     self.tabPage, self.tabButton, self.tabIndex = page, tab, newIndex
     print(string.format("[AS_Settings] onglet AUTOSWITCH créé (page %d, copie de la page %d)", newIndex, index))
     return layout

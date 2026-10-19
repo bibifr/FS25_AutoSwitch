@@ -136,6 +136,7 @@
         <text name="vtpas_adRoad_label" text="AutoDrive : vitesse sur la route"/>
         <text name="vtpas_adRoad_tip" text="Vitesse imposée à AutoDrive sur la route goudronnée. Sans limite : vitesse maximale du tracteur."/>
         <text name="vtpas_adNoLimit" text="Sans limite"/>
+        <text name="vtpas_tabTitle" text="AutoSwitch"/>
         <text name="vtpas_reqTitle" text="Mods requis"/>
         <text name="vtpas_reqTip" text="Version minimale : %s"/>
         <text name="vtpas_reqOk" text="OK (%s)"/>

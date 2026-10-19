@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.93 | Onglet AUTOSWITCH : le clic sur l'onglet ouvre maintenant la page (la barre des pages attend le numéro de la page, comme pour BetterContracts) ; en-tête, défilement et lignes alternées de la page |
 | 1.0.0.92 | Menu : onglet « AUTOSWITCH » dans la barre des Paramètres (à côté de Paramètres généraux), options rangées par sections (Différentiels, Pneus, Notifications et alertes, AutoDrive, Affichage, Sol et cultures, Lumières / vent / traces / météo, Finances, Trafic et magasin). En bas de l'onglet, liste des mods requis : OK en vert, X en rouge (absent, pas activé ou trop ancien). Le cadre des mods manquants en bas à gauche de l'écran est retiré (infos dans log.txt). Si l'onglet ne peut pas être créé, les options restent dans Paramètres généraux |
 | 1.0.0.89 | Roues jumelées retirées du magasin et de l'atelier : elles se montent uniquement avec les palettes de pneus. La configuration actuelle d'un tracteur reste affichée en reconfiguration. Un tracteur arrivé déjà en jumelées peut être remis en roues simples par la palette (roues simples les plus proches : même marque et même pneu en priorité). Réglage « Jumelées bloquées en magasin » (Oui par défaut) |
 | 1.0.0.88 | Plus d'erreurs en boucle dans log.txt après un changement de roues par la palette (ou la vente / réinitialisation d'un véhicule) : Reifenverschleiß oublie le véhicule supprimé au lieu de recalculer ses roues disparues à chaque image, et l'icône d'ouvrier de ce véhicule est retirée de la carte |
