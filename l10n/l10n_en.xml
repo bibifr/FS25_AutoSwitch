@@ -136,11 +136,10 @@
         <text name="vtpas_adRoad_label" text="AutoDrive: speed on roads"/>
         <text name="vtpas_adRoad_tip" text="Speed imposed on AutoDrive on paved roads. No limit: the tractor's maximum speed."/>
         <text name="vtpas_adNoLimit" text="No limit"/>
-        <text name="vtpas_versionDisabled" text="AutoSwitch is disabled: some required mods are too old. Update them, then reload the savegame."/>
-        <text name="vtpas_versionLine" text="%s: version %s, %s minimum required"/>
-        <text name="vtpas_versionMissing" text="%s: not found, %s minimum required"/>
-        <text name="vtpas_modNotActive" text="AutoSwitch: some required mods are not enabled in this savegame. Enable them in the mod selection when loading the savegame."/>
-        <text name="vtpas_modNotActiveLine" text="%s: not enabled in this savegame"/>
+        <text name="vtpas_missTitle" text="AutoSwitch: missing mods"/>
+        <text name="vtpas_missAbsent" text="%s: missing"/>
+        <text name="vtpas_missOld" text="%s: version %s, %s required"/>
+        <text name="vtpas_missInactive" text="%s: not enabled"/>
         <text name="vtpas_sleepHours" text="+%d h"/>
         <text name="vtpas_sleepDay" text="+%d day"/>
         <text name="vtpas_sleepDays" text="+%d days"/>

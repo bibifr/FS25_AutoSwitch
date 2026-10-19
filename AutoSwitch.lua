@@ -54,6 +54,10 @@
 -- le nom de la bêta KingMods (FS25_TTD_v3_7_BETA...). Retiré des dépendances du
 -- modDesc : le jeu réclamait la version ModHub 1.0.0.0 en plus de la bêta.
 -- Si les deux sont installés, la version la plus récente est retenue.
+-- v1.0.0.87 : un mod requis absent, pas activé ou trop ancien n'empêche plus AutoSwitch
+-- de démarrer : seuls les modules qui en dépendent (liste « cuts » de REQUIRED) ne
+-- sont pas chargés, et un cadre en bas à gauche de l'écran liste les mods manquants.
+-- Mods retirés des dépendances du modDesc (sinon le jeu refuse de charger AutoSwitch).
 -- =============================================================================
 
 local modDir = g_currentModDirectory or ""
@@ -95,20 +99,32 @@ local FILES = {
     "scripts/Settings.lua",
 }
 
--- Versions minimales des mods requis (versions utilisées pour régler AutoSwitch)
+-- Versions minimales des mods requis (versions utilisées pour régler AutoSwitch).
+-- cuts : modules non chargés si le mod manque (v1.0.0.87)
+local MSP_CUTS = { "scripts/SeedProtect.lua", "scripts/DirectResow.lua", "scripts/Duals.lua",
+    "scripts/GrassTrample.lua", "scripts/MudPreset.lua", "scripts/MudWheelDrag.lua",
+    "scripts/ImplementStabilizer.lua", "scripts/TireDirtKeep.lua", "scripts/TtdBridge.lua" }
+local MR_CUTS = { "scripts/WetGrip.lua", "scripts/MudWheelDrag.lua", "scripts/ImplementStabilizer.lua" }
 local REQUIRED = {
-    { "FS25_VariableTirePressure",    "1.0.0.13" },
-    { "FS25_AutoDrive",               "3.0.1.4" },
-    { "FS25_Courseplay",              "8.1.0.3" },
-    { "FS25_EnhancedVehicle",         "1.1.7.1" },
-    { "FS25_MudSystemPhysics",        "1.3.6.0" },
-    { "FS25_DynamicDrivePro",         "1.0.1.0" },
-    { { "FS25_TractorTerrainDynamics", "FS25_TTD*" }, "1.0.3.7", "Tractor Terrain Dynamics" },
-    { "MoreRealistic",                "0.26.09.13" },
-    { "moreRealisticXmlDatabank",     "1.0.0.1" },
-    { "FS25_RealisticHarvesting",     "1.6.0.0" },
-    { "FS25_MoistureSystem",          "2.0.0.8" },
-    { "FS25_Reifenverschleiss*",      "1.2.2.67", "Real Physics - Tire Wear" },
+    { "FS25_VariableTirePressure",    "1.0.0.13", "Variable Tire Pressure", cuts = { "scripts/Tires.lua", "scripts/VtpFix.lua" } },
+    { "FS25_AutoDrive",               "3.0.1.4",  "AutoDrive" },
+    { "FS25_Courseplay",              "8.1.0.3",  "Courseplay" },
+    { "FS25_EnhancedVehicle",         "1.1.7.1",  "Enhanced Vehicle", cuts = { "scripts/Diff.lua", "scripts/SteerLimit.lua", "scripts/HudDedup.lua" } },
+    { "FS25_MudSystemPhysics",        "1.3.6.0",  "Mud System Physics", cuts = MSP_CUTS },
+    { "FS25_DynamicDrivePro",         "1.0.1.0",  "DynamicDrive Pro" },
+    { { "FS25_TractorTerrainDynamics", "FS25_TTD*" }, "1.0.3.7", "Tractor Terrain Dynamics", cuts = { "scripts/TtdBridge.lua" } },
+    { "MoreRealistic",                "0.26.09.13", "MoreRealistic", cuts = MR_CUTS },
+    { "moreRealisticXmlDatabank",     "1.0.0.1",  "MoreRealistic XML Databank", cuts = MR_CUTS },
+    { "FS25_RealisticHarvesting",     "1.6.0.0",  "Realistic Harvesting" },
+    { "FS25_MoistureSystem",          "2.0.0.8",  "Moisture System" },
+    { "FS25_Reifenverschleiss*",      "1.2.2.67", "Real Physics - Tire Wear", cuts = { "scripts/TireWear.lua" } },
+}
+
+-- Modules coupés : table vide à leur place, pour les autres modules qui lisent leurs réglages
+local STUB_NAMES = { ["scripts/SteerLimit.lua"] = "AS_Steer" }
+local STUB_FIELDS = {
+    AS_Diff = { MIN_WHEEL_SPEED = 1.0 },
+    AS_HudDedup = { setEnabled = function() end },
 }
 
 -- mod chargé dont le nom commence par prefix (nom avec numéro de version)
@@ -158,30 +174,6 @@ local function findRequired(req)
     return best, req[3] or names[1]
 end
 
--- Liste des mods trop anciens ou absents : { name, title, found, required }
-local function checkVersions()
-    local bad = {}
-    if g_modManager == nil or g_modManager.getModByName == nil then
-        print("[AutoSwitch] contrôle des versions impossible (gestionnaire de mods introuvable)")
-        return bad
-    end
-    for _, req in ipairs(REQUIRED) do
-        local minVersion = req[2]
-        local mod, name = findRequired(req)
-        -- pas de g_modIsLoaded : les mods requis dont le nom vient après FS25_AutoSwitch
-        -- ne sont pas encore chargés à ce moment-là (v1.0.0.30)
-        if mod == nil then
-            bad[#bad + 1] = { name = name, title = name, found = nil, required = minVersion }
-        else
-            local cmp = compareVersions(mod.version, minVersion)
-            if cmp ~= nil and cmp < 0 then
-                bad[#bad + 1] = { name = name, title = mod.title or name, found = mod.version, required = minVersion }
-            end
-        end
-    end
-    return bad
-end
-
 local function text(key, fallback)
     if g_i18n ~= nil and g_i18n.hasText ~= nil and g_i18n:hasText(key) then
         return g_i18n:getText(key)
@@ -198,79 +190,162 @@ do
     end
 end
 
-local badMods = checkVersions()
-
-if #badMods > 0 then
-    for _, m in ipairs(badMods) do
-        if m.found ~= nil then
-            print(string.format("[AutoSwitch] ERREUR : %s version %s trouvée, %s minimum requise", m.name, tostring(m.found), m.required))
-        else
-            print(string.format("[AutoSwitch] ERREUR : %s introuvable, %s minimum requise", m.name, m.required))
+-- Mod activé dans la partie ? true / false, nil si on ne peut pas encore le savoir
+-- (les mods dont le nom vient après FS25_AutoSwitch sont chargés après lui).
+local function isModActive(modName)
+    if g_modIsLoaded ~= nil and g_modIsLoaded[modName] == true then return true end
+    local mi = g_currentMission ~= nil and g_currentMission.missionDynamicInfo or nil
+    if mi ~= nil and type(mi.mods) == "table" and next(mi.mods) ~= nil then
+        for _, m in pairs(mi.mods) do
+            local n = type(m) == "table" and m.modName or m
+            if n == modName then return true end
         end
+        return false
     end
-    print("[AutoSwitch] AutoSwitch désactivé : mettre à jour les mods ci-dessus")
+    return nil
+end
 
-    -- Message en jeu au premier update de la partie
-    AS_VersionCheck = { shown = false, badMods = badMods }
-    function AS_VersionCheck:update(dt)
-        if self.shown then return end
-        if g_currentMission == nil or g_gui == nil then return end
-        self.shown = true
-        local lines = {}
-        for _, m in ipairs(self.badMods) do
-            if m.found ~= nil then
-                lines[#lines + 1] = string.format(text("vtpas_versionLine", "%s : version %s, %s minimum requise"), tostring(m.title), tostring(m.found), m.required)
-            else
-                lines[#lines + 1] = string.format(text("vtpas_versionMissing", "%s : introuvable, %s minimum requise"), tostring(m.title), m.required)
-            end
-        end
-        local msg = text("vtpas_versionDisabled", "AutoSwitch est désactivé : certains mods requis sont trop anciens.") .. "\n\n" .. table.concat(lines, "\n")
-        local shown = false
-        if InfoDialog ~= nil and InfoDialog.show ~= nil then
-            shown = pcall(InfoDialog.show, msg, nil, nil, DialogElement ~= nil and DialogElement.TYPE_WARNING or nil)
-        end
-        if not shown and g_currentMission.showBlinkingWarning ~= nil then
-            pcall(g_currentMission.showBlinkingWarning, g_currentMission, msg, 15000)
-        end
+-- État d'un mod requis : nil si tout va bien, sinon { title, status = "absent" / "old" / "inactive", found, required }
+local function checkRequired(req, final)
+    local mod, name = findRequired(req)
+    if mod == nil then
+        return { title = name, status = "absent", required = req[2] }
     end
-    addModEventListener(AS_VersionCheck)
-    return
+    local cmp = compareVersions(mod.version, req[2])
+    if cmp ~= nil and cmp < 0 then
+        return { title = name, status = "old", found = mod.version, required = req[2] }
+    end
+    local active
+    if final then
+        active = g_modIsLoaded ~= nil and g_modIsLoaded[mod.modName] == true
+    else
+        active = isModActive(mod.modName)
+    end
+    if active == false then
+        return { title = name, status = "inactive", modName = mod.modName }
+    end
+    return nil
+end
+
+local function logBad(m)
+    if m.status == "old" then
+        print(string.format("[AutoSwitch] ATTENTION : %s version %s trouvée, %s minimum requise : fonctions liées coupées", m.title, tostring(m.found), m.required))
+    elseif m.status == "absent" then
+        print(string.format("[AutoSwitch] ATTENTION : %s introuvable (%s minimum requise) : fonctions liées coupées", m.title, m.required))
+    else
+        print(string.format("[AutoSwitch] ATTENTION : %s (%s) n'est pas activé dans cette partie", m.title, tostring(m.modName)))
+    end
+end
+
+-- (v1.0.0.87) modules coupés selon les mods requis manquants
+local skip = {}
+local logged = {}
+for _, req in ipairs(REQUIRED) do
+    local ok, bad = pcall(checkRequired, req, false)
+    if ok and bad ~= nil then
+        logBad(bad)
+        logged[bad.title] = bad.status
+        for _, file in ipairs(req.cuts or {}) do skip[file] = true end
+    end
 end
 
 for _, file in ipairs(FILES) do
-    local path = Utils.getFilename(file, modDir)
-    if fileExists(path) then
-        source(path)
+    if skip[file] then
+        local global = STUB_NAMES[file] or ("AS_" .. string.match(file, "([%w_]+)%.lua$"))
+        local stub = { disabled = true, ENABLED = false }
+        for k, v in pairs(STUB_FIELDS[global] or {}) do stub[k] = v end
+        _G[global] = stub
+        print("[AutoSwitch] module coupé (mod requis manquant) : " .. file)
     else
-        print("[AutoSwitch] ERREUR : fichier introuvable : " .. tostring(path))
+        local path = Utils.getFilename(file, modDir)
+        if fileExists(path) then
+            source(path)
+        else
+            print("[AutoSwitch] ERREUR : fichier introuvable : " .. tostring(path))
+        end
     end
 end
 
--- (v1.0.0.49) mods requis installés mais pas activés dans cette partie : signalés en jeu.
--- Contrôle au premier update de la partie, quand tous les mods sont chargés.
-AS_ModCheck = { done = false }
+-------------------------------------------------------------------------------
+-- (v1.0.0.87) cadre « mods manquants » en bas à gauche de l'écran, tant qu'il en manque.
+-- Liste refaite au premier update de la partie, quand tous les mods sont chargés.
+-------------------------------------------------------------------------------
+AS_ModCheck = { done = false, bad = {} }
+
 function AS_ModCheck:update(dt)
     if self.done then return end
-    if g_currentMission == nil or g_gui == nil or g_modIsLoaded == nil then return end
+    if g_currentMission == nil or g_modIsLoaded == nil then return end
     self.done = true
-    local lines = {}
     for _, req in ipairs(REQUIRED) do
-        local mod, name = findRequired(req)
-        local modName = mod ~= nil and mod.modName or name
-        if g_modIsLoaded[modName] ~= true then
-            local title = (mod ~= nil and mod.title) or name
-            print(string.format("[AutoSwitch] ATTENTION : %s (%s) n'est pas activé dans cette partie", tostring(title), modName))
-            lines[#lines + 1] = string.format(text("vtpas_modNotActiveLine", "%s : pas activé dans cette partie"), tostring(title))
+        local ok, bad = pcall(checkRequired, req, true)
+        if ok and bad ~= nil then
+            if logged[bad.title] ~= bad.status then logBad(bad) end
+            self.bad[#self.bad + 1] = bad
         end
     end
-    if #lines == 0 then return end
-    local msg = text("vtpas_modNotActive", "AutoSwitch : des mods requis ne sont pas activés dans cette partie. Activez-les dans la sélection des mods au chargement de la partie.") .. "\n\n" .. table.concat(lines, "\n")
-    local shown = false
-    if InfoDialog ~= nil and InfoDialog.show ~= nil then
-        shown = pcall(InfoDialog.show, msg, nil, nil, DialogElement ~= nil and DialogElement.TYPE_WARNING or nil)
+end
+
+local function uiScale()
+    local s = 1
+    if g_gameSettings ~= nil and g_gameSettings.getValue ~= nil then
+        local ok, v = pcall(g_gameSettings.getValue, g_gameSettings, "uiScale")
+        if ok and type(v) == "number" and v > 0 then s = v end
     end
-    if not shown and g_currentMission.showBlinkingWarning ~= nil then
-        pcall(g_currentMission.showBlinkingWarning, g_currentMission, msg, 15000)
+    return s
+end
+
+function AS_ModCheck:lineText(m)
+    if m.status == "old" then
+        return string.format(text("vtpas_missOld", "%s : version %s, %s requise"), tostring(m.title), tostring(m.found), m.required)
+    elseif m.status == "absent" then
+        return string.format(text("vtpas_missAbsent", "%s : absent"), tostring(m.title))
+    end
+    return string.format(text("vtpas_missInactive", "%s : pas activé"), tostring(m.title))
+end
+
+function AS_ModCheck:drawPanel()
+    local sc = uiScale()
+    local aspect = (g_screenWidth or 1920) / math.max(1, g_screenHeight or 1080)
+    local function py(px) return px * sc / 1080 end
+    local function pxw(px) return py(px) / aspect end
+    local title = text("vtpas_missTitle", "AutoSwitch : mods manquants")
+    local size, rowH, pad, titleH = 15, 22, 10, 28
+    local lines, w = {}, getTextWidth(py(17), title)
+    for i, m in ipairs(self.bad) do
+        lines[i] = self:lineText(m)
+        w = math.max(w, pxw(22) + getTextWidth(py(size), lines[i]))
+    end
+    local W = w + pxw(2 * pad)
+    local H = py(titleH + rowH * #lines + pad)
+    local x0, y0 = pxw(16), py(16)
+    AS_drawPanelBg(x0, y0, W, H, py(titleH), py, pxw, 0.80)
+    local top = y0 + H
+    setTextAlignment(RenderText.ALIGN_LEFT)
+    setTextBold(true)
+    setTextColor(1, 0.75, 0.2, 1)
+    renderText(x0 + pxw(pad), top - py(20), py(17), title)
+    for i, line in ipairs(lines) do
+        local y = top - py(titleH + rowH * i) + py(6)
+        setTextBold(true)
+        setTextColor(0.95, 0.25, 0.2, 1)
+        renderText(x0 + pxw(pad), y, py(size), "X")
+        setTextBold(false)
+        setTextColor(1, 1, 1, 1)
+        renderText(x0 + pxw(pad + 22), y, py(size), line)
     end
 end
+
+function AS_ModCheck:draw()
+    if #self.bad == 0 or g_currentMission == nil or AS_drawPanelBg == nil then return end
+    if g_gui ~= nil and g_gui.getIsGuiVisible ~= nil and g_gui:getIsGuiVisible() then return end
+    local ok, err = pcall(self.drawPanel, self)
+    if not ok and not self.loggedDrawError then
+        self.loggedDrawError = true
+        print("[AutoSwitch] erreur d'affichage des mods manquants : " .. tostring(err))
+    end
+    setTextAlignment(RenderText.ALIGN_LEFT)
+    setTextBold(false)
+    setTextColor(1, 1, 1, 1)
+end
+
 addModEventListener(AS_ModCheck)

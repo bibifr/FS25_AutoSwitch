@@ -136,11 +136,10 @@
         <text name="vtpas_adRoad_label" text="AutoDrive : vitesse sur la route"/>
         <text name="vtpas_adRoad_tip" text="Vitesse imposée à AutoDrive sur la route goudronnée. Sans limite : vitesse maximale du tracteur."/>
         <text name="vtpas_adNoLimit" text="Sans limite"/>
-        <text name="vtpas_versionDisabled" text="AutoSwitch est désactivé : certains mods requis sont trop anciens. Mettez-les à jour puis relancez la partie."/>
-        <text name="vtpas_versionLine" text="%s : version %s, %s minimum requise"/>
-        <text name="vtpas_versionMissing" text="%s : introuvable, %s minimum requise"/>
-        <text name="vtpas_modNotActive" text="AutoSwitch : des mods requis ne sont pas activés dans cette partie. Activez-les dans la sélection des mods au chargement de la partie."/>
-        <text name="vtpas_modNotActiveLine" text="%s : pas activé dans cette partie"/>
+        <text name="vtpas_missTitle" text="AutoSwitch : mods manquants"/>
+        <text name="vtpas_missAbsent" text="%s : absent"/>
+        <text name="vtpas_missOld" text="%s : version %s, %s requise"/>
+        <text name="vtpas_missInactive" text="%s : pas activé"/>
         <text name="vtpas_sleepHours" text="+%d h"/>
         <text name="vtpas_sleepDay" text="+%d jour"/>
         <text name="vtpas_sleepDays" text="+%d jours"/>

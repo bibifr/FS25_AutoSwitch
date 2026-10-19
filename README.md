@@ -56,13 +56,13 @@ Les jumelées doivent exister dans la **même marque de pneus** que ceux du trac
 - [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases) : version 1.6.0.0 minimum
 - [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025) : version 2.0.0.8 minimum
 
-AutoSwitch fait partie d'un ensemble réaliste global : tous ces mods sont obligatoires, au moins dans la version indiquée. Si l'un d'eux est plus ancien, AutoSwitch ne démarre pas et le signale en jeu.
+AutoSwitch fait partie d'un ensemble réaliste global : ces mods sont prévus, au moins dans la version indiquée. S'il en manque un (absent, pas activé ou plus ancien), AutoSwitch démarre quand même, sans les fonctions qui dépendent de ce mod, et un cadre en bas à gauche de l'écran liste les mods manquants.
 
 ## Installation
 
 1. Télécharger `FS25_AutoSwitch.zip` dans la section **Releases**.
 2. Le copier **sans le dézipper** dans `Documents/My Games/FarmingSimulator2025/mods`.
-3. L'activer avec ses dépendances. Réglages : **Paramètres > Général > AutoSwitch**.
+3. L'activer avec les mods requis. Réglages : **Paramètres > Général > AutoSwitch**.
 
 ## Limites connues
 
@@ -122,13 +122,13 @@ Dual wheels must exist in the **same tire brand** as the tractor's tires. Wheel 
 - [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases): version 1.6.0.0 minimum
 - [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025): version 2.0.0.8 minimum
 
-AutoSwitch is part of a global realistic pack: all these mods are required, at least in the version shown. If one of them is older, AutoSwitch does not start and says so in game.
+AutoSwitch is part of a global realistic pack: these mods are expected, at least in the version shown. If one is missing (not installed, not enabled or older), AutoSwitch still starts without the features that depend on it, and a box at the bottom left of the screen lists the missing mods.
 
 ### Installation
 
 1. Download `FS25_AutoSwitch.zip` from the **Releases** section.
 2. Copy it **without unzipping** into `Documents/My Games/FarmingSimulator2025/mods`.
-3. Enable it together with its dependencies. Settings: **Settings > General > AutoSwitch**.
+3. Enable it together with the required mods. Settings: **Settings > General > AutoSwitch**.
 
 ### Known limitations
 

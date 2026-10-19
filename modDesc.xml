@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <modDesc descVersion="106">
     <author>Fabien</author>
-    <version>1.0.0.86</version>
+    <version>1.0.0.87</version>
     <multiplayer supported="true"/>
 
     <title>
@@ -80,20 +80,6 @@ Benötigte Mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, M
 
     <!-- Traductions : l10n/l10n_en.xml, l10n_fr.xml, l10n_de.xml (le jeu ajoute le code de langue) -->
     <l10n filenamePrefix="l10n/l10n"/>
-
-    <!-- Dépendances obligatoires : ce mod est chargé APRÈS elles -->
-    <dependencies>
-        <dependency>FS25_VariableTirePressure</dependency>
-        <dependency>FS25_AutoDrive</dependency>
-        <dependency>FS25_Courseplay</dependency>
-        <dependency>FS25_EnhancedVehicle</dependency>
-        <dependency>FS25_MudSystemPhysics</dependency>
-        <dependency>FS25_DynamicDrivePro</dependency>
-        <dependency>MoreRealistic</dependency>
-        <dependency>moreRealisticXmlDatabank</dependency>
-        <dependency>FS25_RealisticHarvesting</dependency>
-        <dependency>FS25_MoistureSystem</dependency>
-    </dependencies>
 
     <storeItems>
         <storeItem xmlFilename="objects/tireRackAR/tireRackAR.xml"/>
