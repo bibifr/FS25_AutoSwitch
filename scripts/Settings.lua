@@ -669,16 +669,151 @@ function AS_Settings:addRow(layout, template, def)
     return option
 end
 
-function AS_Settings:buildUI(frame)
-    local layout = frame.generalSettingsLayout or frame.gameSettingsLayout
+-- (v1.0.0.92) onglet AUTOSWITCH dans la barre des Paramètres (à côté de Paramètres généraux,
+-- comme Additional Settings) : la page « Paramètres généraux » et son onglet sont clonés,
+-- la copie est vidée puis remplie avec les options d'AutoSwitch. Si la structure du menu
+-- n'est pas celle attendue, les options restent dans « Paramètres généraux » comme avant.
+
+-- chemin (indices) de root jusqu'à el, nil si el n'est pas dans root
+local function pathTo(root, el)
+    if root == el then return {} end
+    if root == nil or root.elements == nil then return nil end
+    for i, c in ipairs(root.elements) do
+        local p = pathTo(c, el)
+        if p ~= nil then
+            table.insert(p, 1, i)
+            return p
+        end
+    end
+    return nil
+end
+
+local function followPath(root, path)
+    local el = root
+    for _, i in ipairs(path) do
+        if el == nil or el.elements == nil then return nil end
+        el = el.elements[i]
+    end
+    return el
+end
+
+local function setElementText(el, text)
+    if el == nil then return end
+    if el.setText ~= nil and pcall(el.setText, el, text) then return end
+    local t = findFirst(el, function(c) return c.isa ~= nil and c:isa(TextElement) end)
+    if t ~= nil then pcall(t.setText, t, text) end
+end
+
+function AS_Settings:createTab(frame)
+    local gl = frame.generalSettingsLayout
+    local tabs, pages, paging = frame.subCategoryTabs, frame.subCategoryPages, frame.subCategoryPaging
+    local keys = {}
+    for k, v in pairs(frame) do
+        if type(k) == "string" and (string.find(k, "subCategory") or string.find(k, "Layout")
+            or string.find(k, "Slider") or string.find(k, "Tab") or string.find(k, "Paging")) then
+            keys[#keys + 1] = k .. "=" .. type(v) .. (type(v) == "table" and ("#" .. #v) or "")
+        end
+    end
+    table.sort(keys)
+    print("[AS_Settings] structure du menu Paramètres : " .. table.concat(keys, ", "))
+    if gl == nil or type(tabs) ~= "table" or type(pages) ~= "table" or #tabs == 0 or #tabs ~= #pages then
+        return nil
+    end
+    local index
+    for i, p in ipairs(pages) do
+        if pathTo(p, gl) ~= nil then index = i break end
+    end
+    if index == nil or tabs[index] == nil then return nil end
+    local srcPage, srcTab = pages[index], tabs[index]
+    local path = pathTo(srcPage, gl)
+
+    local page = srcPage:clone(srcPage.parent)
+    local tab = srcTab:clone(srcTab.parent)
+    local layout = followPath(page, path)
     if layout == nil or layout.elements == nil then
+        pcall(page.delete, page)
+        pcall(tab.delete, tab)
+        return nil
+    end
+    for i = #layout.elements, 1, -1 do
+        pcall(layout.elements[i].delete, layout.elements[i])
+    end
+    page:setVisible(false)
+    setElementText(tab, "AUTOSWITCH")
+
+    table.insert(pages, page)
+    table.insert(tabs, tab)
+    local newIndex = #pages
+    if paging ~= nil and type(paging.texts) == "table" and paging.setTexts ~= nil then
+        local texts = {}
+        for i, t in ipairs(paging.texts) do texts[i] = t end
+        texts[newIndex] = "AutoSwitch"
+        pcall(paging.setTexts, paging, texts)
+    end
+    tab.target = nil
+    tab.onClickCallback = function()
+        if paging ~= nil and paging.setState ~= nil then
+            pcall(paging.setState, paging, newIndex, true)
+        end
+    end
+    if srcTab.parent ~= nil and srcTab.parent.invalidateLayout ~= nil then
+        pcall(srcTab.parent.invalidateLayout, srcTab.parent)
+    end
+    self.tabPage, self.tabButton, self.tabIndex = page, tab, newIndex
+    print(string.format("[AS_Settings] onglet AUTOSWITCH créé (page %d, copie de la page %d)", newIndex, index))
+    return layout
+end
+
+function AS_Settings:addHeader(layout, headerTemplate, text)
+    if headerTemplate == nil then return end
+    local header = headerTemplate:clone(layout)
+    header:setText(text)
+end
+
+-- (v1.0.0.92) en bas de l'onglet : mods requis, coche verte ou croix rouge
+function AS_Settings:addRequiredMods(layout, template, headerTemplate)
+    if AS_ModCheck == nil or type(AS_ModCheck.all) ~= "table" then return end
+    self:addHeader(layout, headerTemplate, L("vtpas_reqTitle"))
+    self.reqRows = {}
+    for _, m in ipairs(AS_ModCheck.all) do
+        local option = self:addRow(layout, template, {
+            label = m.title,
+            tip = string.format(L("vtpas_reqTip"), m.required),
+            texts = { AS_ModCheck:statusText(m) },
+            state = 1,
+            callback = function() end,
+        })
+        if option ~= nil then
+            local ok = m.status == nil
+            local r, g, b = 0.95, 0.25, 0.2
+            if ok then r, g, b = 0.35, 0.85, 0.3 end
+            local row = option.parent
+            if row ~= nil and row.elements ~= nil then
+                for _, c in ipairs(row.elements) do
+                    if c.isa ~= nil and c:isa(TextElement) and c.setTextColor ~= nil then
+                        pcall(c.setTextColor, c, r, g, b, 1)
+                        break
+                    end
+                end
+            end
+            if option.textElement ~= nil and option.textElement.setTextColor ~= nil then
+                pcall(option.textElement.setTextColor, option.textElement, r, g, b, 1)
+            end
+            if option.setDisabled ~= nil then pcall(option.setDisabled, option, false) end
+        end
+    end
+end
+
+function AS_Settings:buildUI(frame)
+    local srcLayout = frame.generalSettingsLayout or frame.gameSettingsLayout
+    if srcLayout == nil or srcLayout.elements == nil then
         sprint("ERREUR : mise en page des paramètres introuvable (utilise la commande console vtpSlip)")
         return
     end
 
     -- Modèle : une ligne existante contenant une vraie option à choix multiples
     local template
-    for _, row in ipairs(layout.elements) do
+    for _, row in ipairs(srcLayout.elements) do
         if not isMultiText(row) and findFirst(row, isRealMultiText) ~= nil then
             template = row
             break
@@ -691,15 +826,18 @@ function AS_Settings:buildUI(frame)
 
     -- Modèle d'en-tête de section (facultatif)
     local headerTemplate
-    for _, row in ipairs(layout.elements) do
+    for _, row in ipairs(srcLayout.elements) do
         if row.isa ~= nil and row:isa(TextElement) and profileContains(row, "header") then
             headerTemplate = row
             break
         end
     end
-    if headerTemplate ~= nil then
-        local header = headerTemplate:clone(layout)
-        header:setText("AutoSwitch")
+    local okTab, tabLayout = pcall(self.createTab, self, frame)
+    if not okTab then sprint("ERREUR onglet : %s", tostring(tabLayout)) end
+    local layout = (okTab and tabLayout) or srcLayout
+    if layout == srcLayout then
+        print("[AS_Settings] onglet AUTOSWITCH impossible : options dans Paramètres généraux")
+        self:addHeader(layout, headerTemplate, "AutoSwitch")
     end
 
     local slipTexts = {}
@@ -709,6 +847,7 @@ function AS_Settings:buildUI(frame)
     local onOff      = { L("vtpas_off"), L("vtpas_on") }
     local autoManual = { L("vtpas_auto"), L("vtpas_manual") }
 
+    if layout ~= srcLayout then self:addHeader(layout, headerTemplate, L("vtpas_secDiff")) end
     self.options.slip = self:addRow(layout, template, {
         label = L("vtpas_slip_label"),
         tip = L("vtpas_slip_tip"),
@@ -765,6 +904,7 @@ function AS_Settings:buildUI(frame)
         callback = AS_Settings.onAutoOnHelperChanged,
     })
 
+    if layout ~= srcLayout then self:addHeader(layout, headerTemplate, L("vtpas_secTires")) end
     self.options.tireMode = self:addRow(layout, template, {
         label = L("vtpas_tire_label"),
         tip = L("vtpas_tire_tip"),
@@ -786,6 +926,7 @@ function AS_Settings:buildUI(frame)
         callback = AS_Settings.onTireDelayChanged,
     })
 
+    if layout ~= srcLayout then self:addHeader(layout, headerTemplate, L("vtpas_secAlerts")) end
     self.options.notifyDiff = self:addRow(layout, template, {
         label = L("vtpas_notifDiff_label"),
         tip = L("vtpas_notifDiff_tip"),
@@ -854,6 +995,7 @@ function AS_Settings:buildUI(frame)
         end
         return t
     end
+    if layout ~= srcLayout then self:addHeader(layout, headerTemplate, L("vtpas_secAD")) end
     self.options.adField = self:addRow(layout, template, {
         label = L("vtpas_adField_label"),
         tip = L("vtpas_adField_tip"),
@@ -876,6 +1018,7 @@ function AS_Settings:buildUI(frame)
         callback = AS_Settings.onAdRoadChanged,
     })
 
+    if layout ~= srcLayout then self:addHeader(layout, headerTemplate, L("vtpas_secHud")) end
     self.options.speedHint = self:addRow(layout, template, {
         label = L("vtpas_hintShow_label"),
         tip = L("vtpas_hintShow_tip"),
@@ -892,6 +1035,7 @@ function AS_Settings:buildUI(frame)
         callback = AS_Settings.onSlipIconChanged,
     })
 
+    if layout ~= srcLayout then self:addHeader(layout, headerTemplate, L("vtpas_secGround")) end
     self.options.wetGrip = self:addRow(layout, template, {
         label = L("vtpas_wetGrip_label"),
         tip = L("vtpas_wetGrip_tip"),
@@ -920,6 +1064,7 @@ function AS_Settings:buildUI(frame)
     for i, v in ipairs(self.BEAM_LIST) do
         beamTexts[i] = (v == 1) and L("vtpas_lightRange_base") or ("x" .. v)
     end
+    if layout ~= srcLayout then self:addHeader(layout, headerTemplate, L("vtpas_secWorld")) end
     self.options.beamEnabled = self:addRow(layout, template, {
         label = L("vtpas_beamEnabled_label"),
         tip = L("vtpas_beamEnabled_tip"),
@@ -985,6 +1130,7 @@ function AS_Settings:buildUI(frame)
     for i, v in ipairs(self.OVERDRAFT_PERCENT_LIST) do
         odTexts[i] = (v == 0) and L("vtpas_overdraft_off") or (v .. " %")
     end
+    if layout ~= srcLayout then self:addHeader(layout, headerTemplate, L("vtpas_secMoney")) end
     self.options.overdraftPercent = self:addRow(layout, template, {
         label = L("vtpas_overdraft_label"),
         tip = L("vtpas_overdraft_tip"),
@@ -1012,6 +1158,7 @@ function AS_Settings:buildUI(frame)
         callback = AS_Settings.onCoopPayChanged,
     })
 
+    if layout ~= srcLayout then self:addHeader(layout, headerTemplate, L("vtpas_secTraffic")) end
     self.options.noOvertake = self:addRow(layout, template, {
         label = L("vtpas_noOvertake_label"),
         tip = L("vtpas_noOvertake_tip"),
@@ -1027,6 +1174,8 @@ function AS_Settings:buildUI(frame)
         state = self.shopBlockTwins and 2 or 1,
         callback = AS_Settings.onShopBlockTwinsChanged,
     })
+
+    if layout ~= srcLayout then self:addRequiredMods(layout, template, headerTemplate) end
 
     self.built = true
     layout:invalidateLayout()

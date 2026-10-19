@@ -136,10 +136,21 @@
         <text name="vtpas_adRoad_label" text="AutoDrive : vitesse sur la route"/>
         <text name="vtpas_adRoad_tip" text="Vitesse imposée à AutoDrive sur la route goudronnée. Sans limite : vitesse maximale du tracteur."/>
         <text name="vtpas_adNoLimit" text="Sans limite"/>
-        <text name="vtpas_missTitle" text="AutoSwitch : mods manquants"/>
-        <text name="vtpas_missAbsent" text="%s : absent"/>
-        <text name="vtpas_missOld" text="%s : version %s, %s requise"/>
-        <text name="vtpas_missInactive" text="%s : pas activé"/>
+        <text name="vtpas_reqTitle" text="Mods requis"/>
+        <text name="vtpas_reqTip" text="Version minimale : %s"/>
+        <text name="vtpas_reqOk" text="OK (%s)"/>
+        <text name="vtpas_reqAbsent" text="X  Absent"/>
+        <text name="vtpas_reqInactive" text="X  Pas activé"/>
+        <text name="vtpas_reqOld" text="X  Version %s (%s requise)"/>
+        <text name="vtpas_secDiff" text="Différentiels"/>
+        <text name="vtpas_secTires" text="Pneus"/>
+        <text name="vtpas_secAlerts" text="Notifications et alertes"/>
+        <text name="vtpas_secAD" text="AutoDrive"/>
+        <text name="vtpas_secHud" text="Affichage"/>
+        <text name="vtpas_secGround" text="Sol et cultures"/>
+        <text name="vtpas_secWorld" text="Lumières, vent, traces et météo"/>
+        <text name="vtpas_secMoney" text="Finances"/>
+        <text name="vtpas_secTraffic" text="Trafic et magasin"/>
         <text name="vtpas_sleepHours" text="+%d h"/>
         <text name="vtpas_sleepDay" text="+%d jour"/>
         <text name="vtpas_sleepDays" text="+%d jours"/>

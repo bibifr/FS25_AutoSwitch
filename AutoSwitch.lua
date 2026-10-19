@@ -57,7 +57,8 @@
 -- Si les deux sont installés, la version la plus récente est retenue.
 -- v1.0.0.87 : un mod requis absent, pas activé ou trop ancien n'empêche plus AutoSwitch
 -- de démarrer : seuls les modules qui en dépendent (liste « cuts » de REQUIRED) ne
--- sont pas chargés, et un cadre en bas à gauche de l'écran liste les mods manquants.
+-- sont pas chargés, et un cadre en bas à gauche de l'écran liste les mods manquants
+-- (v1.0.0.92 : cadre retiré, log.txt et liste en bas de l'onglet AUTOSWITCH).
 -- Mods retirés des dépendances du modDesc (sinon le jeu refuse de charger AutoSwitch).
 -- =============================================================================
 
@@ -269,10 +270,11 @@ for _, file in ipairs(FILES) do
 end
 
 -------------------------------------------------------------------------------
--- (v1.0.0.87) cadre « mods manquants » en bas à gauche de l'écran, tant qu'il en manque.
--- Liste refaite au premier update de la partie, quand tous les mods sont chargés.
+-- (v1.0.0.87) mods requis manquants : liste refaite au premier update de la partie,
+-- quand tous les mods sont chargés. (v1.0.0.92) plus de cadre à l'écran : log.txt,
+-- et la liste complète (coche verte / croix rouge) en bas de l'onglet AUTOSWITCH.
 -------------------------------------------------------------------------------
-AS_ModCheck = { done = false, bad = {} }
+AS_ModCheck = { done = false, bad = {}, all = {} }
 
 function AS_ModCheck:update(dt)
     if self.done then return end
@@ -280,74 +282,27 @@ function AS_ModCheck:update(dt)
     self.done = true
     for _, req in ipairs(REQUIRED) do
         local ok, bad = pcall(checkRequired, req, true)
+        local mod, name = findRequired(req)
+        local entry = { title = name, required = req[2], found = mod ~= nil and mod.version or nil }
         if ok and bad ~= nil then
             if logged[bad.title] ~= bad.status then logBad(bad) end
             self.bad[#self.bad + 1] = bad
+            entry.status = bad.status
         end
+        self.all[#self.all + 1] = entry
     end
 end
 
-local function uiScale()
-    local s = 1
-    if g_gameSettings ~= nil and g_gameSettings.getValue ~= nil then
-        local ok, v = pcall(g_gameSettings.getValue, g_gameSettings, "uiScale")
-        if ok and type(v) == "number" and v > 0 then s = v end
-    end
-    return s
-end
-
-function AS_ModCheck:lineText(m)
+-- texte d'état d'un mod requis pour le menu
+function AS_ModCheck:statusText(m)
     if m.status == "old" then
-        return string.format(text("vtpas_missOld", "%s : version %s, %s requise"), tostring(m.title), tostring(m.found), m.required)
+        return string.format(text("vtpas_reqOld", "Version %s (%s requise)"), tostring(m.found), m.required)
     elseif m.status == "absent" then
-        return string.format(text("vtpas_missAbsent", "%s : absent"), tostring(m.title))
+        return text("vtpas_reqAbsent", "Absent")
+    elseif m.status == "inactive" then
+        return text("vtpas_reqInactive", "Pas activé")
     end
-    return string.format(text("vtpas_missInactive", "%s : pas activé"), tostring(m.title))
-end
-
-function AS_ModCheck:drawPanel()
-    local sc = uiScale()
-    local aspect = (g_screenWidth or 1920) / math.max(1, g_screenHeight or 1080)
-    local function py(px) return px * sc / 1080 end
-    local function pxw(px) return py(px) / aspect end
-    local title = text("vtpas_missTitle", "AutoSwitch : mods manquants")
-    local size, rowH, pad, titleH = 15, 22, 10, 28
-    local lines, w = {}, getTextWidth(py(17), title)
-    for i, m in ipairs(self.bad) do
-        lines[i] = self:lineText(m)
-        w = math.max(w, pxw(22) + getTextWidth(py(size), lines[i]))
-    end
-    local W = w + pxw(2 * pad)
-    local H = py(titleH + rowH * #lines + pad)
-    local x0, y0 = pxw(16), py(16)
-    AS_drawPanelBg(x0, y0, W, H, py(titleH), py, pxw, 0.80)
-    local top = y0 + H
-    setTextAlignment(RenderText.ALIGN_LEFT)
-    setTextBold(true)
-    setTextColor(1, 0.75, 0.2, 1)
-    renderText(x0 + pxw(pad), top - py(20), py(17), title)
-    for i, line in ipairs(lines) do
-        local y = top - py(titleH + rowH * i) + py(6)
-        setTextBold(true)
-        setTextColor(0.95, 0.25, 0.2, 1)
-        renderText(x0 + pxw(pad), y, py(size), "X")
-        setTextBold(false)
-        setTextColor(1, 1, 1, 1)
-        renderText(x0 + pxw(pad + 22), y, py(size), line)
-    end
-end
-
-function AS_ModCheck:draw()
-    if #self.bad == 0 or g_currentMission == nil or AS_drawPanelBg == nil then return end
-    if g_gui ~= nil and g_gui.getIsGuiVisible ~= nil and g_gui:getIsGuiVisible() then return end
-    local ok, err = pcall(self.drawPanel, self)
-    if not ok and not self.loggedDrawError then
-        self.loggedDrawError = true
-        print("[AutoSwitch] erreur d'affichage des mods manquants : " .. tostring(err))
-    end
-    setTextAlignment(RenderText.ALIGN_LEFT)
-    setTextBold(false)
-    setTextColor(1, 1, 1, 1)
+    return string.format(text("vtpas_reqOk", "OK (%s)"), tostring(m.found))
 end
 
 addModEventListener(AS_ModCheck)
