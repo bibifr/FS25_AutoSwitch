@@ -447,8 +447,7 @@ function AS_Weather:drawPanel(d)
         return C.white
     end
 
-    drawFilledRect(x0, y0, W, H, 0.05, 0.07, 0.10, 0.88)
-    drawFilledRect(x0, top - py(44), W, py(44), 0.10, 0.14, 0.20, 0.95)
+    AS_drawPanelBg(x0, y0, W, H, py(44), py, pxw, 0.88)
     text(x0 + pad, top - py(31), 20, L("vtpas_wx_title"), C.title, nil, true)
     -- (v1.0.0.60) bouton X de fermeture en haut à droite
     local bs = py(30)

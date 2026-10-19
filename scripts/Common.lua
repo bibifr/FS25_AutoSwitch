@@ -375,3 +375,30 @@ AS.shSmootherstep = shSmootherstep
 AS.getMudClass = getMudClass
 AS.modGlobal = modGlobal
 AS.shGetControlledVehicle = shGetControlledVehicle
+
+-- (v1.0.0.82) fond des fenêtres (Météo, Registre) : coins arrondis comme la fenêtre de pesée
+-- d'AutoDrive Addon. Bandes de 1 px rentrées selon le quart de cercle, sans chevauchement
+-- (même transparence partout). py / pxw : conversion pixels -> écran de la fenêtre.
+function AS_drawPanelBg(x0, y0, W, H, titleH, py, pxw, bodyAlpha)
+    local R = 12
+    local function rounded(x, y, w, h, roundTop, roundBottom, r, g, b, a)
+        local step = py(1)
+        local n = math.min(R, math.floor(h / step / 2))
+        local top, bottom = y + h, y
+        for i = 0, n - 1 do
+            local dy = R - i - 0.5
+            local inset = pxw(R - math.sqrt(math.max(0, R * R - dy * dy)))
+            if roundTop then
+                drawFilledRect(x + inset, top - step * (i + 1), w - 2 * inset, step, r, g, b, a)
+            end
+            if roundBottom then
+                drawFilledRect(x + inset, bottom + step * i, w - 2 * inset, step, r, g, b, a)
+            end
+        end
+        if roundTop then top = top - step * n end
+        if roundBottom then bottom = bottom + step * n end
+        drawFilledRect(x, bottom, w, top - bottom, r, g, b, a)
+    end
+    rounded(x0, y0, W, H - titleH, false, true, 0.05, 0.07, 0.10, bodyAlpha or 0.88)
+    rounded(x0, y0 + H - titleH, W, titleH, true, false, 0.10, 0.14, 0.20, 0.95)
+end

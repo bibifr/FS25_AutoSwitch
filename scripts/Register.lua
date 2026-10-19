@@ -471,8 +471,7 @@ function AS_Register:drawPanel()
     local top = y0 + H
     local pad = pxw(18)
 
-    drawFilledRect(x0, y0, W, H, 0.05, 0.07, 0.10, 0.90)
-    drawFilledRect(x0, top - py(44), W, py(44), 0.10, 0.14, 0.20, 0.95)
+    AS_drawPanelBg(x0, y0, W, H, py(44), py, pxw, 0.90)
     text(x0 + pad, top - py(31), 20, T("Registre", "Register"), C.title, nil, true)
 
     -- bouton X
