@@ -24,6 +24,7 @@
 --   MudWheelDrag  résistance de boue sur les roues sans frein
 --   TtdBridge     pont MSP -> TTD : humidité locale, pas de résistance en double
 --   TireWear      usure Reifenverschleiß : adhérence du sol gardée, effet slick sur route
+--   DeletedVehicles véhicules supprimés oubliés par Reifenverschleiß et la carte
 --   TireDirtKeep  la saleté des pneus part moins vite en roulant
 --   SleepPlus     menu Dormir : avancer de X heures ou de X jours
 --   LightRange    lumières des véhicules visibles de plus loin
@@ -85,6 +86,7 @@ local FILES = {
     "scripts/MudWheelDrag.lua",
     "scripts/TtdBridge.lua",
     "scripts/TireWear.lua",
+    "scripts/DeletedVehicles.lua",
     "scripts/TireDirtKeep.lua",
     "scripts/SleepPlus.lua",
     "scripts/LightRange.lua",
