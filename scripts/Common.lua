@@ -329,14 +329,32 @@ end
 
 -- (v1.0.0.09) globale publiée par un autre mod : d'abord dans l'environnement du mod,
 -- puis dans les globales du jeu (jamais rawget, voir getMudClass)
+-- (v1.0.0.83) résultat gardé 1 s : appelé pour chaque roue à chaque image (boue, pont TTD...),
+-- la recherche (fonction + pcall) n'est refaite qu'une fois par seconde et par nom
+local MG_TTL = 1000
+local mgValues, mgTimes = {}, {}
+local function modGlobalLookup(modName, name)
+    local env = _G[modName]
+    if type(env) == "table" and env[name] ~= nil then return env[name] end
+    return _G[name]
+end
 local function modGlobal(modName, name)
-    local ok, v = pcall(function()
-        local env = _G[modName]
-        if type(env) == "table" and env[name] ~= nil then return env[name] end
-        return _G[name]
-    end)
-    if ok then return v end
-    return nil
+    local now = g_time
+    local vals = mgValues[modName]
+    if vals ~= nil and now ~= nil then
+        local t = mgTimes[modName][name]
+        if t ~= nil and now - t < MG_TTL and now >= t then return vals[name] end
+    end
+    local ok, v = pcall(modGlobalLookup, modName, name)
+    if not ok then v = nil end
+    if v ~= nil and now ~= nil then
+        if vals == nil then
+            vals = {}
+            mgValues[modName], mgTimes[modName] = vals, {}
+        end
+        vals[name], mgTimes[modName][name] = v, now
+    end
+    return v
 end
 
 local function shGetControlledVehicle()

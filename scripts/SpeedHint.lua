@@ -236,6 +236,8 @@ function AS_SpeedHint:compute(vehicle)
     st.color = color
 end
 
+local SH_CORNERS = { "fl", "fr", "rl", "rr" }   -- (v1.0.0.83) table fixe, plus recréée
+
 function AS_SpeedHint:update(dt)
     if not (self.ENABLED or self.SLIP_ICON) or g_currentMission == nil then return end
     local vehicle = shGetControlledVehicle()
@@ -267,7 +269,7 @@ function AS_SpeedHint:update(dt)
             ws = {}
             self.state.wheelSlip, self.state.wheelVehicle = ws, vehicle
         end
-        for _, k in ipairs({ "fl", "fr", "rl", "rr" }) do
+        for _, k in ipairs(SH_CORNERS) do
             local v = ok and slips ~= nil and slips[k] or nil
             if v == nil then
                 ws[k] = nil

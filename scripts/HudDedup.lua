@@ -37,8 +37,14 @@ local function findTable(entry)
     return t
 end
 
--- Appelé à chaque image : le mod peut recréer ses tables (menu de réglages rechargé).
+-- Le mod peut recréer ses tables (menu de réglages rechargé) : contrôle régulier.
+-- (v1.0.0.83) toutes les 0,5 s au lieu de chaque image
+AS_HudDedup.CHECK_MS = 500
+AS_HudDedup.timer = 0
 function AS_HudDedup:update(dt)
+    self.timer = self.timer + (dt or 0)
+    if self.timer < self.CHECK_MS then return end
+    self.timer = 0
     for i, entry in ipairs(self.LIST) do
         local tbl = findTable(entry)
         local s = self.saved[i]

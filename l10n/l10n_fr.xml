@@ -223,5 +223,9 @@
         <text name="vtpas_beamRange_tip" text="Distance éclairée par les phares et phares de travail de tous les véhicules, le vôtre compris. x1 = jeu de base. Coûte un peu de FPS la nuit."/>
         <text name="vtpas_beamGlow_label" text="Luminosité de la zone éclairée"/>
         <text name="vtpas_beamGlow_tip" text="Force de l'éclairage au sol des phares et phares de travail de tous les véhicules, le vôtre compris. x1 = jeu de base."/>
+        <text name="vtpas_beamEnabled_label" text="Phares renforcés"/>
+        <text name="vtpas_beamEnabled_tip" text="Oui : portée et luminosité des phares réglées ci-dessous. Non : phares du jeu de base, aucun calcul (meilleures performances)."/>
+        <text name="vtpas_tracksMax_label" text="Traces de pneus gardées (points)"/>
+        <text name="vtpas_tracksMax_tip" text="Nombre de points de traces de pneus gardés et sauvegardés avec la partie. Moins = moins de mémoire et de calcul."/>
     </texts>
 </l10n>

@@ -21,9 +21,9 @@ AS_Tires.NOTIFY = true     -- notification à l'écran à chaque gonflage / dég
 AS_Tires.USER_AUTO = false  -- conduite manuelle : true = pneus automatiques, false = manuel (touche VTP)
                                   -- (avec AutoDrive / Courseplay, c'est toujours automatique)
 AS_Tires.MIN_SWITCH_MS = 4000  -- délai minimum entre deux changements de pression (0 = aucun)
-AS_Tires.lastSwitch = {}       -- [vehicle] = g_time de la dernière bascule envoyée
-AS_Tires.awaiting = {}     -- [vehicle] = true (route) / false (champ) : bascule envoyée, en attente de confirmation
-AS_Tires.state = {}
+AS_Tires.lastSwitch = setmetatable({}, { __mode = "k" })       -- [vehicle] = g_time de la dernière bascule envoyée
+AS_Tires.awaiting = setmetatable({}, { __mode = "k" })     -- [vehicle] = true (route) / false (champ) : bascule envoyée, en attente de confirmation
+AS_Tires.state = setmetatable({}, { __mode = "k" })   -- (v1.0.0.83) véhicule vendu oublié
 AS_Tires.loggedMissing = false
 AS_Tires.loggedMethod = false
 
@@ -178,7 +178,7 @@ function AS_Tires:update(dt)
 end
 
 function AS_Tires:delete()
-    self.state = {}
+    self.state = setmetatable({}, { __mode = "k" })
 end
 
 addModEventListener(AS_Tires)

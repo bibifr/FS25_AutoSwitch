@@ -62,6 +62,9 @@ AS_Settings.iconPosY = nil
 AS_Settings.beamRange = 2          -- (v1.0.0.75) portée des vrais faisceaux (x1 = jeu de base)
 AS_Settings.beamGlow = 2           -- (v1.0.0.75) luminosité de la zone éclairée (x1 = jeu de base)
 AS_Settings.BEAM_LIST = { 1, 2, 3, 4 }
+AS_Settings.beamEnabled = true     -- (v1.0.0.83) phares renforcés (Oui / Non)
+AS_Settings.tracksMax = 60000      -- (v1.0.0.83) points de traces de pneus gardés
+AS_Settings.TRACKS_MAX_LIST = { 10000, 20000, 30000, 40000, 60000, 80000, 100000 }
 AS_Settings.windSway = 22          -- (v1.0.0.73) mouvement du feuillage au vent, en dixièmes (x2,2 ; 10 = jeu de base)
 AS_Settings.WIND_SWAY_LIST = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 }
 AS_Settings.hudDedup = true        -- (v1.0.0.78) affichages en double des autres mods masqués
@@ -117,6 +120,8 @@ function AS_Settings:save()
             setXMLInt(xml, "vtpAutoSwitch.notifDuration#alert", self.durAlert)
             setXMLInt(xml, "vtpAutoSwitch.lightRange#beamRange", self.beamRange)
             setXMLInt(xml, "vtpAutoSwitch.lightRange#beamGlow", self.beamGlow)
+            setXMLBool(xml, "vtpAutoSwitch.lightRange#enabled", self.beamEnabled)
+            setXMLInt(xml, "vtpAutoSwitch.tireTracks#maxPoints", self.tracksMax)
             setXMLInt(xml, "vtpAutoSwitch.windSway#factor10", self.windSway)
             setXMLBool(xml, "vtpAutoSwitch.weatherWidget#enabled", self.weatherWidget)
             setXMLBool(xml, "vtpAutoSwitch.hudDedup#enabled", self.hudDedup)
@@ -205,6 +210,10 @@ function AS_Settings:load()
                 if br ~= nil then self.beamRange = math.max(1, math.min(4, br)) end
                 local bg = getXMLInt(xml, "vtpAutoSwitch.lightRange#beamGlow")
                 if bg ~= nil then self.beamGlow = math.max(1, math.min(4, bg)) end
+                local be = getXMLBool(xml, "vtpAutoSwitch.lightRange#enabled")
+                if be ~= nil then self.beamEnabled = be end
+                local tm = getXMLInt(xml, "vtpAutoSwitch.tireTracks#maxPoints")
+                if tm ~= nil then self.tracksMax = math.max(10000, math.min(100000, tm)) end
                 local hd = getXMLBool(xml, "vtpAutoSwitch.hudDedup#enabled")
                 if hd ~= nil then self.hudDedup = hd end
                 local cp = getXMLBool(xml, "vtpAutoSwitch.coopPay#enabled")
@@ -274,6 +283,8 @@ function AS_Settings:apply()
     AS_SpeedHint.POS_X, AS_SpeedHint.POS_Y = self.hintPosX, self.hintPosY
     AS_SpeedHint.ICON_X, AS_SpeedHint.ICON_Y = self.iconPosX, self.iconPosY
     AS_LightRange:setBeams(self.beamRange, self.beamGlow)
+    AS_LightRange:setEnabled(self.beamEnabled)
+    if AS_TireTracksSave ~= nil then AS_TireTracksSave:setMaxPoints(self.tracksMax) end
     if AS_WindSway ~= nil then AS_WindSway:setFactor(self.windSway / 10) end
     if AS_HudDedup ~= nil then AS_HudDedup:setEnabled(self.hudDedup) end
     if AS_CoopPay ~= nil then AS_CoopPay.ENABLED = self.coopPay end
@@ -535,6 +546,23 @@ function AS_Settings:onWindSwayChanged(state, element)
         self:apply()
         self:save()
         sprint("mouvement du vent : x%.1f", v / 10)
+    end
+end
+
+function AS_Settings:onBeamEnabledChanged(state, element)
+    self.beamEnabled = (state == 2)
+    self:apply()
+    self:save()
+    sprint("phares renforcés : %s", tostring(self.beamEnabled))
+end
+
+function AS_Settings:onTracksMaxChanged(state, element)
+    local v = self.TRACKS_MAX_LIST[state]
+    if v ~= nil then
+        self.tracksMax = v
+        self:apply()
+        self:save()
+        sprint("traces de pneus gardées : %d points", v)
     end
 end
 
@@ -868,6 +896,13 @@ function AS_Settings:buildUI(frame)
     for i, v in ipairs(self.BEAM_LIST) do
         beamTexts[i] = (v == 1) and L("vtpas_lightRange_base") or ("x" .. v)
     end
+    self.options.beamEnabled = self:addRow(layout, template, {
+        label = L("vtpas_beamEnabled_label"),
+        tip = L("vtpas_beamEnabled_tip"),
+        texts = onOff,
+        state = self.beamEnabled and 2 or 1,
+        callback = AS_Settings.onBeamEnabledChanged,
+    })
     self.options.beamRange = self:addRow(layout, template, {
         label = L("vtpas_beamRange_label"),
         tip = L("vtpas_beamRange_tip"),
@@ -892,6 +927,18 @@ function AS_Settings:buildUI(frame)
         texts = windTexts,
         state = self:getIndex(self.WIND_SWAY_LIST, self.windSway),
         callback = AS_Settings.onWindSwayChanged,
+    })
+
+    local tracksTexts = {}
+    for i, v in ipairs(self.TRACKS_MAX_LIST) do
+        tracksTexts[i] = string.format("%d 000", math.floor(v / 1000))
+    end
+    self.options.tracksMax = self:addRow(layout, template, {
+        label = L("vtpas_tracksMax_label"),
+        tip = L("vtpas_tracksMax_tip"),
+        texts = tracksTexts,
+        state = self:getIndex(self.TRACKS_MAX_LIST, self.tracksMax),
+        callback = AS_Settings.onTracksMaxChanged,
     })
 
     self.options.weatherWidget = self:addRow(layout, template, {
@@ -971,6 +1018,8 @@ function AS_Settings:refreshStates()
     if o.durDiffs ~= nil then o.durDiffs:setState(self:getIndex(self.DURATION_LIST, self.durDiffs)) end
     if o.durAlert ~= nil then o.durAlert:setState(self:getIndex(self.DURATION_LIST, self.durAlert)) end
     if o.speedHint ~= nil then o.speedHint:setState(self.speedHint and 2 or 1) end
+    if o.beamEnabled ~= nil then o.beamEnabled:setState(self.beamEnabled and 2 or 1) end
+    if o.tracksMax ~= nil then o.tracksMax:setState(self:getIndex(self.TRACKS_MAX_LIST, self.tracksMax)) end
     if o.beamRange ~= nil then o.beamRange:setState(self:getIndex(self.BEAM_LIST, self.beamRange)) end
     if o.beamGlow ~= nil then o.beamGlow:setState(self:getIndex(self.BEAM_LIST, self.beamGlow)) end
     if o.windSway ~= nil then o.windSway:setState(self:getIndex(self.WIND_SWAY_LIST, self.windSway)) end

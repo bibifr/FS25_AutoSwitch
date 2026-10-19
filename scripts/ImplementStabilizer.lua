@@ -62,7 +62,12 @@ function AS_ImplementStabilizer:isFrozen(vehicle)
             self.stillSince[root] = nil
         end
     end
-    self.cache[vehicle] = { t = now, frozen = frozen }
+    -- (v1.0.0.83) table réutilisée (plus de table neuve à chaque image et par outil)
+    if c == nil then
+        c = {}
+        self.cache[vehicle] = c
+    end
+    c.t, c.frozen = now, frozen
     return frozen
 end
 

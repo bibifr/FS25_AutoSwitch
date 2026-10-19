@@ -11,6 +11,8 @@ local vtpInfo = AS.vtpInfo
 --   Seuls les MAX_POINTS points les plus récents sont gardés, un point tous les
 --   MIN_STEP mètres au plus. Partie solo ou hôte uniquement (les traces sont
 --   dessinées sur la machine qui sauvegarde).
+-- v1.0.0.83 : nombre de points gardés réglable dans le menu (10 000 à 100 000).
+--   Moins de points = moins de mémoire et une sauvegarde plus légère.
 -------------------------------------------------------------------------------
 AS_TireTracksSave = {}
 AS_TireTracksSave.MAX_POINTS     = 60000
@@ -77,6 +79,12 @@ function AS_TireTracksSave:dropOldest()
             end
         end
     end
+end
+
+-- (v1.0.0.83) réglage du menu ; les points en trop partent au prochain point noté
+function AS_TireTracksSave:setMaxPoints(n)
+    n = tonumber(n)
+    if n ~= nil and n > 0 then self.MAX_POINTS = math.floor(n) end
 end
 
 function AS_TireTracksSave:record(index, x, y, z, ux, uy, uz, r, g, b, dirt, depth, dir, isTerrain, blend)

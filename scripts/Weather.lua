@@ -643,6 +643,21 @@ end
 -- affichée à sa place : icônes rendues transparentes le temps du dessin du jeu
 -- (Colored Weather Icons et HUD+ les recolorent, d'où le passage à chaque image).
 local GAME_WEATHER_OVERLAYS = { "weatherIcon", "weatherNextIcon" }
+local GW_SAVED, GW_NUM = {}, {}
+local GW_SLOTS = { weatherIcon = {}, weatherNextIcon = {} }
+-- remet les icônes et les écarts du jeu après son dessin, puis rend son résultat (sans table)
+local function gwRestore(gid, saved, savedNum, ok, ...)
+    for name, c in pairs(saved) do
+        local o = gid[name]
+        o.width = c[5]
+        pcall(o.setColor, o, c[1], c[2], c[3], c[4])
+    end
+    if savedNum ~= nil then
+        gid.weatherNextIconOffsetX, gid.weatherNextIconSpacing = savedNum[1], savedNum[2]
+    end
+    if not ok then error((...), 0) end
+    return ...
+end
 if GameInfoDisplay ~= nil and GameInfoDisplay.draw ~= nil then
     GameInfoDisplay.draw = Utils.overwrittenFunction(GameInfoDisplay.draw, function(self, superFunc, ...)
         -- (v1.0.0.64) l'un ou l'autre : icônes du jeu cachées dès que la mini-météo est
@@ -650,12 +665,17 @@ if GameInfoDisplay ~= nil and GameInfoDisplay.draw ~= nil then
         if not (AS_Weather.WIDGET and AS_Weather.anchored) then
             return superFunc(self, ...)
         end
-        local saved = {}
+        -- (v1.0.0.83) tables de sauvegarde réutilisées d'une image à l'autre
+        local saved = GW_SAVED
         for _, name in ipairs(GAME_WEATHER_OVERLAYS) do
             local o = self[name]
+            local c = GW_SLOTS[name]
             if type(o) == "table" and o.setColor ~= nil then
-                saved[name] = { o.r, o.g, o.b, o.a, o.width }
+                c[1], c[2], c[3], c[4], c[5] = o.r, o.g, o.b, o.a, o.width
+                saved[name] = c
                 pcall(o.setColor, o, o.r, o.g, o.b, 0)
+            else
+                saved[name] = nil
             end
         end
         -- (v1.0.0.65) mini-météo déplacée ailleurs : la case météo de la barre est refermée
@@ -664,22 +684,13 @@ if GameInfoDisplay ~= nil and GameInfoDisplay.draw ~= nil then
         -- weatherNextIconSpacing ; le jeu place les éléments au moment du dessin)
         local savedNum
         if AS_Weather.WIDGET_X ~= nil then
-            savedNum = { self.weatherNextIconOffsetX, self.weatherNextIconSpacing }
+            savedNum = GW_NUM
+            savedNum[1], savedNum[2] = self.weatherNextIconOffsetX, self.weatherNextIconSpacing
             for name in pairs(saved) do self[name].width = 0 end
             if type(self.weatherNextIconOffsetX) == "number" then self.weatherNextIconOffsetX = 0 end
             if type(self.weatherNextIconSpacing) == "number" then self.weatherNextIconSpacing = 0 end
         end
-        local r = { pcall(superFunc, self, ...) }
-        for name, c in pairs(saved) do
-            local o = self[name]
-            o.width = c[5]
-            pcall(o.setColor, o, c[1], c[2], c[3], c[4])
-        end
-        if savedNum ~= nil then
-            self.weatherNextIconOffsetX, self.weatherNextIconSpacing = savedNum[1], savedNum[2]
-        end
-        if not r[1] then error(r[2], 0) end
-        return unpack(r, 2)
+        return gwRestore(self, saved, savedNum, pcall(superFunc, self, ...))
     end)
 end
 

@@ -176,8 +176,14 @@ local function updateLocks(self, vehicle)
     local vd = vehicle.vData
     if vd.want == nil then return end
     local front, rear = evLocks(vehicle, vd)
-    local prev = self.locks[vehicle] or { front = false, rear = false }
-    self.locks[vehicle] = { front = front, rear = rear }
+    -- (v1.0.0.83) une table par véhicule, réutilisée (plus de table neuve à chaque image)
+    local lk = self.locks[vehicle]
+    if lk == nil then
+        lk = { front = false, rear = false }
+        self.locks[vehicle] = lk
+    end
+    local prevFront, prevRear = lk.front, lk.rear
+    lk.front, lk.rear = front, rear
 
     if not (front or rear) or not cutEnabled() or self.fitsLocks(vehicle, front, rear) then
         return
@@ -187,9 +193,9 @@ local function updateLocks(self, vehicle)
         return
     end
 
-    local newLock = (front and not prev.front) or (rear and not prev.rear)
+    local newLock = (front and not prevFront) or (rear and not prevRear)
     releaseLocks(vehicle)
-    self.locks[vehicle] = { front = false, rear = false }
+    lk.front, lk.rear = false, false
 
     if newLock then
         -- blocage demandé roues braquées : refusé

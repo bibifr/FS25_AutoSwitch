@@ -1304,7 +1304,13 @@ function AS_DualRack:update(dt)
             pcall(self.applyTwinState, self, j, j.vehicle)
         end
     end
-    local okM, errM = pcall(self.updateMarkers, self)
+    -- (v1.0.0.83) marqueurs au sol mis à jour toutes les 0,2 s (plus à chaque image)
+    self.markerTimer = (self.markerTimer or 0) + (dt or 0)
+    local okM, errM = true, nil
+    if self.markerTimer >= 200 then
+        self.markerTimer = 0
+        okM, errM = pcall(self.updateMarkers, self)
+    end
     if not okM and not self.markerErrPrinted then
         self.markerErrPrinted = true
         print("[AS_DualRack] ERREUR marqueur : " .. tostring(errM))

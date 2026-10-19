@@ -11,8 +11,11 @@ local getVehicles = AS.getVehicles
 --   jeu est reprise puis multipliée.
 --   Les réglages de la 1.0.0.37 / 1.0.0.38 (distance et luminosité des halos)
 --   sont retirés : sans effet visible en jeu.
+-- v1.0.0.83 : option « Phares renforcés » (Oui / Non). Sur Non, les faisceaux
+--   reprennent les valeurs du jeu et plus rien n'est lu à chaque image.
 -------------------------------------------------------------------------------
 AS_LightRange = {}
+AS_LightRange.ENABLED    = true  -- (v1.0.0.83) phares renforcés
 AS_LightRange.BEAM_RANGE = 2     -- portée des vrais faisceaux (1 = jeu de base)
 AS_LightRange.BEAM_GLOW  = 2     -- luminosité des vrais faisceaux (1 = jeu de base)
 AS_LightRange.SCAN_MS = 2000     -- recherche des nouveaux véhicules
@@ -102,8 +105,28 @@ function AS_LightRange:setBeams(range, glow)
     end
 end
 
+-- (v1.0.0.83) Oui / Non : sur Non, valeurs du jeu remises, plus aucune lecture
+function AS_LightRange:setEnabled(on)
+    on = on == true
+    if on == self.ENABLED then return end
+    self.ENABLED = on
+    if not on then
+        for _, list in pairs(self.beams) do
+            for _, l in ipairs(list) do
+                if entityExists(l.node) and l.rangeW >= 0 then
+                    setLightRange(l.node, l.range)
+                    setLightColor(l.node, l.r, l.g, l.b)
+                end
+            end
+        end
+    end
+    -- nouvelle recherche des lumières au retour sur Oui
+    self.done, self.beams = {}, {}
+    self.timer = self.SCAN_MS
+end
+
 function AS_LightRange:update(dt)
-    if g_currentMission == nil or g_client == nil then return end
+    if not self.ENABLED or g_currentMission == nil or g_client == nil then return end
     pcall(self.updateBeams, self)
     self.timer = self.timer + (dt or 0)
     if self.timer < self.SCAN_MS then return end

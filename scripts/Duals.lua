@@ -55,6 +55,10 @@ function AS_Duals:install()
     -- 1) calcul par roue : Mud appelle getWheelGroundProfile juste avant de lire la largeur.
     --    On ne remplace la largeur que pendant serverUpdate (après le calcul du jeu de base).
     WheelPhysics.serverUpdate = Utils.overwrittenFunction(WheelPhysics.serverUpdate, function(wp, superFunc, ...)
+        -- (v1.0.0.83) roue simple : rien à échanger, appel direct (plus de pcall par roue et par image)
+        if not AS_Duals.ENABLED or AS_Duals.getDualWidth(wp) == nil then
+            return superFunc(wp, ...)
+        end
         wp.__asInServerUpdate = true
         local ok, err = pcall(superFunc, wp, ...)
         wp.__asInServerUpdate = nil
@@ -70,25 +74,29 @@ function AS_Duals:install()
     end
 
     -- 2) calcul du véhicule entier (enfoncement / vitesse maxi dans la boue)
+    -- (v1.0.0.83) sans roue jumelée : appel direct, aucune table créée
     local origApply = fg.applyFieldPhysics
+    local function finish(swapped, ok, ...)
+        for _, wp in ipairs(swapped) do swapOut(wp) end
+        if not ok then error((...), 0) end
+        return ...
+    end
     fg.applyFieldPhysics = function(selfFg, vehicle, ...)
         local swapped = nil
         if AS_Duals.ENABLED and vehicle ~= nil and vehicle.spec_wheels ~= nil and vehicle.spec_wheels.wheels ~= nil then
-            swapped = {}
             for _, w in ipairs(vehicle.spec_wheels.wheels) do
                 local wp = w.physics
                 if wp ~= nil and wp.__asBaseWidth == nil and AS_Duals.getDualWidth(wp) ~= nil then
                     swapIn(wp)
-                    table.insert(swapped, wp)
+                    swapped = swapped or {}
+                    swapped[#swapped + 1] = wp
                 end
             end
         end
-        local res = {pcall(origApply, selfFg, vehicle, ...)}
-        if swapped ~= nil then
-            for _, wp in ipairs(swapped) do swapOut(wp) end
+        if swapped == nil then
+            return origApply(selfFg, vehicle, ...)
         end
-        if not res[1] then error(res[2], 0) end
-        return unpack(res, 2)
+        return finish(swapped, pcall(origApply, selfFg, vehicle, ...))
     end
 end
 

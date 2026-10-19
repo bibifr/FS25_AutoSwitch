@@ -16,7 +16,7 @@ AS_SlipAlert.ALERT_PERCENT = 80
 AS_SlipAlert.ALERT_SECONDS = 5
 AS_SlipAlert.REPEAT_MS     = 10000
 AS_SlipAlert.CHECK_MS      = 200
-AS_SlipAlert.state = {}
+AS_SlipAlert.state = setmetatable({}, { __mode = "k" })   -- (v1.0.0.83) véhicule vendu oublié
 
 local function notifySlipAlert(vehicle, slip, seconds)
     if g_currentMission == nil then return end
@@ -68,7 +68,7 @@ function AS_SlipAlert:update(dt)
 end
 
 function AS_SlipAlert:delete()
-    self.state = {}
+    self.state = setmetatable({}, { __mode = "k" })
 end
 
 addModEventListener(AS_SlipAlert)

@@ -223,5 +223,9 @@
         <text name="vtpas_beamRange_tip" text="Von Scheinwerfern und Arbeitsscheinwerfern aller Fahrzeuge beleuchtete Entfernung, Ihres eingeschlossen. x1 = Basisspiel. Kostet nachts etwas FPS."/>
         <text name="vtpas_beamGlow_label" text="Helligkeit der beleuchteten Fläche"/>
         <text name="vtpas_beamGlow_tip" text="Stärke der Bodenbeleuchtung durch Scheinwerfer und Arbeitsscheinwerfer aller Fahrzeuge, Ihres eingeschlossen. x1 = Basisspiel."/>
+        <text name="vtpas_beamEnabled_label" text="Verstärkte Scheinwerfer"/>
+        <text name="vtpas_beamEnabled_tip" text="Ja: Reichweite und Helligkeit wie unten eingestellt. Nein: Scheinwerfer des Basisspiels, keine Berechnung (bessere Leistung)."/>
+        <text name="vtpas_tracksMax_label" text="Gespeicherte Reifenspuren (Punkte)"/>
+        <text name="vtpas_tracksMax_tip" text="Anzahl der Reifenspurpunkte, die behalten und mit dem Spielstand gespeichert werden. Weniger = weniger Speicher und Rechenaufwand."/>
     </texts>
 </l10n>

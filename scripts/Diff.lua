@@ -34,7 +34,7 @@ AS_Diff.ZONE_CHECK_MS    = 1000
 AS_Diff.MANUAL           = false  -- (v1.0.0.50) mode MANUEL (touche Ctrl droit + Flèche haut) : différentiels
                                   -- et 4x2 / 4x4 laissés au joueur, blocages jamais coupés (braquage bridé)
 AS_Diff.AUTO_ON_HELPER   = true   -- (v1.0.0.50) AutoDrive / Courseplay qui prend la main repasse en AUTO
-AS_Diff.state = {}
+AS_Diff.state = setmetatable({}, { __mode = "k" })   -- (v1.0.0.83) véhicule vendu oublié
 
 -- (v1.0.0.50) vrai si AutoSwitch laisse ce véhicule au joueur
 function AS_Diff.isManual(vehicle)
@@ -241,8 +241,14 @@ function AS_Diff:update(dt)
             local manual = self.isManual(vehicle)
             if manual then
                 st.zone4wd, st.zoneCandidate, st.zoneCount, st.slip4wd = nil, nil, 0, false
-                st.onSince, st.offSince, st.turning = {}, {}, false
-                st.eng, st.engaged = {}, false   -- les blocages en place appartiennent au joueur
+                st.turning, st.engaged = false, false   -- les blocages en place appartiennent au joueur
+                -- (v1.0.0.83) tables vidées une seule fois au passage en MANUEL (plus à chaque image)
+                if not st.manualCleared then
+                    st.onSince, st.offSince, st.eng = {}, {}, {}
+                    st.manualCleared = true
+                end
+            else
+                st.manualCleared = nil
             end
 
             -- (v1.30) 4x4 dans les champs, 4x2 sur route : appliqué seulement au changement de zone
@@ -403,7 +409,7 @@ function AS_Diff:update(dt)
 end
 
 function AS_Diff:delete()
-    self.state = {}
+    self.state = setmetatable({}, { __mode = "k" })
     self.resetDone = {}
     self.resetTimer = 0
 end
