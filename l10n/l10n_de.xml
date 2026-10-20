@@ -176,6 +176,17 @@
         <text name="vtpas_coopPay_tip" text='Verkäufe an Genossenschaften (Verkaufsstellen mit "coop" im Namen) werden im Register (Strg rechts + R) als "Offen" vermerkt und am Monatsende ausgezahlt, Zeile "Genossenschaften" in den Finanzen. Liste: modSettings/FS25_AutoSwitch/cooperatives.xml.'/>
         <text name="vtpas_coopPay_paid" text="Genossenschaften: %s für den Monat ausgezahlt"/>
         <text name="finance_asCoopPayment" text="Genossenschaften"/>
+        <text name="vtpas_secHours" text="Öffnungszeiten"/>
+        <text name="vtpas_hours_label" text="Öffnungszeiten"/>
+        <text name="vtpas_hours_tip" text='Shop und Verkaufsstellen außerhalb ihrer Öffnungszeiten geschlossen. Ausnahmen pro Verkaufsstelle: modSettings/FS25_AutoSwitch/horaires.xml (open="0" close="24": rund um die Uhr).'/>
+        <text name="vtpas_hours_shopOpen" text="Shop: öffnet um"/>
+        <text name="vtpas_hours_shopClose" text="Shop: schließt um"/>
+        <text name="vtpas_hours_shop_tip" text="Außerhalb der Öffnungszeiten kann der Shop angesehen werden, Kaufen, Leasen, Verkaufen und Bauen werden abgelehnt."/>
+        <text name="vtpas_hours_sellOpen" text="Verkaufsstellen: öffnen um"/>
+        <text name="vtpas_hours_sellClose" text="Verkaufsstellen: schließen um"/>
+        <text name="vtpas_hours_sell_tip" text="Silos, Mühlen, Fabriken... Außerhalb der Öffnungszeiten wird nichts angenommen; ein AutoDrive-LKW wartet bis zur Öffnung."/>
+        <text name="vtpas_hours_shopClosed" text="Der Shop ist geschlossen. Geöffnet von %s bis %s."/>
+        <text name="vtpas_hours_stationClosed" text="%s: geschlossen, öffnet um %s"/>
         <text name="vtpas_noOvertake_label" text="Traktoren nicht überholen"/>
         <text name="vtpas_noOvertake_tip" text="Verkehrsautos bleiben hinter Traktoren (AutoDrive oder gefahren) auf der Straße. Sie dürfen vorbei, wenn der Traktor seit 10 s steht oder die Warnblinker an sind."/>
         <text name="vtpas_shopBlockTwins_label" text="Zwillingsräder im Shop gesperrt"/>

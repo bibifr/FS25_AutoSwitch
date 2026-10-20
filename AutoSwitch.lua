@@ -34,6 +34,7 @@
 --   Overdraft     découvert : achat / location jusqu'à un plafond, agios chaque jour
 --   CoopPay       coopératives payées en fin de mois (ventes « À payer » dans le registre)
 --   Register      registre des pesées (AutoDrive Addon) et des ventes (Ctrl droit + R)
+--   OpeningHours  horaires d'ouverture du magasin et des points de vente
 --   HudDedup      affichages en double des autres mods masqués (Enhanced Vehicle...)
 --   NoOvertake    les voitures du trafic ne doublent plus les tracteurs
 --   Settings      menu Paramètres et sauvegarde des réglages (toujours en dernier)
@@ -100,6 +101,7 @@ local FILES = {
     "scripts/Overdraft.lua",
     "scripts/CoopPay.lua",
     "scripts/Register.lua",
+    "scripts/OpeningHours.lua",
     "scripts/HudDedup.lua",
     "scripts/NoOvertake.lua",
     "scripts/Settings.lua",

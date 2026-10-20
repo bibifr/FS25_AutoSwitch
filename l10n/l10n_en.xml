@@ -176,6 +176,17 @@
         <text name="vtpas_coopPay_tip" text='Sales to co-ops (selling points whose name contains "coop") are marked "To be paid" in the register (Right Ctrl + R) and paid at the end of the month, "Co-ops" line in Finances. Editable list: modSettings/FS25_AutoSwitch/cooperatives.xml.'/>
         <text name="vtpas_coopPay_paid" text="Co-ops: %s paid for the month"/>
         <text name="finance_asCoopPayment" text="Co-ops"/>
+        <text name="vtpas_secHours" text="Opening hours"/>
+        <text name="vtpas_hours_label" text="Opening hours"/>
+        <text name="vtpas_hours_tip" text='Shop and selling points closed outside their opening hours. Exceptions per selling point: modSettings/FS25_AutoSwitch/horaires.xml (open="0" close="24": open 24/7).'/>
+        <text name="vtpas_hours_shopOpen" text="Shop: opens at"/>
+        <text name="vtpas_hours_shopClose" text="Shop: closes at"/>
+        <text name="vtpas_hours_shop_tip" text="Outside opening hours the shop can be browsed but buying, leasing, selling or building is refused."/>
+        <text name="vtpas_hours_sellOpen" text="Selling points: open at"/>
+        <text name="vtpas_hours_sellClose" text="Selling points: close at"/>
+        <text name="vtpas_hours_sell_tip" text="Silos, mills, factories... Outside opening hours nothing is accepted; an AutoDrive truck waits until opening."/>
+        <text name="vtpas_hours_shopClosed" text="The shop is closed. Open from %s to %s."/>
+        <text name="vtpas_hours_stationClosed" text="%s: closed, opens at %s"/>
         <text name="vtpas_noOvertake_label" text="No overtaking of tractors"/>
         <text name="vtpas_noOvertake_tip" text="Traffic cars stay behind tractors (AutoDrive or driven) on the road. They may pass when the tractor has been stopped for 10 s or has its hazard lights on."/>
         <text name="vtpas_shopBlockTwins_label" text="Dual wheels blocked in shop"/>

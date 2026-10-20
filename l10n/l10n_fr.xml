@@ -176,6 +176,17 @@
         <text name="vtpas_coopPay_tip" text="Les ventes aux coopératives (point de vente dont le nom contient « coop ») sont notées « À payer » dans le registre (Ctrl droit + R) et versées à la fin du mois, ligne « Coopératives » dans Finances. Liste modifiable : modSettings/FS25_AutoSwitch/cooperatives.xml."/>
         <text name="vtpas_coopPay_paid" text="Coopératives : %s versés pour le mois"/>
         <text name="finance_asCoopPayment" text="Coopératives"/>
+        <text name="vtpas_secHours" text="Horaires d'ouverture"/>
+        <text name="vtpas_hours_label" text="Horaires d'ouverture"/>
+        <text name="vtpas_hours_tip" text='Magasin et points de vente fermés en dehors de leurs horaires. Exceptions par point de vente : modSettings/FS25_AutoSwitch/horaires.xml (open="0" close="24" : ouvert 24 h/24).'/>
+        <text name="vtpas_hours_shopOpen" text="Magasin : ouverture"/>
+        <text name="vtpas_hours_shopClose" text="Magasin : fermeture"/>
+        <text name="vtpas_hours_shop_tip" text="Hors horaires, la boutique reste consultable mais acheter, louer, vendre ou construire est refusé."/>
+        <text name="vtpas_hours_sellOpen" text="Points de vente : ouverture"/>
+        <text name="vtpas_hours_sellClose" text="Points de vente : fermeture"/>
+        <text name="vtpas_hours_sell_tip" text="Silos, moulins, usines... Hors horaires, rien n'est accepté ; un camion AutoDrive attend l'ouverture."/>
+        <text name="vtpas_hours_shopClosed" text="Le magasin est fermé. Ouvert de %s à %s."/>
+        <text name="vtpas_hours_stationClosed" text="%s : fermé, ouvre à %s"/>
         <text name="vtpas_noOvertake_label" text="Interdire de doubler les tracteurs"/>
         <text name="vtpas_noOvertake_tip" text="Les voitures du trafic restent derrière les tracteurs (AutoDrive ou conduits) qui roulent sur la route. Elles peuvent passer si le tracteur est arrêté depuis 10 s ou a les warnings allumés."/>
         <text name="vtpas_shopBlockTwins_label" text="Jumelées bloquées en magasin"/>

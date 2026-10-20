@@ -69,6 +69,13 @@ AS_Settings.windSway = 22          -- (v1.0.0.73) mouvement du feuillage au vent
 AS_Settings.WIND_SWAY_LIST = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 }
 AS_Settings.hudDedup = true        -- (v1.0.0.78) affichages en double des autres mods masqués
 AS_Settings.coopPay = true         -- (v1.0.0.81) coopératives payées en fin de mois
+AS_Settings.hoursEnabled = true    -- (v1.0.0.95) horaires d'ouverture du magasin et des points de vente
+AS_Settings.shopOpen = 8           -- magasin : ouverture / fermeture (heures)
+AS_Settings.shopClose = 19
+AS_Settings.sellOpen = 6           -- points de vente / industries
+AS_Settings.sellClose = 22
+AS_Settings.HOUR_OPEN_LIST = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 }
+AS_Settings.HOUR_CLOSE_LIST = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 }
 AS_Settings.noOvertake = true      -- (v1.0.0.84) les voitures du trafic ne doublent plus les tracteurs
 AS_Settings.shopBlockTwins = true  -- (v1.0.0.89) roues jumelées retirées du magasin (montage par palette)
 AS_Settings.weatherWidget = true   -- (v1.0.0.61) mini-météo à gauche de l'horloge
@@ -129,6 +136,11 @@ function AS_Settings:save()
             setXMLBool(xml, "vtpAutoSwitch.hudDedup#enabled", self.hudDedup)
             setXMLBool(xml, "vtpAutoSwitch.coopPay#enabled", self.coopPay)
             setXMLBool(xml, "vtpAutoSwitch.noOvertake#enabled", self.noOvertake)
+            setXMLBool(xml, "vtpAutoSwitch.hours#enabled", self.hoursEnabled)
+            setXMLInt(xml, "vtpAutoSwitch.hours#shopOpen", self.shopOpen)
+            setXMLInt(xml, "vtpAutoSwitch.hours#shopClose", self.shopClose)
+            setXMLInt(xml, "vtpAutoSwitch.hours#sellOpen", self.sellOpen)
+            setXMLInt(xml, "vtpAutoSwitch.hours#sellClose", self.sellClose)
             setXMLBool(xml, "vtpAutoSwitch.shopTwins#blocked", self.shopBlockTwins)
             setXMLInt(xml, "vtpAutoSwitch.overdraft#percent", self.overdraftPercent)
             setXMLInt(xml, "vtpAutoSwitch.overdraft#rate", self.overdraftRate)
@@ -222,6 +234,16 @@ function AS_Settings:load()
                 if hd ~= nil then self.hudDedup = hd end
                 local cp = getXMLBool(xml, "vtpAutoSwitch.coopPay#enabled")
                 if cp ~= nil then self.coopPay = cp end
+                local he = getXMLBool(xml, "vtpAutoSwitch.hours#enabled")
+                if he ~= nil then self.hoursEnabled = he end
+                local h1 = getXMLInt(xml, "vtpAutoSwitch.hours#shopOpen")
+                if h1 ~= nil then self.shopOpen = math.max(0, math.min(23, h1)) end
+                local h2 = getXMLInt(xml, "vtpAutoSwitch.hours#shopClose")
+                if h2 ~= nil then self.shopClose = math.max(1, math.min(24, h2)) end
+                local h3 = getXMLInt(xml, "vtpAutoSwitch.hours#sellOpen")
+                if h3 ~= nil then self.sellOpen = math.max(0, math.min(23, h3)) end
+                local h4 = getXMLInt(xml, "vtpAutoSwitch.hours#sellClose")
+                if h4 ~= nil then self.sellClose = math.max(1, math.min(24, h4)) end
                 local no = getXMLBool(xml, "vtpAutoSwitch.noOvertake#enabled")
                 if no ~= nil then self.noOvertake = no end
                 local sb = getXMLBool(xml, "vtpAutoSwitch.shopTwins#blocked")
@@ -297,6 +319,11 @@ function AS_Settings:apply()
     if AS_HudDedup ~= nil then AS_HudDedup:setEnabled(self.hudDedup) end
     if AS_CoopPay ~= nil then AS_CoopPay.ENABLED = self.coopPay end
     if AS_NoOvertake ~= nil then AS_NoOvertake:setEnabled(self.noOvertake) end
+    if AS_Hours ~= nil then
+        AS_Hours.ENABLED = self.hoursEnabled
+        AS_Hours.SHOP_OPEN, AS_Hours.SHOP_CLOSE = self.shopOpen, self.shopClose
+        AS_Hours.SELL_OPEN, AS_Hours.SELL_CLOSE = self.sellOpen, self.sellClose
+    end
     if AS_DualRack ~= nil then AS_DualRack.shopBlockTwins = self.shopBlockTwins end
     if AS_Overdraft ~= nil then
         AS_Overdraft.PERCENT = self.overdraftPercent
@@ -548,6 +575,28 @@ function AS_Settings:onCoopPayChanged(state, element)
     self:save()
     sprint("coopératives payées en fin de mois : %s", tostring(self.coopPay))
 end
+
+function AS_Settings:onHoursEnabledChanged(state, element)
+    self.hoursEnabled = (state == 2)
+    self:apply()
+    self:save()
+    sprint("horaires d'ouverture : %s", tostring(self.hoursEnabled))
+end
+
+-- (v1.0.0.95) heures d'ouverture / fermeture : field = nom du réglage, list = liste des heures
+function AS_Settings:setHour(field, list, state)
+    local v = list[state]
+    if v ~= nil then
+        self[field] = v
+        self:apply()
+        self:save()
+        sprint("horaires : %s = %d h", field, v)
+    end
+end
+function AS_Settings:onShopOpenChanged(state) self:setHour("shopOpen", self.HOUR_OPEN_LIST, state) end
+function AS_Settings:onShopCloseChanged(state) self:setHour("shopClose", self.HOUR_CLOSE_LIST, state) end
+function AS_Settings:onSellOpenChanged(state) self:setHour("sellOpen", self.HOUR_OPEN_LIST, state) end
+function AS_Settings:onSellCloseChanged(state) self:setHour("sellClose", self.HOUR_CLOSE_LIST, state) end
 
 function AS_Settings:onNoOvertakeChanged(state, element)
     self.noOvertake = (state == 2)
@@ -1202,6 +1251,45 @@ function AS_Settings:buildUI(frame)
         callback = AS_Settings.onCoopPayChanged,
     })
 
+    -- (v1.0.0.95) horaires d'ouverture
+    local function hourTexts(list)
+        local t = {}
+        for i, v in ipairs(list) do t[i] = v .. " h" end
+        return t
+    end
+    if layout ~= srcLayout then self:addHeader(layout, headerTemplate, L("vtpas_secHours")) end
+    self.options.hoursEnabled = self:addRow(layout, template, {
+        label = L("vtpas_hours_label"),
+        tip = L("vtpas_hours_tip"),
+        texts = onOff,
+        state = self.hoursEnabled and 2 or 1,
+        callback = AS_Settings.onHoursEnabledChanged,
+    })
+    self.options.shopOpen = self:addRow(layout, template, {
+        label = L("vtpas_hours_shopOpen"), tip = L("vtpas_hours_shop_tip"),
+        texts = hourTexts(self.HOUR_OPEN_LIST),
+        state = self:getIndex(self.HOUR_OPEN_LIST, self.shopOpen),
+        callback = AS_Settings.onShopOpenChanged,
+    })
+    self.options.shopClose = self:addRow(layout, template, {
+        label = L("vtpas_hours_shopClose"), tip = L("vtpas_hours_shop_tip"),
+        texts = hourTexts(self.HOUR_CLOSE_LIST),
+        state = self:getIndex(self.HOUR_CLOSE_LIST, self.shopClose),
+        callback = AS_Settings.onShopCloseChanged,
+    })
+    self.options.sellOpen = self:addRow(layout, template, {
+        label = L("vtpas_hours_sellOpen"), tip = L("vtpas_hours_sell_tip"),
+        texts = hourTexts(self.HOUR_OPEN_LIST),
+        state = self:getIndex(self.HOUR_OPEN_LIST, self.sellOpen),
+        callback = AS_Settings.onSellOpenChanged,
+    })
+    self.options.sellClose = self:addRow(layout, template, {
+        label = L("vtpas_hours_sellClose"), tip = L("vtpas_hours_sell_tip"),
+        texts = hourTexts(self.HOUR_CLOSE_LIST),
+        state = self:getIndex(self.HOUR_CLOSE_LIST, self.sellClose),
+        callback = AS_Settings.onSellCloseChanged,
+    })
+
     if layout ~= srcLayout then self:addHeader(layout, headerTemplate, L("vtpas_secTraffic")) end
     self.options.noOvertake = self:addRow(layout, template, {
         label = L("vtpas_noOvertake_label"),
@@ -1260,6 +1348,11 @@ function AS_Settings:refreshStates()
     if o.hudDedup ~= nil then o.hudDedup:setState(self.hudDedup and 2 or 1) end
     if o.coopPay ~= nil then o.coopPay:setState(self.coopPay and 2 or 1) end
     if o.noOvertake ~= nil then o.noOvertake:setState(self.noOvertake and 2 or 1) end
+    if o.hoursEnabled ~= nil then o.hoursEnabled:setState(self.hoursEnabled and 2 or 1) end
+    if o.shopOpen ~= nil then o.shopOpen:setState(self:getIndex(self.HOUR_OPEN_LIST, self.shopOpen)) end
+    if o.shopClose ~= nil then o.shopClose:setState(self:getIndex(self.HOUR_CLOSE_LIST, self.shopClose)) end
+    if o.sellOpen ~= nil then o.sellOpen:setState(self:getIndex(self.HOUR_OPEN_LIST, self.sellOpen)) end
+    if o.sellClose ~= nil then o.sellClose:setState(self:getIndex(self.HOUR_CLOSE_LIST, self.sellClose)) end
     if o.shopBlockTwins ~= nil then o.shopBlockTwins:setState(self.shopBlockTwins and 2 or 1) end
     if o.overdraftPercent ~= nil then o.overdraftPercent:setState(self:getIndex(self.OVERDRAFT_PERCENT_LIST, self.overdraftPercent)) end
     if o.overdraftRate ~= nil then o.overdraftRate:setState(self:getIndex(self.OVERDRAFT_RATE_LIST, self.overdraftRate)) end
