@@ -11,6 +11,7 @@
 --   modSettings/FS25_AutoSwitch/cooperatives.xml : coop="true" / "false" pour corriger.
 --   Ce qui reste dû est gardé avec la partie (AutoSwitch_coop.xml dans la sauvegarde).
 -- v1.0.0.86 : plus de lignes [AS_CoopPay] dans le log, sauf les erreurs.
+-- v1.0.1.0 : lignes [AS_CoopPay] remises dans le log (points de vente, sommes dues, versement du mois).
 -------------------------------------------------------------------------------
 AS_CoopPay = {}
 AS_CoopPay.ENABLED   = true
@@ -123,6 +124,7 @@ function AS_CoopPay:isCoop(name)
         self.stations[name] = v
         table.insert(self.order, name)
         self:saveList()
+        print(string.format("[AS_CoopPay] point de vente « %s » : %s", name, v and "coopérative (fin de mois)" or "payé tout de suite"))
     end
     return v
 end
@@ -209,6 +211,7 @@ function AS_CoopPay:pay(farmId)
     if AS_Register ~= nil and AS_Register.markPaid ~= nil then
         pcall(AS_Register.markPaid, AS_Register, farmId)
     end
+    print(string.format("[AS_CoopPay] ferme %d : %d versés par les coopératives (mois %d)", farmId, money, o.key))
     local isLocalFarm = g_currentMission.getFarmId == nil or g_currentMission:getFarmId() == farmId
     if isLocalFarm and AS.showTimedNotification ~= nil and FSBaseMission ~= nil then
         local s = g_i18n ~= nil and g_i18n.formatMoney ~= nil and g_i18n:formatMoney(money, 0, true, true) or tostring(money)
@@ -258,6 +261,7 @@ function AS_CoopPay:load()
         local money = getXMLFloat(xml, key .. "#money") or 0
         if money > 0 then
             self.owed[farmId] = { money = money, key = getXMLInt(xml, key .. "#month") or 0 }
+            print(string.format("[AS_CoopPay] ferme %d : %d à recevoir des coopératives", farmId, math.floor(money)))
         end
         i = i + 1
     end
