@@ -52,10 +52,14 @@ Les jumelées doivent exister dans la **même marque de pneus** que ceux du trac
 - [MoreRealistic XML Databank](https://github.com/quadural/MoreRealistic_FS25/blob/main/moreRealisticXmlDatabank.zip) : version 1.0.0.1 minimum
 - [Mud System Physics](https://www.kingmods.net/en/fs25/mods/73208/mud-system-physics) : version 1.3.6.0 minimum
 - [Tractor Terrain Dynamics](https://www.kingmods.net/en/fs25/mods/78890/tractor-terrain-dynamics) : version 1.0.3.7 minimum (bêta). Le zip peut garder son nom KingMods (FS25_TTD_v3_7_BETA.zip) ; n'installer qu'un seul TTD.
-- [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025) : version 1.0.1.0 minimum
-- [Real Physics - Tire Wear (Reifenverschleiß)](https://www.kingmods.net/fr/fs25/mods/82753/usure-reelle-des-pneus) : version 1.2.2.67 minimum
+- [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025) : version 1.0.1.0 minimum 
 - [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases) : version 1.6.0.0 minimum
 - [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025) : version 2.0.0.8 minimum
+
+  2 Alternative 
+- [LS25_Real_Physik_Reifenverschleiss](https://github.com/duesterelegende/LS25_Real_Physik_Reifenverschleiss/releases/tag/LS25) : version 1.2.2.67 minimum
+or 
+- [UseUPYourTire](https://www.farming-simulator.com/mod.php?mod_id=321793&title=fs2025) : version 1.1.0.0 minimum
 
 AutoSwitch fait partie d'un ensemble réaliste global : ces mods sont prévus, au moins dans la version indiquée. S'il en manque un (absent, pas activé ou plus ancien), AutoSwitch démarre quand même, sans les fonctions qui dépendent de ce mod, et un cadre en bas à gauche de l'écran liste les mods manquants.
 
@@ -110,18 +114,22 @@ Dual wheels must exist in the **same tire brand** as the tractor's tires. Wheel 
 
 ### Required mods
 
-- [Variable Tire Pressure](https://www.farming-simulator.com/mod.php?mod_id=347991&title=fs2025): version 1.0.0.13 minimum
-- [Enhanced Vehicle](https://github.com/ZhooL/FS25_EnhancedVehicle/releases): version 1.1.7.1 minimum
-- [AutoDrive](https://github.com/Stephan-S/FS25_AutoDrive/releases): version 3.0.1.4 minimum
-- [Courseplay](https://github.com/Courseplay/Courseplay_FS25/releases): version 8.1.0.3 minimum
-- [MoreRealistic](https://github.com/quadural/MoreRealistic_FS25/blob/main/MoreRealistic.zip): version 0.26.09.13 minimum
-- [MoreRealistic XML Databank](https://github.com/quadural/MoreRealistic_FS25/blob/main/moreRealisticXmlDatabank.zip): version 1.0.0.1 minimum
-- [Mud System Physics](https://www.kingmods.net/en/fs25/mods/73208/mud-system-physics): version 1.3.6.0 minimum
-- [Tractor Terrain Dynamics](https://www.kingmods.net/en/fs25/mods/78890/tractor-terrain-dynamics): version 1.0.3.7 minimum (beta). The zip can keep its KingMods name (FS25_TTD_v3_7_BETA.zip); install only one TTD.
-- [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025): version 1.0.1.0 minimum
-- [Real Physics - Tire Wear (Reifenverschleiß)](https://www.kingmods.net/fr/fs25/mods/82753/usure-reelle-des-pneus): version 1.2.2.67 minimum
-- [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases): version 1.6.0.0 minimum
-- [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025): version 2.0.0.8 minimum
+- [Variable Tire Pressure](https://www.farming-simulator.com/mod.php?mod_id=347991&title=fs2025) : version 1.0.0.13 minimum
+- [Enhanced Vehicle](https://github.com/ZhooL/FS25_EnhancedVehicle/releases) : version 1.1.7.1 minimum
+- [AutoDrive](https://github.com/Stephan-S/FS25_AutoDrive/releases) : version 3.0.1.4 minimum
+- [Courseplay](https://github.com/Courseplay/Courseplay_FS25/releases) : version 8.1.0.3 minimum
+- [MoreRealistic](https://github.com/quadural/MoreRealistic_FS25/blob/main/MoreRealistic.zip) : version 0.26.09.13 minimum
+- [MoreRealistic XML Databank](https://github.com/quadural/MoreRealistic_FS25/blob/main/moreRealisticXmlDatabank.zip) : version 1.0.0.1 minimum
+- [Mud System Physics](https://www.kingmods.net/en/fs25/mods/73208/mud-system-physics) : version 1.3.6.0 minimum
+- [Tractor Terrain Dynamics](https://www.kingmods.net/en/fs25/mods/78890/tractor-terrain-dynamics) : version 1.0.3.7 minimum (bêta). Le zip peut garder son nom KingMods (FS25_TTD_v3_7_BETA.zip) ; n'installer qu'un seul TTD.
+- [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025) : version 1.0.1.0 minimum 
+- [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases) : version 1.6.0.0 minimum
+- [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025) : version 2.0.0.8 minimum
+
+  2 Alternative 
+- [LS25_Real_Physik_Reifenverschleiss](https://github.com/duesterelegende/LS25_Real_Physik_Reifenverschleiss/releases/tag/LS25) : version 1.2.2.67 minimum
+or 
+- [UseUPYourTire](https://www.farming-simulator.com/mod.php?mod_id=321793&title=fs2025) : version 1.1.0.0 minimum
 
 AutoSwitch is part of a global realistic pack: these mods are expected, at least in the version shown. If one is missing (not installed, not enabled or older), AutoSwitch still starts without the features that depend on it, and a box at the bottom left of the screen lists the missing mods.
 
