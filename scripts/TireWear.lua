@@ -1,5 +1,5 @@
 -- AutoSwitch : usure des pneus avec Reifenverschleiß (Real Physics - Tire Wear),
--- bloqué si Use Your Tyres est aussi activé (v1.0.0.94)
+-- bloqué si Use Your Tyres est aussi activé (v1.0.0.94, fenêtre MSP retirée en v1.0.0.96)
 -- Fichier chargé par AutoSwitch.lua (après Common.lua).
 
 -------------------------------------------------------------------------------
@@ -144,6 +144,7 @@ local function none() return nil, nil end
 
 function AS_TireWear:block(core, modName)
     self.rvBlockedByUyt = true
+    self:silenceMspWarning()
     core.getWearAppliedTarget = none
     core.getRubberTrackRollerWear01ForSpeedMalus = none
     core.getOwnWear01ForHUD = none   -- seule lecture de la limite AutoDrive (40 à 20 km/h)
@@ -156,6 +157,32 @@ function AS_TireWear:block(core, modName)
     end
     print(string.format("[AS_TireWear] Use Your Tyres prioritaire : %s bloqué (adhérence, antidémarrage, limite AutoDrive)%s",
         modName, type(wfs) == "table" and "" or ", antidémarrage introuvable"))
+end
+
+-- (v1.0.0.96) les deux mods activés : Mud System Physics ouvre une fenêtre « deux mods
+-- d'usure ». AutoSwitch arbitre déjà (Reifenverschleiß bloqué) : la fenêtre est retirée,
+-- une ligne reste dans log.txt. Fait au chargement de la carte, avant celui de MSP.
+function AS_TireWear:silenceMspWarning()
+    if self.mspSilenced then return end
+    local rvc = AS.modGlobal("FS25_MudSystemPhysics", "ReifenverschleissCompatibility")
+    if type(rvc) ~= "table" or type(rvc.queueDualWearWarning) ~= "function" then return end
+    self.mspSilenced = true
+    rvc.queueDualWearWarning = function(r)
+        if r._dualWearWarningQueued == true then return false end
+        r._dualWearWarningQueued = true
+        print("[AS_TireWear] Use Your Tyres + Reifenverschleiß : avertissement de Mud System Physics retiré, AutoSwitch bloque Reifenverschleiß")
+        return false
+    end
+    rvc.showDualWearWarning = function(r, onComplete)
+        if onComplete ~= nil then onComplete() end
+        return false
+    end
+end
+
+function AS_TireWear:loadMap()
+    if g_modIsLoaded ~= nil and g_modIsLoaded["FS25_useYourTyres"] == true and self:findModName() ~= nil then
+        self:silenceMspWarning()
+    end
 end
 
 function AS_TireWear:update(dt)
