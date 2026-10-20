@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.0.97 | Onglet AUTOSWITCH : placé juste après « Paramètres généraux » au lieu du bout de la barre ; titre de la page « AutoSwitch » (plus de « MISSING vtpas_tabTitle ») ; la molette fait défiler la page vers le bas (la page vient maintenant de gui/AS_SettingsPage.xml au lieu d'une copie de « Paramètres généraux ») |
 | 1.0.0.96 | Use Your Tyres et Reifenverschleiß activés ensemble : la fenêtre d'avertissement « deux mods d'usure » de Mud System Physics n'apparaît plus, AutoSwitch arbitre déjà (une ligne reste dans log.txt) |
 | 1.0.0.95 | Horaires d'ouverture : magasin ouvert de 8 h à 19 h (hors horaires, la boutique reste consultable mais acheter, louer, vendre ou construire est refusé, fenêtre « Le magasin est fermé ») ; points de vente et industries ouverts de 6 h à 22 h (hors horaires rien n'est accepté, un camion AutoDrive attend l'ouverture, notification « fermé, ouvre à 6 h »). Section « Horaires d'ouverture » dans l'onglet AUTOSWITCH (Oui / Non et les quatre heures). Exceptions par point de vente dans modSettings/FS25_AutoSwitch/horaires.xml (-1 = horaires du menu, open="0" close="24" = 24 h/24) |
 | 1.0.0.94 | Usure des pneus : Use Your Tyres (1.1.0.0) ou Real Physics - Tire Wear / Reifenverschleiß (1.2.2.67), l'un ou l'autre suffit. Si les deux sont activés, Use Your Tyres est prioritaire : Reifenverschleiß reste chargé mais n'agit plus sur la conduite (adhérence, neige, chenilles, limite de vitesse AutoDrive, antidémarrage de 5 s). L'onglet AUTOSWITCH affiche le mod utilisé |

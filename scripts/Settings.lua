@@ -16,6 +16,7 @@ local vtpInfo, L, showTimedNotification, getVtpClass, isAutoDriveActive, isCours
 -------------------------------------------------------------------------------
 AS_Settings = {}
 AS_Settings.MOD_DIR_NAME = g_currentModName or "FS25_AutoSwitch"   -- = nom du dossier / zip du mod
+AS_Settings.MOD_DIR = g_currentModDirectory or ""
 AS_Settings.VALUES = { 0, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80 }  -- 0 = désactivé
 AS_Settings.slip        = 15     -- (v1.0.0.21) seuil du diff ARRIÈRE
 AS_Settings.slipFront   = 30     -- (v1.0.0.21) seuil du diff AVANT
@@ -720,10 +721,9 @@ end
 
 -- (v1.0.0.92) onglet AUTOSWITCH dans la barre des Paramètres
 -- (v1.0.0.93) clic sur l'onglet réparé : la barre de pages a pour textes les numéros de
--- page (comme BetterContracts) ; en-tête, défilement et fond alterné de notre page. (à côté de Paramètres généraux,
--- comme Additional Settings) : la page « Paramètres généraux » et son onglet sont clonés,
--- la copie est vidée puis remplie avec les options d'AutoSwitch. Si la structure du menu
--- n'est pas celle attendue, les options restent dans « Paramètres généraux » comme avant.
+-- page (comme BetterContracts) ; en-tête, défilement et fond alterné de notre page.
+-- Si la structure du menu n'est pas celle attendue, les options restent dans
+-- « Paramètres généraux » comme avant.
 
 -- chemin (indices) de root jusqu'à el, nil si el n'est pas dans root
 local function pathTo(root, el)
@@ -739,15 +739,6 @@ local function pathTo(root, el)
     return nil
 end
 
-local function followPath(root, path)
-    local el = root
-    for _, i in ipairs(path) do
-        if el == nil or el.elements == nil then return nil end
-        el = el.elements[i]
-    end
-    return el
-end
-
 local function setElementText(el, text)
     if el == nil then return end
     if el.setText ~= nil and pcall(el.setText, el, text) then return end
@@ -755,50 +746,77 @@ local function setElementText(el, text)
     if t ~= nil then pcall(t.setText, t, text) end
 end
 
-function AS_Settings:createTab(frame)
-    local gl = frame.generalSettingsLayout
-    local tabs, pages, paging = frame.subCategoryTabs, frame.subCategoryPages, frame.subCategoryPaging
-    local keys = {}
-    for k, v in pairs(frame) do
-        if type(k) == "string" and (string.find(k, "subCategory") or string.find(k, "Layout")
-            or string.find(k, "Slider") or string.find(k, "Tab") or string.find(k, "Paging")) then
-            keys[#keys + 1] = k .. "=" .. type(v) .. (type(v) == "table" and ("#" .. #v) or "")
-        end
+-- (v1.0.0.97) page chargée depuis gui/AS_SettingsPage.xml (vraie ScrollingLayout du jeu,
+-- comme Mud System Physics / BetterContracts) au lieu d'un clone de « Paramètres généraux » :
+-- avec le clone, la molette faisait glisser la page de gauche à droite.
+AS_SettingsPage = AS_SettingsPage or {}
+if Class ~= nil and FrameElement ~= nil then
+    local AS_SettingsPage_mt = Class(AS_SettingsPage, FrameElement)
+    function AS_SettingsPage.new()
+        return FrameElement.new(nil, AS_SettingsPage_mt)
     end
-    table.sort(keys)
-    print("[AS_Settings] structure du menu Paramètres : " .. table.concat(keys, ", "))
-    if gl == nil or type(tabs) ~= "table" or type(pages) ~= "table" or #tabs == 0 or #tabs ~= #pages then
-        return nil
-    end
-    local index
-    for i, p in ipairs(pages) do
-        if pathTo(p, gl) ~= nil then index = i break end
-    end
-    if index == nil or tabs[index] == nil then return nil end
-    local srcPage, srcTab = pages[index], tabs[index]
-    local path = pathTo(srcPage, gl)
+end
+function AS_SettingsPage:onClickAutoSwitchTab() end
 
-    local page = srcPage:clone(srcPage.parent)
-    local tab = srcTab:clone(srcTab.parent)
-    local layout = followPath(page, path)
-    if layout == nil or layout.elements == nil then
-        pcall(page.delete, page)
-        pcall(tab.delete, tab)
+local function insertAt(element, target, pos)
+    if element.parent ~= nil then element.parent:removeElement(element) end
+    pos = math.max(1, math.min(pos, #target.elements + 1))
+    table.insert(target.elements, pos, element)
+    element.parent = target
+end
+
+function AS_Settings:createTab(frame)
+    local tabs, pages, paging, box = frame.subCategoryTabs, frame.subCategoryPages, frame.subCategoryPaging, frame.subCategoryBox
+    if g_gui == nil or AS_SettingsPage.new == nil or box == nil or type(box.elements) ~= "table"
+        or type(tabs) ~= "table" or type(pages) ~= "table" or #tabs == 0 or #tabs ~= #pages
+        or pages[1] == nil or pages[1].parent == nil then
         return nil
     end
-    for i = #layout.elements, 1, -1 do
-        pcall(layout.elements[i].delete, layout.elements[i])
+    local gl, srcTab = frame.generalSettingsLayout, nil
+    for i, p in ipairs(pages) do
+        if gl ~= nil and pathTo(p, gl) ~= nil then srcTab = tabs[i] break end
     end
+
+    local xml = Utils.getFilename("gui/AS_SettingsPage.xml", AS_Settings.MOD_DIR)
+    if not fileExists(xml) then
+        print("[AS_Settings] fichier introuvable : " .. tostring(xml))
+        return nil
+    end
+    local name = "AS_SettingsPage"
+    if g_gui.guis ~= nil then g_gui.guis[name] = nil end
+    local ctrl = AS_SettingsPage.new()
+    local ok, err = pcall(g_gui.loadGui, g_gui, xml, name, ctrl)
+    if not ok then
+        print("[AS_Settings] chargement de la page impossible : " .. tostring(err))
+        return nil
+    end
+    if g_gui.guis ~= nil and g_gui.guis[name] ~= nil and g_gui.guis[name].target ~= nil then
+        ctrl = g_gui.guis[name].target
+    end
+    local page, tab, layout = ctrl.asSettingsPage, ctrl.asSettingsTab, ctrl.asSettingsLayout
+    if page == nil or tab == nil or layout == nil then
+        print("[AS_Settings] page AutoSwitch incomplète")
+        return nil
+    end
+
+    local pageNr = #pages + 1
+    insertAt(page, pages[1].parent, pageNr)
+    -- onglet affiché juste après « Paramètres généraux » (seul l'ordre d'affichage change,
+    -- les numéros de page des autres mods restent les mêmes)
+    local tabPos = #box.elements + 1
+    for i, e in ipairs(box.elements) do
+        if e == srcTab then tabPos = i + 1 break end
+    end
+    insertAt(tab, box, tabPos)
+    frame:updateAbsolutePosition()
+    page:setTarget(frame, page.target)
+    tab:setTarget(frame, tab.target)
+    pages[pageNr] = page
+    tabs[pageNr] = tab
     page:setVisible(false)
     setElementText(tab, "AUTOSWITCH")
 
-    table.insert(pages, page)
-    table.insert(tabs, tab)
-    local pageNr = #pages
-    if frame.updateAbsolutePosition ~= nil then pcall(frame.updateAbsolutePosition, frame) end
-
-    -- (v1.0.0.93) la barre (subCategoryPaging) a pour textes les numéros des pages
-    -- affichées : on y ajoute le nôtre (le jeu le refait ensuite à chaque ouverture)
+    -- la barre (subCategoryPaging) a pour textes les numéros des pages affichées
     local function ensureState()
         if paging == nil or type(paging.texts) ~= "table" then return nil end
         for state, val in ipairs(paging.texts) do
@@ -811,14 +829,31 @@ function AS_Settings:createTab(frame)
         return #texts
     end
     ensureState()
+    if box.invalidateLayout ~= nil then box:invalidateLayout() end
+    if paging ~= nil and paging.setSize ~= nil and box.maxFlowSize ~= nil and g_pixelSizeScaledX ~= nil then
+        pcall(paging.setSize, paging, box.maxFlowSize + 140 * g_pixelSizeScaledX)
+    end
+    frame:updateAbsolutePosition()
 
     -- en-tête de la page : icône et titre
     local SC = InGameMenuSettingsFrame ~= nil and InGameMenuSettingsFrame.SUB_CATEGORY or nil
     if SC ~= nil then SC.AUTOSWITCH = pageNr end
     if InGameMenuSettingsFrame ~= nil then
         local slices, titles = InGameMenuSettingsFrame.HEADER_SLICES, InGameMenuSettingsFrame.HEADER_TITLES
-        if type(slices) == "table" then slices[pageNr] = slices[index] end
+        if type(slices) == "table" then slices[pageNr] = "gui.icon_options_generalSettings2" end
         if type(titles) == "table" then titles[pageNr] = "vtpas_tabTitle" end
+    end
+    -- le titre de la page est lu dans les textes du jeu, pas dans ceux du mod
+    local title = L("vtpas_tabTitle")
+    if title == "vtpas_tabTitle" then title = "AutoSwitch" end
+    if g_i18n ~= nil then
+        local targets = { g_i18n }
+        local mt = getmetatable(g_i18n)
+        if mt ~= nil and type(mt.__index) == "table" then targets[#targets + 1] = mt.__index end
+        for _, t in ipairs(targets) do
+            if type(t.texts) == "table" then t.texts["vtpas_tabTitle"] = title end
+            if t.setText ~= nil then pcall(t.setText, t, "vtpas_tabTitle", title) end
+        end
     end
 
     -- clic sur l'onglet : la barre passe sur notre page
@@ -833,28 +868,47 @@ function AS_Settings:createTab(frame)
         local superFunc = paging.onClickCallback
         paging.onClickCallback = function(target, state, ...)
             local r = superFunc(target, state, ...)
-            local f = type(target) == "table" and target or frame
-            if paging.texts ~= nil and tonumber(paging.texts[state]) == pageNr then
-                page:setVisible(true)
-                if f.settingsSlider ~= nil and f.settingsSlider.setDataElement ~= nil then
-                    pcall(f.settingsSlider.setDataElement, f.settingsSlider, layout)
-                end
-                if f.updateAlternatingElements ~= nil then pcall(f.updateAlternatingElements, f, layout) end
-            end
+            AS_Settings:syncTab(type(target) == "table" and target.settingsSlider ~= nil and target or frame)
             return r
         end
     end
-    if srcTab.parent ~= nil and srcTab.parent.invalidateLayout ~= nil then
-        pcall(srcTab.parent.invalidateLayout, srcTab.parent)
-    end
     if FocusManager ~= nil and FocusManager.loadElementFromCustomValues ~= nil then
+        local currentGui = FocusManager.currentGui
+        if frame.name ~= nil then pcall(FocusManager.setGui, FocusManager, frame.name) end
+        pcall(FocusManager.removeElement, FocusManager, page)
+        pcall(FocusManager.removeElement, FocusManager, tab)
         pcall(FocusManager.loadElementFromCustomValues, FocusManager, page)
         pcall(FocusManager.loadElementFromCustomValues, FocusManager, tab)
+        if currentGui ~= nil then pcall(FocusManager.setGui, FocusManager, currentGui) end
     end
-    local newIndex = pageNr
-    self.tabPage, self.tabButton, self.tabIndex = page, tab, newIndex
-    print(string.format("[AS_Settings] onglet AUTOSWITCH créé (page %d, copie de la page %d)", newIndex, index))
+    self.tabPage, self.tabButton, self.tabIndex, self.tabLayout = page, tab, pageNr, layout
+    print(string.format("[AS_Settings] onglet AUTOSWITCH créé (page %d)", pageNr))
     return layout
+end
+
+-- notre page affichée : la barre de défilement et la molette agissent sur notre liste
+function AS_Settings:syncTab(frame)
+    local layout, paging = self.tabLayout, frame ~= nil and frame.subCategoryPaging or nil
+    if layout == nil or paging == nil or type(paging.texts) ~= "table" or paging.getState == nil then return end
+    if tonumber(paging.texts[paging:getState()]) ~= self.tabIndex then return end
+    self.tabPage:setVisible(true)
+    layout:setVisible(true)
+    layout:updateAbsolutePosition()
+    layout:invalidateLayout()
+    if frame.settingsSlider ~= nil and frame.settingsSlider.setDataElement ~= nil then
+        frame.settingsSlider:setDataElement(layout)
+        if layout.raiseSliderUpdateEvent ~= nil then layout:raiseSliderUpdateEvent() end
+    end
+    if frame.updateAlternatingElements ~= nil then frame:updateAlternatingElements(layout) end
+    if FocusManager ~= nil and FocusManager.linkElements ~= nil and layout.findFirstFocusable ~= nil then
+        local first = layout:findFirstFocusable(true)
+        local lastRow = layout.elements[#layout.elements]
+        local last = lastRow ~= nil and lastRow.elements ~= nil and lastRow.elements[1] or first
+        if first ~= nil and last ~= nil then
+            FocusManager:linkElements(paging, FocusManager.TOP, last)
+            FocusManager:linkElements(paging, FocusManager.BOTTOM, first)
+        end
+    end
 end
 
 function AS_Settings:addHeader(layout, headerTemplate, text)
@@ -1365,6 +1419,7 @@ function AS_Settings:onSettingsFrameOpen(frame)
     else
         self:refreshStates()
     end
+    pcall(self.syncTab, self, frame)
 end
 
 -- Commande console de repli : vtpSlip <0-100>
@@ -1398,6 +1453,11 @@ if InGameMenuSettingsFrame ~= nil and InGameMenuSettingsFrame.onFrameOpen ~= nil
     InGameMenuSettingsFrame.onFrameOpen = Utils.appendedFunction(InGameMenuSettingsFrame.onFrameOpen, function(frame)
         AS_Settings:onSettingsFrameOpen(frame)
     end)
+    if InGameMenuSettingsFrame.updateSubCategoryPages ~= nil then
+        InGameMenuSettingsFrame.updateSubCategoryPages = Utils.appendedFunction(InGameMenuSettingsFrame.updateSubCategoryPages, function(frame)
+            pcall(AS_Settings.syncTab, AS_Settings, frame)
+        end)
+    end
 else
     print("[AS_Settings] InGameMenuSettingsFrame introuvable : menu non disponible, utilise vtpSlip")
 end

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<GUI name="AS_SettingsPage">
+    <GuiElement profile="fs25_menuContainer">
+        <BoxLayout profile="fs25_subCategorySelectorTabbedBox">
+            <Button profile="fs25_subCategorySelectorTabbedTab" id="asSettingsTab" text="AUTOSWITCH" onClick="onClickAutoSwitchTab">
+                <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background"/>
+            </Button>
+        </BoxLayout>
+        <GuiElement profile="fs25_subCategorySelectorTabbedContainer" id="asSettingsPage">
+            <ScrollingLayout profile="fs25_settingsLayout" id="asSettingsLayout"/>
+            <Bitmap profile="fs25_settingsTooltipSeparator" id="asSettingsSeparator"/>
+        </GuiElement>
+    </GuiElement>
+</GUI>
