@@ -1,4 +1,5 @@
--- AutoSwitch : usure des pneus avec Reifenverschleiß (Real Physics - Tire Wear)
+-- AutoSwitch : usure des pneus avec Reifenverschleiß (Real Physics - Tire Wear),
+-- bloqué si Use Your Tyres est aussi activé (v1.0.0.94)
 -- Fichier chargé par AutoSwitch.lua (après Common.lua).
 
 -------------------------------------------------------------------------------
@@ -134,6 +135,29 @@ function AS_TireWear:updateTtdHud(dt)
     end
 end
 
+-- (v1.0.0.94) Use Your Tyres et Reifenverschleiß activés tous les deux : Use Your Tyres
+-- gagne (son usure est appliquée par WetGrip.lua). Reifenverschleiß reste chargé mais
+-- n'agit plus sur la conduite : adhérence, neige, chenilles, limite de vitesse AutoDrive
+-- et antidémarrage de 5 s. Son usure, ses textures et son atelier restent.
+local function noop() end
+local function none() return nil, nil end
+
+function AS_TireWear:block(core, modName)
+    self.rvBlockedByUyt = true
+    core.getWearAppliedTarget = none
+    core.getRubberTrackRollerWear01ForSpeedMalus = none
+    core.getOwnWear01ForHUD = none   -- seule lecture de la limite AutoDrive (40 à 20 km/h)
+    if type(core.applySnowFriction) == "function" then core.applySnowFriction = noop end
+    local wfs = AS.modGlobal(modName, "ReifenVerschleissWegfahrsperre")
+    if type(wfs) == "table" then
+        wfs.TIMER_DURATION = 0
+        -- plus aucun véhicule verrouillé : les écritures de l'antidémarrage sont ignorées
+        wfs.lockedVehicles = setmetatable({}, { __mode = "k", __newindex = noop })
+    end
+    print(string.format("[AS_TireWear] Use Your Tyres prioritaire : %s bloqué (adhérence, antidémarrage, limite AutoDrive)%s",
+        modName, type(wfs) == "table" and "" or ", antidémarrage introuvable"))
+end
+
 function AS_TireWear:update(dt)
     if self.installed then
         if self.core ~= nil then self:updateTtdHud(dt) end
@@ -156,10 +180,14 @@ function AS_TireWear:update(dt)
         and self.waitMs < self.MSP_WAIT_MS then
         return
     end
-    self:wrap(core)
-    self.core = core
     self.uytLoaded = g_modIsLoaded ~= nil and g_modIsLoaded["FS25_useYourTyres"] == true
     self.installed = true
+    if self.uytLoaded then
+        self:block(core, modName)
+        return
+    end
+    self:wrap(core)
+    self.core = core
     print(string.format("[AS_TireWear] %s : adhérence du sol gardée, usure appliquée par-dessus, effet slick sur route (pont MSP %s)",
         modName, (type(rvc) == "table" and rvc._wearTargetInstalled == true) and "présent" or "absent"))
 end

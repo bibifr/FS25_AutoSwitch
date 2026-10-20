@@ -48,6 +48,9 @@
 -- v1.0.0.49 : un mod requis installé mais pas activé dans la partie est signalé
 -- en jeu au chargement (AutoSwitch démarre quand même). Vu avec Reifenverschleiß,
 -- décoché dans la sauvegarde : AutoSwitch ne le disait que dans log.txt.
+-- v1.0.0.94 : usure des pneus avec Use Your Tyres OU Reifenverschleiß (entrée anyOf
+-- de REQUIRED) ; si les deux sont activés, Use Your Tyres gagne et TireWear.lua bloque
+-- Reifenverschleiß (adhérence, antidémarrage, limite AutoDrive, neige).
 -- v1.0.0.46 : Crop Destruction Overhaul n'est plus requis.
 -- v1.0.0.47 : herbe piétinée corrigée (setParallelogramWorldCoords), stade le plus bas coupé.
 -- v1.0.0.48 : herbe piétinée plus douce (sec dès 11 km/h, humide dès 7 km/h, un stade).
@@ -120,7 +123,12 @@ local REQUIRED = {
     { "moreRealisticXmlDatabank",     "1.0.0.1",  "MoreRealistic XML Databank", cuts = MR_CUTS },
     { "FS25_RealisticHarvesting",     "1.6.0.0",  "Realistic Harvesting" },
     { "FS25_MoistureSystem",          "2.0.0.8",  "Moisture System" },
-    { "FS25_Reifenverschleiss*",      "1.2.2.67", "Real Physics - Tire Wear", cuts = { "scripts/TireWear.lua" } },
+    -- (v1.0.0.94) usure des pneus : l'un OU l'autre, Use Your Tyres prioritaire si les deux
+    -- sont activés (TireWear.lua bloque alors Reifenverschleiß)
+    { anyOf = {
+        { "FS25_useYourTyres",       "1.1.0.0",  "Use Your Tyres" },
+        { "FS25_Reifenverschleiss*", "1.2.2.67", "Real Physics - Tire Wear" },
+    }, title = "Use Your Tyres / Real Physics - Tire Wear" },
 }
 
 -- Modules coupés : table vide à leur place, pour les autres modules qui lisent leurs réglages
@@ -230,6 +238,26 @@ local function checkRequired(req, final)
     return nil
 end
 
+-- (v1.0.0.94) entrée « l'un ou l'autre » : la première possibilité en règle gagne ;
+-- sinon on signale celle qui est installée (trop ancienne / pas activée), ou l'absence
+local function checkAnyOf(req, final)
+    local firstBad
+    for i, alt in ipairs(req.anyOf) do
+        local ok, bad = pcall(checkRequired, alt, final)
+        if ok and bad == nil then return nil, i end
+        if ok and bad ~= nil and bad.status ~= "absent" and firstBad == nil then firstBad = bad end
+    end
+    if firstBad ~= nil then return firstBad end
+    local versions = {}
+    for _, alt in ipairs(req.anyOf) do versions[#versions + 1] = alt[2] end
+    return { title = req.title, status = "absent", required = table.concat(versions, " / ") }
+end
+
+local function checkEntry(req, final)
+    if req.anyOf ~= nil then return checkAnyOf(req, final) end
+    return checkRequired(req, final)
+end
+
 local function logBad(m)
     if m.status == "old" then
         print(string.format("[AutoSwitch] ATTENTION : %s version %s trouvée, %s minimum requise : fonctions liées coupées", m.title, tostring(m.found), m.required))
@@ -244,7 +272,7 @@ end
 local skip = {}
 local logged = {}
 for _, req in ipairs(REQUIRED) do
-    local ok, bad = pcall(checkRequired, req, false)
+    local ok, bad = pcall(checkEntry, req, false)
     if ok and bad ~= nil then
         logBad(bad)
         logged[bad.title] = bad.status
@@ -281,9 +309,28 @@ function AS_ModCheck:update(dt)
     if g_currentMission == nil or g_modIsLoaded == nil then return end
     self.done = true
     for _, req in ipairs(REQUIRED) do
-        local ok, bad = pcall(checkRequired, req, true)
-        local mod, name = findRequired(req)
-        local entry = { title = name, required = req[2], found = mod ~= nil and mod.version or nil }
+        local ok, bad, altIndex = pcall(checkEntry, req, true)
+        local entry
+        if req.anyOf ~= nil then
+            if altIndex ~= nil then
+                local alt = req.anyOf[altIndex]
+                local mod, name = findRequired(alt)
+                entry = { title = name, required = alt[2], found = mod ~= nil and mod.version or nil }
+                -- les deux en règle : la suivante est bloquée (Reifenverschleiß, voir TireWear.lua)
+                local nextAlt = req.anyOf[altIndex + 1]
+                local okN, badN = true, true
+                if nextAlt ~= nil then okN, badN = pcall(checkRequired, nextAlt, true) end
+                if okN and badN == nil then
+                    entry.title = string.format(text("vtpas_reqBlocked", "%s (%s bloqué)"), name, nextAlt[3])
+                end
+            else
+                entry = { title = req.title, required = ok and bad ~= nil and bad.required or "",
+                    found = ok and bad ~= nil and bad.found or nil }
+            end
+        else
+            local mod, name = findRequired(req)
+            entry = { title = name, required = req[2], found = mod ~= nil and mod.version or nil }
+        end
         if ok and bad ~= nil then
             if logged[bad.title] ~= bad.status then logBad(bad) end
             self.bad[#self.bad + 1] = bad

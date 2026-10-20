@@ -143,6 +143,7 @@
         <text name="vtpas_reqAbsent" text="X  Absent"/>
         <text name="vtpas_reqInactive" text="X  Pas activé"/>
         <text name="vtpas_reqOld" text="X  Version %s (%s requise)"/>
+        <text name="vtpas_reqBlocked" text="%s (%s bloqué)"/>
         <text name="vtpas_secDiff" text="Différentiels"/>
         <text name="vtpas_secTires" text="Pneus"/>
         <text name="vtpas_secAlerts" text="Notifications et alertes"/>
