@@ -9,7 +9,7 @@
 --   Semis      date notée par AutoSwitch quand un semoir travaille sur le champ
 --   Engrais    date du dernier passage (engrais, engrais liquide, fumier, lisier, digestat)
 --   Herbicide  date du dernier passage d'herbicide
---   Récolte    « Prêt » ou mois estimé (calendrier de récolte de la culture dans le jeu)
+--   Récolte    « Prêt », « Idéal » ou mois estimé (calendrier de récolte de la culture dans le jeu)
 -- Le jeu ne garde aucune date : elles sont notées à partir de l'installation et
 -- sauvegardées avec la partie (AutoSwitch_fields.xml). Un passage n'est noté que
 -- quand au moins 10 % du champ a été travaillé (passages de bordure ignorés).
@@ -408,6 +408,26 @@ local function growthMode()
     return mi ~= nil and mi.growthMode or nil
 end
 
+-- (v1.0.1.5) premier et dernier stade récoltable d'une culture, calculés une fois par culture
+local harvestRanges = {}
+local function harvestRange(fruit, q)
+    local key = fruit.index or fruit.name
+    local r = harvestRanges[key]
+    if r == nil then
+        r = {}
+        local top = fruit.maxHarvestingGrowthState or 0
+        if fruit.cutState ~= nil and fruit.cutState > 1 then top = math.max(top, fruit.cutState - 1) end
+        for s = 1, math.min(top, 15) do
+            if q("getIsHarvestable", s) and not q("getIsWithered", s) and not q("getIsCut", s) then
+                if r.first == nil then r.first = s end
+                r.last = s
+            end
+        end
+        harvestRanges[key] = r
+    end
+    return r.first, r.last
+end
+
 -- récolte : texte, couleur (« ready », « dead », « wait », « none »)
 local function harvestInfo(fruit, gs)
     if fruit == nil or gs == nil or gs <= 0 then return "-", "none" end
@@ -421,6 +441,12 @@ local function harvestInfo(fruit, gs)
     if q("getIsCut", gs) then return T("Récolté", "Harvested"), "done" end
     if q("getIsHarvestable", gs) or (fruit.minHarvestingGrowthState ~= nil and gs >= fruit.minHarvestingGrowthState
         and gs <= (fruit.maxHarvestingGrowthState or gs)) then
+        -- (v1.0.1.5) culture récoltable sur plusieurs stades (ex. maïs ensilage) : le dernier est l'idéal
+        local first, last = harvestRange(fruit, q)
+        if first ~= nil and last ~= nil and first < last then
+            if gs >= last then return T("Idéal", "Best"), "ready" end
+            return string.format(T("Prêt (idéal %d/%d)", "Ready (best %d/%d)"), last, last), "ready"
+        end
         return T("Prêt", "Ready"), "ready"
     end
     -- (v1.0.1.4) au-delà des stades de récolte : chaume, broyé ou roulé après la récolte
