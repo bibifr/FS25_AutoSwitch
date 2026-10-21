@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!-- Icônes de la liste de gauche de l'aide (une par page, même ordre que helpLine.xml) -->
+<texture>
+    <meta>
+        <filename>as_help_icons.dds</filename>
+        <size width="512" height="512"/>
+    </meta>
+    <slices>
+        <slice id="intro" uvs="0px 0px 128px 128px"/>
+        <slice id="diff" uvs="128px 0px 128px 128px"/>
+        <slice id="tires" uvs="256px 0px 128px 128px"/>
+        <slice id="ground" uvs="384px 0px 128px 128px"/>
+        <slice id="hud" uvs="0px 128px 128px 128px"/>
+        <slice id="weather" uvs="128px 128px 128px 128px"/>
+        <slice id="fields" uvs="256px 128px 128px 128px"/>
+        <slice id="register" uvs="384px 128px 128px 128px"/>
+        <slice id="money" uvs="0px 256px 128px 128px"/>
+        <slice id="hours" uvs="128px 256px 128px 128px"/>
+        <slice id="road" uvs="256px 256px 128px 128px"/>
+        <slice id="files" uvs="384px 256px 128px 128px"/>
+    </slices>
+</texture>

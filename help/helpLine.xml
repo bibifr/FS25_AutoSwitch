@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!-- Aide d'AutoSwitch dans le menu du jeu (Échap > Aide), chargée par scripts/Help.lua
+     avec g_helpLineManager:loadFromXML. Textes : clés as_help_* des fichiers l10n.
+     Images : size = taille de la texture, uvs = partie affichée, aspectRatio = hauteur / largeur. -->
+<helpLines>
+    <category title="$l10n_as_help_title" subTitle="$l10n_as_help_subTitle">
+        <page title="$l10n_as_help_intro_title">
+            <paragraph>
+                <title text="$l10n_as_help_intro_p1_title"/>
+                <text text="$l10n_as_help_intro_p1_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_intro_p2_title"/>
+                <image filename="help/as_help_mode.dds" size="1024 1024" uvs="0px 0px 1024px 313px" aspectRatio="0.306"/>
+                <text text="$l10n_as_help_intro_p2_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_intro_p3_title"/>
+                <text text="$l10n_as_help_intro_p3_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_intro_p4_title"/>
+                <image filename="help/as_help_settings.dds" size="1024 1024" uvs="0px 0px 1024px 397px" aspectRatio="0.388"/>
+                <text text="$l10n_as_help_intro_p4_text"/>
+            </paragraph>
+        </page>
+        <page title="$l10n_as_help_diff_title">
+            <paragraph>
+                <title text="$l10n_as_help_diff_p1_title"/>
+                <image filename="help/as_help_diff.dds" size="512 512" uvs="0px 0px 512px 323px" aspectRatio="0.631"/>
+                <text text="$l10n_as_help_diff_p1_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_diff_p2_title"/>
+                <text text="$l10n_as_help_diff_p2_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_diff_p3_title"/>
+                <text text="$l10n_as_help_diff_p3_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_diff_p4_title"/>
+                <text text="$l10n_as_help_diff_p4_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_diff_p5_title"/>
+                <text text="$l10n_as_help_diff_p5_text"/>
+            </paragraph>
+        </page>
+        <page title="$l10n_as_help_tires_title">
+            <paragraph>
+                <title text="$l10n_as_help_tires_p1_title"/>
+                <text text="$l10n_as_help_tires_p1_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_tires_p2_title"/>
+                <image filename="help/as_help_duals.dds" size="1024 1024" uvs="0px 0px 1024px 708px" aspectRatio="0.691"/>
+                <text text="$l10n_as_help_tires_p2_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_tires_p3_title"/>
+                <text text="$l10n_as_help_tires_p3_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_tires_p4_title"/>
+                <text text="$l10n_as_help_tires_p4_text"/>
+            </paragraph>
+        </page>
+        <page title="$l10n_as_help_ground_title">
+            <paragraph>
+                <title text="$l10n_as_help_ground_p1_title"/>
+                <text text="$l10n_as_help_ground_p1_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_ground_p2_title"/>
+                <text text="$l10n_as_help_ground_p2_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_ground_p3_title"/>
+                <text text="$l10n_as_help_ground_p3_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_ground_p4_title"/>
+                <text text="$l10n_as_help_ground_p4_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_ground_p5_title"/>
+                <text text="$l10n_as_help_ground_p5_text"/>
+            </paragraph>
+        </page>
+        <page title="$l10n_as_help_hud_title">
+            <paragraph>
+                <title text="$l10n_as_help_hud_p1_title"/>
+                <image filename="help/as_help_hud.dds" size="1024 1024" uvs="0px 0px 1024px 512px" aspectRatio="0.500"/>
+                <text text="$l10n_as_help_hud_p1_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_hud_p2_title"/>
+                <text text="$l10n_as_help_hud_p2_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_hud_p3_title"/>
+                <text text="$l10n_as_help_hud_p3_text"/>
+            </paragraph>
+        </page>
+        <page title="$l10n_as_help_weather_title">
+            <paragraph>
+                <title text="$l10n_as_help_weather_p1_title"/>
+                <image filename="help/as_help_weather.dds" size="1024 1024" uvs="0px 0px 1024px 917px" aspectRatio="0.896"/>
+                <text text="$l10n_as_help_weather_p1_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_weather_p2_title"/>
+                <image filename="help/as_help_miniweather.dds" size="512 512" uvs="0px 0px 512px 157px" aspectRatio="0.307"/>
+                <text text="$l10n_as_help_weather_p2_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_weather_p3_title"/>
+                <text text="$l10n_as_help_weather_p3_text"/>
+            </paragraph>
+        </page>
+        <page title="$l10n_as_help_fields_title">
+            <paragraph>
+                <title text="$l10n_as_help_fields_p1_title"/>
+                <image filename="help/as_help_fields.dds" size="1024 1024" uvs="0px 0px 1024px 220px" aspectRatio="0.215"/>
+                <text text="$l10n_as_help_fields_p1_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_fields_p2_title"/>
+                <text text="$l10n_as_help_fields_p2_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_fields_p3_title"/>
+                <text text="$l10n_as_help_fields_p3_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_fields_p4_title"/>
+                <image filename="help/as_help_fieldsgroup.dds" size="1024 1024" uvs="0px 0px 1024px 340px" aspectRatio="0.332"/>
+                <text text="$l10n_as_help_fields_p4_text"/>
+            </paragraph>
+        </page>
+        <page title="$l10n_as_help_register_title">
+            <paragraph>
+                <title text="$l10n_as_help_register_p1_title"/>
+                <image filename="help/as_help_register.dds" size="1024 1024" uvs="0px 0px 1024px 462px" aspectRatio="0.451"/>
+                <text text="$l10n_as_help_register_p1_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_register_p2_title"/>
+                <image filename="help/as_help_registersales.dds" size="1024 1024" uvs="0px 0px 1024px 461px" aspectRatio="0.450"/>
+                <text text="$l10n_as_help_register_p2_text"/>
+            </paragraph>
+        </page>
+        <page title="$l10n_as_help_money_title">
+            <paragraph>
+                <title text="$l10n_as_help_money_p1_title"/>
+                <text text="$l10n_as_help_money_p1_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_money_p2_title"/>
+                <text text="$l10n_as_help_money_p2_text"/>
+            </paragraph>
+        </page>
+        <page title="$l10n_as_help_hours_title">
+            <paragraph>
+                <title text="$l10n_as_help_hours_p1_title"/>
+                <text text="$l10n_as_help_hours_p1_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_hours_p2_title"/>
+                <image filename="help/as_help_sleep.dds" size="1024 1024" uvs="0px 0px 1024px 753px" aspectRatio="0.735"/>
+                <text text="$l10n_as_help_hours_p2_text"/>
+            </paragraph>
+        </page>
+        <page title="$l10n_as_help_road_title">
+            <paragraph>
+                <title text="$l10n_as_help_road_p1_title"/>
+                <text text="$l10n_as_help_road_p1_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_road_p2_title"/>
+                <text text="$l10n_as_help_road_p2_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_road_p3_title"/>
+                <text text="$l10n_as_help_road_p3_text"/>
+            </paragraph>
+        </page>
+        <page title="$l10n_as_help_files_title">
+            <paragraph>
+                <title text="$l10n_as_help_files_p1_title"/>
+                <text text="$l10n_as_help_files_p1_text"/>
+            </paragraph>
+            <paragraph>
+                <title text="$l10n_as_help_files_p2_title"/>
+                <text text="$l10n_as_help_files_p2_text"/>
+            </paragraph>
+        </page>
+    </category>
+</helpLines>

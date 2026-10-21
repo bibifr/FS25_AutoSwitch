@@ -112,6 +112,7 @@ local FILES = {
     "scripts/HudDedup.lua",
     "scripts/TrafficSensor.lua",
     "scripts/NoOvertake.lua",
+    "scripts/Help.lua",
     "scripts/Settings.lua",
 }
 

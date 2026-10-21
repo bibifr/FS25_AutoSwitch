@@ -957,6 +957,7 @@ AS_Settings.LOG_LIST = {
     { "AS_CoopPay", "Coopératives", "Cooperatives" },
     { "AS_Hours", "Horaires d'ouverture", "Opening hours" },
     { "AS_TrafficSensor", "Capteurs du trafic", "Traffic sensors" },
+    { "AS_Help", "Aide (menu Échap > Aide)", "Help (Esc > Help menu)" },
 }
 
 local function isFr()

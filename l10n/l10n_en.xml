@@ -257,5 +257,99 @@
         <text name="vtpas_beamEnabled_tip" text="Yes: headlight reach and brightness set below. No: base game headlights, no processing (better performance)."/>
         <text name="vtpas_tracksMax_label" text="Tire tracks kept (points)"/>
         <text name="vtpas_tracksMax_tip" text="Number of tire track points kept and saved with the game. Fewer = less memory and processing."/>
+        <!-- Aide (menu Échap > Aide) : help/helpLine.xml -->
+        <text name="as_help_title" text="AutoSwitch"/>
+        <text name="as_help_subTitle" text="Make it real"/>
+        <text name="as_help_intro_title" text="Overview"/>
+        <text name="as_help_intro_p1_title" text="What AutoSwitch does"/>
+        <text name="as_help_intro_p1_text" text="AutoSwitch makes Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics and Tractor Terrain Dynamics work together, without modifying any of them.&#10;&#10;It handles tire pressure and differential locks on its own, makes grip realistic depending on the ground and its moisture, and adds handy windows: Weather, Fields and Register.&#10;&#10;It also settles the conflicts between MoreRealistic, Use Your Tyres, DynamicDrivePro, Enhanced Vehicle and Recovery Winch: no mod is disabled."/>
+        <text name="as_help_intro_p2_title" text="AUTO / MANUAL mode"/>
+        <text name="as_help_intro_p2_text" text="Key Right Ctrl + Up arrow, inside a vehicle. The mode is shown above the tractor.&#10;&#10;• AUTO: AutoSwitch locks the differentials depending on wheel slip and picks 2WD or 4WD depending on the ground.&#10;• MANUAL: you handle differentials and 2WD / 4WD yourself. An engaged lock is never released, and the tractor only steers up to its limit (wheels turned fully, it slides).&#10;&#10;When AutoDrive or Courseplay takes over, the tractor goes back to AUTO (adjustable)."/>
+        <text name="as_help_intro_p3_title" text="Shortcuts"/>
+        <text name="as_help_intro_p3_text" text="• Right Ctrl + Up arrow: AUTO / MANUAL mode (inside a vehicle)&#10;• Right Ctrl + M: Weather window&#10;• Right Ctrl + C: Fields window&#10;• Right Ctrl + R: weighing and sales Register&#10;• Right Ctrl + I: mount / unmount dual wheels (on foot, next to a tire rack)&#10;&#10;All these keys can be changed in Settings &gt; Controls."/>
+        <text name="as_help_intro_p4_title" text="Settings and required mods"/>
+        <text name="as_help_intro_p4_text" text="All settings are in Esc &gt; Settings, AUTOSWITCH tab. Each line has a tooltip.&#10;&#10;At the bottom of the tab:&#10;• the list of required mods, with a green tick (OK) or a red cross (missing, not activated or too old). A missing required mod does not block the game: only the features that depend on it are turned off;&#10;• &quot;Logs in log.txt&quot;: one switch per feature, off by default. Errors are always written.&#10;&#10;Required mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, MoreRealistic, moreRealisticXmlDatabank, MudSystemPhysics, TractorTerrainDynamics, DynamicDrivePro, RealisticHarvesting, MoistureSystem.&#10;Optional: Use Your Tyres (recommended) or Real Physics - Tire Wear for tire wear."/>
+        <text name="as_help_diff_title" text="Differentials and 4WD"/>
+        <text name="as_help_diff_p1_title" text="Automatic locking"/>
+        <text name="as_help_diff_p1_text" text="In AUTO mode, AutoSwitch locks the differentials (Enhanced Vehicle) when the wheels slip:&#10;• rear at 15 % slip, then front at 30 % (adjustable thresholds);&#10;• the slip must last 1.5 s before locking (adjustable);&#10;• unlocked when the slip falls back to half the threshold.&#10;&#10;A notification is shown on each lock and unlock (can be turned off). Locks are reset when the game is loaded."/>
+        <text name="as_help_diff_p2_title" text="2WD on the road, 4WD elsewhere"/>
+        <text name="as_help_diff_p2_text" text="The tractor switches to 2WD on asphalt and concrete, and to 4WD everywhere else: fields, gravel or dirt tracks, grass.&#10;&#10;In 2WD, if the rear axle slips, 4WD engages first, then the differentials lock if it still slips. On the road, back to 2WD once grip returns.&#10;&#10;A choice made by hand is kept until the next change of ground."/>
+        <text name="as_help_diff_p3_title" text="When turning"/>
+        <text name="as_help_diff_p3_text" text="• In 4WD, steering is limited to 90 %.&#10;• Locks are released beyond 50 % of full steering (rear only), 20 % (front only) or 10 % (both).&#10;• With the wheels turned, a lock is refused: the message &quot;Straighten the wheels&quot; is shown."/>
+        <text name="as_help_diff_p4_title" text="Plowing"/>
+        <text name="as_help_diff_p4_text" text="In AUTO mode, when a plow is lowered (even behind another implement), the rear differential locks and stays locked while it is in the ground. In MANUAL, it is up to you."/>
+        <text name="as_help_diff_p5_title" text="Combines, forage harvesters and 2WD machines"/>
+        <text name="as_help_diff_p5_text" text="Machines without 4WD keep full steering, have no 2WD / 4WD and only their driven axle locks. The HUD then shows a combine or a forage harvester instead of the tractor.&#10;&#10;The actual drivetrain of each machine is read after MoreRealistic (see the page &quot;Files and advanced settings&quot;)."/>
+        <text name="as_help_tires_title" text="Tires and dual wheels"/>
+        <text name="as_help_tires_p1_title" text="Tire pressure"/>
+        <text name="as_help_tires_p1_text" text="With AutoDrive or Courseplay, tires (Variable Tire Pressure) are deflated in the field and inflated on the road, always automatically.&#10;&#10;When you drive yourself, the &quot;Tire pressure&quot; setting decides: Automatic (as with a helper) or Manual (you use the Variable Tire Pressure key).&#10;&#10;Variable Tire Pressure's automatic re-inflation at 30 km/h is disabled. At least 4 s separate two pressure changes (adjustable)."/>
+        <text name="as_help_tires_p2_title" text="Mounting dual wheels"/>
+        <text name="as_help_tires_p2_text" text="The shop and the workshop no longer offer dual wheels (adjustable): they are mounted with tire racks, available in the shop and the construction menu.&#10;• Rear rack: 2 BKT 650/65R42 tires on rims.&#10;• Front rack: 2 BKT 540/65R30 tires, used with the rear rack for front + rear dual wheels.&#10;&#10;1. Park the tractor, stopped, in the mounting area (rectangle on the ground next to the rack).&#10;2. On foot, stand on the yellow marker.&#10;3. Press Right Ctrl + I and confirm.&#10;&#10;Full rack = mounting, empty rack = unmounting (the tires are put back on it). Allow 15 in-game minutes per tire; the tractor cannot be used during the work and the change is cancelled if it is moved. Single-player only."/>
+        <text name="as_help_tires_p3_title" text="Benefits of dual wheels"/>
+        <text name="as_help_tires_p3_text" text="The real width of dual wheels is used by Mud System Physics (less sinking) and they grip better on wet ground. A Variable Tire Pressure fix is applied for tires with brand variants."/>
+        <text name="as_help_tires_p4_title" text="Wear and dirt"/>
+        <text name="as_help_tires_p4_text" text="Tire wear is optional: Use Your Tyres (recommended) or Real Physics - Tire Wear. If both are activated, Use Your Tyres is used and the other one is blocked. Wear is applied on top of ground grip; on the road, a worn tire grips a little better (slick effect).&#10;&#10;Muddy tires stay dirty much longer while driving (at least one hour on the road); water, rain and washing still clean them."/>
+        <text name="as_help_ground_title" text="Grip, ground and mud"/>
+        <text name="as_help_ground_p1_title" text="Grip on wet ground"/>
+        <text name="as_help_ground_p1_text" text="MoreRealistic ignores the grip computed by Mud System Physics and Tractor Terrain Dynamics. AutoSwitch therefore lowers grip in the field depending on local moisture (from 20 %, maximum at 70 %) and the soil type.&#10;&#10;Five levels: Beginner, Easy, Normal (default), Hard, Extreme. At 60 % moisture, the loss goes from about 34 % (Beginner) to 78 % (Extreme)."/>
+        <text name="as_help_ground_p2_title" text="Grip bonuses"/>
+        <text name="as_help_ground_p2_text" text="• Tires deflated in the field (Variable Tire Pressure): bonus capped at +15 % (+20 % with dual wheels).&#10;• Locked differentials: +4 % on the rear wheels, +3 % on the front wheels."/>
+        <text name="as_help_ground_p3_title" text="Puddles"/>
+        <text name="as_help_ground_p3_text" text="The Precision Farming soil type counts in Mud System Physics moisture: sand dries quickly, clay stays wet.&#10;&#10;When it rains on saturated ground, water gathers in the hollows of the terrain (fields, tracks, meadows; never on asphalt, concrete or in water) and forms visible puddles. They slowly disappear through seepage and evaporation."/>
+        <text name="as_help_ground_p4_title" text="Grass and tracks"/>
+        <text name="as_help_ground_p4_text" text="Mud System Physics mowed the grass under every wheel from 12 % moisture. Instead, trampled grass goes back one growth stage, with a chance that rises with speed and moisture; above 30 km/h it is cut short.&#10;&#10;Tire tracks are kept with the savegame: they no longer disappear when the game is reloaded (60,000 points by default, adjustable)."/>
+        <text name="as_help_ground_p5_title" text="Implements, mud and sowing"/>
+        <text name="as_help_ground_p5_text" text="• Implements stay still when stopped: no more bouncing caused by Mud System Physics and MoreRealistic.&#10;• Mud also slows down unbraked trailers and implements.&#10;• Seeding protection: when reversing, and under the wheels of a seeder or planter, the crop is no longer erased.&#10;• Seeders and planters can be filled with the lid closed.&#10;• Direct re-sowing is possible on crushed strips.&#10;• AutoSwitch's Mud System Physics and Tractor Terrain Dynamics settings are applied automatically."/>
+        <text name="as_help_hud_title" text="Display"/>
+        <text name="as_help_hud_p1_title" text="Top view of the tractor"/>
+        <text name="as_help_hud_p1_text" text="Inside a vehicle, a top view of the tractor is shown next to the speedometer: locked axles in red, 4WD in green, and the slip of each wheel (or a single percentage per locked axle).&#10;&#10;Slip color: white, yellow from 10 %, orange at the differential threshold, red at the alert threshold. It can be moved with the mouse."/>
+        <text name="as_help_hud_p2_title" text="Recommended speed"/>
+        <text name="as_help_hud_p2_text" text="Above the speedometer, the recommended speed range is recomputed continuously depending on the area (field / road), tire pressure, the ground, its moisture and wheel slip. &quot;RISK OF GETTING STUCK&quot; warns you when you should not stop."/>
+        <text name="as_help_hud_p3_title" text="Alerts and notifications"/>
+        <text name="as_help_hud_p3_text" text="• Red slip alert when slip stays above 80 % for 5 s (threshold and duration adjustable, can be turned off).&#10;• Differential and tire notifications, with an adjustable display time.&#10;• &quot;Hide duplicate displays&quot; hides information that other mods repeat (for example Enhanced Vehicle), without changing their settings."/>
+        <text name="as_help_weather_title" text="Weather"/>
+        <text name="as_help_weather_p1_title" text="Weather window"/>
+        <text name="as_help_weather_p1_text" text="Right Ctrl + M opens the Weather window, in four parts: now, next 24 h (in 3-hour slots), upcoming changes and next days.&#10;&#10;These are the game's real forecasts: what is shown will happen. The game only gives a rain intensity: millimeters are estimated. A &quot;*&quot; marks a day that is not fully forecast."/>
+        <text name="as_help_weather_p2_title" text="Mini weather"/>
+        <text name="as_help_weather_p2_text" text="Left of the clock, the mini weather shows the current weather, the next change, the wind and its direction. It can be moved with the mouse when the cursor is visible; a click on it (&quot;Click me&quot;) opens the Weather window. Can be turned off."/>
+        <text name="as_help_weather_p3_title" text="Visible wind"/>
+        <text name="as_help_weather_p3_text" text="Trees, crops and grass move more strongly in the wind (x2.2 by default; x1 = base game). Only the display changes: wind speed stays the game's."/>
+        <text name="as_help_fields_title" text="Fields"/>
+        <text name="as_help_fields_p1_title" text="Fields window"/>
+        <text name="as_help_fields_p1_text" text="Right Ctrl + C, or a click on the field icon (with &quot;Click me&quot; written under it), opens the list of your fields. One line per owned field:&#10;• Field: the game's number;&#10;• Crop and Stage;&#10;• Sown, Fertilizer, Herbicide: date of the last pass;&#10;• Harvest: when the crop will be ready.&#10;&#10;The mouse wheel scrolls the list; the cross at the top closes the window."/>
+        <text name="as_help_fields_p2_title" text="Dates"/>
+        <text name="as_help_fields_p2_text" text="The game keeps no dates: AutoSwitch records them itself since it was installed, once at least 10 % of the field has been worked (passes along the edge do not count). Before that, the cell says &quot;before tracking&quot;. Dates are kept with the savegame."/>
+        <text name="as_help_fields_p3_title" text="Harvest"/>
+        <text name="as_help_fields_p3_text" text="• A month (&quot;about Month 8&quot;): harvest estimated from the crop's calendar.&#10;• &quot;Ready&quot;: the crop can be harvested.&#10;• &quot;Ready (best 5/7)&quot;: can be harvested, but the best stage is not reached yet (crops harvestable over several stages, such as silage maize).&#10;• &quot;Best&quot;: best time to harvest.&#10;• After harvest: &quot;Harvested&quot; or the stubble."/>
+        <text name="as_help_fields_p4_title" text="Merged fields"/>
+        <text name="as_help_fields_p4_text" text="Game fields merged into one (a single outline of cultivated ground) are shown on a single line, for example &quot;Field 12 (2 fields)&quot;.&#10;• A click on the blue cross unfolds the list of fields in the group.&#10;• A click on a field in this list makes it the main field (the one whose number is shown).&#10;&#10;The outline is computed only once, spread over several frames so the game is not slowed down, then kept with the savegame."/>
+        <text name="as_help_register_title" text="Register"/>
+        <text name="as_help_register_p1_title" text="Weighing and sales register"/>
+        <text name="as_help_register_p1_text" text="Right Ctrl + R opens the register, in three tabs:&#10;• Weighings: each pass on a weighbridge (sent by AutoDrive Addon), with the place and who weighed (AutoDrive or the player);&#10;• Sales: each sale with the product, quantity, amount and selling point. Unloading a trailer arrives in small pieces: they are grouped into a single line;&#10;• Totals: per month and per product.&#10;&#10;Totals are shown at the bottom of each tab."/>
+        <text name="as_help_register_p2_title" text="Years and deleting"/>
+        <text name="as_help_register_p2_text" text="One page per year: the register opens on the current year; the &lt; &gt; arrows show previous years (nothing is erased).&#10;&#10;The cross at the end of a line deletes it: click a second time to confirm.&#10;&#10;The register is kept with the savegame."/>
+        <text name="as_help_money_title" text="Money"/>
+        <text name="as_help_money_p1_title" text="Overdraft and interest"/>
+        <text name="as_help_money_p1_text" text="You can buy or lease with the account in the red, up to 20 % of the resale value of what you own: purchased equipment (not leased), land and buildings (adjustable; Off = base game).&#10;&#10;Interest is charged every in-game day on the negative balance: 10 % per year by default, spread over the days of the year. &quot;Overdraft interest&quot; line in Finances."/>
+        <text name="as_help_money_p2_title" text="Cooperatives paid at the end of the month"/>
+        <text name="as_help_money_p2_text" text="A sale to a cooperative (selling point whose name contains &quot;coop&quot;) works as usual, but the money does not come in straight away: it is marked &quot;To be paid&quot; in the register and the month's total is paid at the end of the month, &quot;Co-ops&quot; line in Finances. Can be turned off."/>
+        <text name="as_help_hours_title" text="Opening hours and sleep"/>
+        <text name="as_help_hours_p1_title" text="Opening hours"/>
+        <text name="as_help_hours_p1_text" text="• Shop: 8 am to 7 pm. Outside these hours, the shop can still be browsed, but buying, leasing, selling or building is refused.&#10;• Selling points (silos, mills, factories…): 6 am to 10 pm. Outside these hours, nothing is accepted; an AutoDrive truck waits on site for opening.&#10;&#10;Hours adjustable in the AUTOSWITCH tab, and can be turned off."/>
+        <text name="as_help_hours_p2_title" text="Sleep"/>
+        <text name="as_help_hours_p2_text" text="The Sleep window offers two lists: hours (+0 to +23 h) and days (0 to 7). With days, you wake up at 8 am on the last day, plus the chosen hours. Days pass normally: crops, sales and wages are computed as usual."/>
+        <text name="as_help_road_title" text="Road, traffic and lights"/>
+        <text name="as_help_road_p1_title" text="Traffic"/>
+        <text name="as_help_road_p1_text" text="• Traffic cars no longer overtake tractors (AutoDrive or driven) on the road. They pass if the tractor has been stopped for 10 s, is reversing or has its hazard lights on.&#10;• Their sensors are reduced to 80 % of their width: they no longer brake when meeting a tractor.&#10;&#10;Also works with traffic added by Traffic Density Control."/>
+        <text name="as_help_road_p2_title" text="AutoDrive speed"/>
+        <text name="as_help_road_p2_text" text="AutoSwitch sets AutoDrive's speed by the ground: 20 km/h in fields, 30 km/h on tracks, no limit on the road (adjustable). AutoDrive still slows down in turns and at arrival."/>
+        <text name="as_help_road_p3_title" text="Lights"/>
+        <text name="as_help_road_p3_text" text="Headlights and work lights of all vehicles, yours included, reach twice as far and twice as bright (range and brightness adjustable from x1 to x4). &quot;Enhanced headlights: No&quot; restores the base game ones, with no computing at all."/>
+        <text name="as_help_files_title" text="Files and advanced settings"/>
+        <text name="as_help_files_p1_title" text="modSettings/FS25_AutoSwitch folder"/>
+        <text name="as_help_files_p1_text" text="These files are created by AutoSwitch and can be corrected by hand, with the game closed:&#10;• transmissions.xml: drivetrain of each machine. &quot;detected&quot; is what AutoSwitch read; fill in &quot;forced&quot; with 4x4, front (front axle only) or rear (rear axle only) to impose yours.&#10;• cooperatives.xml: each selling point with coop=&quot;true&quot; or &quot;false&quot;, to correct what counts as a cooperative.&#10;• horaires.xml: opening hours of a specific selling point. -1 = hours from the menu; open=&quot;0&quot; close=&quot;24&quot; = open 24/7."/>
+        <text name="as_help_files_p2_title" text="In the savegame"/>
+        <text name="as_help_files_p2_text" text="• AutoSwitch_fields.xml: dates and merged fields of the Fields window.&#10;• AutoSwitch_register.xml: weighings and sales of the register.&#10;• AutoSwitch_coop.xml: what the cooperatives still owe.&#10;&#10;Tire tracks and the AUTOSWITCH tab settings are also kept with the game."/>
+        <!-- fin de l'aide -->
     </texts>
 </l10n>
