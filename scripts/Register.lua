@@ -607,6 +607,7 @@ function AS_Register:setOpen(open)
     if g_inputBinding == nil or g_inputBinding.setShowMouseCursor == nil then return end
     if open then
         if AS_Weather ~= nil and AS_Weather.isOpen then AS_Weather:setOpen(false) end
+        if AS_Fields ~= nil and AS_Fields.isOpen then AS_Fields:setOpen(false) end
         self.cursorBefore = g_inputBinding.getShowMouseCursor ~= nil and g_inputBinding:getShowMouseCursor() == true
         if not self.cursorBefore then pcall(g_inputBinding.setShowMouseCursor, g_inputBinding, true) end
     elseif self.cursorBefore == false then

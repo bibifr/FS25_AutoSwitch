@@ -145,6 +145,11 @@ function AS_Settings:save()
             setXMLBool(xml, "vtpAutoSwitch.shopTwins#blocked", self.shopBlockTwins)
             setXMLInt(xml, "vtpAutoSwitch.overdraft#percent", self.overdraftPercent)
             setXMLInt(xml, "vtpAutoSwitch.overdraft#rate", self.overdraftRate)
+            -- (v1.0.1.7) logs coupés dans log.txt
+            local on = {}
+            for tag, v in pairs(AS_LOGS or {}) do if v == true then on[#on + 1] = tag end end
+            table.sort(on)
+            setXMLString(xml, "vtpAutoSwitch.logs#on", table.concat(on, " "))
             if self.weatherPosX ~= nil and self.weatherPosY ~= nil then
                 setXMLFloat(xml, "vtpAutoSwitch.weatherWidget#x", self.weatherPosX)
                 setXMLFloat(xml, "vtpAutoSwitch.weatherWidget#y", self.weatherPosY)
@@ -260,6 +265,8 @@ function AS_Settings:load()
                 if odp ~= nil then self.overdraftPercent = math.max(0, math.min(100, odp)) end
                 local odr = getXMLInt(xml, "vtpAutoSwitch.overdraft#rate")
                 if odr ~= nil then self.overdraftRate = math.max(0, math.min(20, odr)) end
+                AS_LOGS = AS_LOGS or {}
+                for tag in (getXMLString(xml, "vtpAutoSwitch.logs#on") or ""):gmatch("[%w_]+") do AS_LOGS[tag] = true end
                 local ww = getXMLBool(xml, "vtpAutoSwitch.weatherWidget#enabled")
                 if ww ~= nil then self.weatherWidget = ww end
                 local wx = getXMLFloat(xml, "vtpAutoSwitch.weatherWidget#x")
@@ -917,6 +924,67 @@ function AS_Settings:addHeader(layout, headerTemplate, text)
     header:setText(text)
 end
 
+-- (v1.0.1.7) logs dans log.txt, un interrupteur par module (étiquette, texte FR, texte EN)
+AS_Settings.LOG_LIST = {
+    { "AutoSwitch", "Général (versions, mods requis)", "General (versions, required mods)" },
+    { "AS_Settings", "Paramètres", "Settings" },
+    { "AS_Arbiter", "Arbitrage entre les mods", "Mod arbitration" },
+    { "AS_Tires", "Pression des pneus", "Tire pressure" },
+    { "AS_Diff", "Différentiels", "Differentials" },
+    { "AS_Steer", "Braquage 4x4", "4WD steering" },
+    { "AS_SlipAlert", "Alerte de patinage", "Slip alert" },
+    { "AS_SpeedHint", "Vitesse conseillée", "Speed hint" },
+    { "AS_Trans", "Transmissions", "Transmissions" },
+    { "AS_SeedProtect", "Protection du semis", "Seed protection" },
+    { "AS_SeedCoverFill", "Remplissage du semoir", "Seeder filling" },
+    { "AS_DirectResow", "Semis direct", "Direct resowing" },
+    { "AS_WetGrip", "Adhérence humide", "Wet grip" },
+    { "AS_Duals", "Roues jumelées", "Dual wheels" },
+    { "AS_DualRack", "Palettes de pneus", "Tire racks" },
+    { "AS_VtpFix", "Correctif VTP", "VTP fix" },
+    { "AS_TireWear", "Usure des pneus", "Tire wear" },
+    { "AS_TireTracksSave", "Traces de pneus", "Tire tracks" },
+    { "AS_MudPreset", "Réglages Mud / TTD", "Mud / TTD presets" },
+    { "AS_MudWheelDrag", "Résistance de la boue", "Mud wheel drag" },
+    { "AS_TtdBridge", "Pont MSP -> TTD", "MSP -> TTD bridge" },
+    { "AS_ImplementStabilizer", "Outils stables à l'arrêt", "Implement stabilizer" },
+    { "AS_AdSpeed", "Vitesse AutoDrive", "AutoDrive speed" },
+    { "AS_Grass", "Herbe piétinée", "Trampled grass" },
+    { "AS_Puddles", "Flaques", "Puddles" },
+    { "AS_Weather", "Météo", "Weather" },
+    { "AS_Champs", "Champs", "Fields" },
+    { "AS_Register", "Registre", "Register" },
+    { "AS_CoopPay", "Coopératives", "Cooperatives" },
+    { "AS_Hours", "Horaires d'ouverture", "Opening hours" },
+    { "AS_TrafficSensor", "Capteurs du trafic", "Traffic sensors" },
+}
+
+local function isFr()
+    local ok, t = pcall(L, "vtpas_off")
+    return ok and t == "Désactivé"
+end
+
+function AS_Settings:addLogRows(layout, template, headerTemplate)
+    local fr = isFr()
+    self:addHeader(layout, headerTemplate, fr and "Logs dans log.txt" or "Logs in log.txt")
+    local onOff = { L("vtpas_off"), L("vtpas_on") }
+    for _, e in ipairs(self.LOG_LIST) do
+        local tag = e[1]
+        self:addRow(layout, template, {
+            label = fr and e[2] or e[3],
+            tip = fr and ("Lignes [" .. tag .. "] dans log.txt. Les erreurs sont toujours écrites.")
+                or ("[" .. tag .. "] lines in log.txt. Errors are always written."),
+            texts = onOff,
+            state = (AS_LOGS ~= nil and AS_LOGS[tag] == true) and 2 or 1,
+            callback = function(_, state)
+                AS_LOGS = AS_LOGS or {}
+                if state == 2 then AS_LOGS[tag] = true else AS_LOGS[tag] = nil end
+                AS_Settings:save()
+            end,
+        })
+    end
+end
+
 -- (v1.0.0.92) en bas de l'onglet : mods requis, coche verte ou croix rouge
 function AS_Settings:addRequiredMods(layout, template, headerTemplate)
     if AS_ModCheck == nil or type(AS_ModCheck.all) ~= "table" then return end
@@ -1362,7 +1430,11 @@ function AS_Settings:buildUI(frame)
         callback = AS_Settings.onShopBlockTwinsChanged,
     })
 
-    if layout ~= srcLayout then self:addRequiredMods(layout, template, headerTemplate) end
+    if layout ~= srcLayout then
+        self:addRequiredMods(layout, template, headerTemplate)
+        local ok, err = pcall(self.addLogRows, self, layout, template, headerTemplate)
+        if not ok then sprint("ERREUR logs : %s", tostring(err)) end
+    end
 
     self.built = true
     layout:invalidateLayout()

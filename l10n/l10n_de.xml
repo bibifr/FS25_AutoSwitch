@@ -198,6 +198,7 @@
         <text name="vtpas_weatherWidget_tip" text="Zeigt das aktuelle Wetter und den nächsten Wechsel links neben der Uhr. Mit sichtbarem Mauszeiger verschiebbar; ein Klick öffnet das Wetterfenster (Strg rechts + M)."/>
         <text name="input_AS_WEATHER" text="Wetter: öffnen / schließen"/>
         <text name="input_AS_REGISTER" text="Wiege- und Verkaufsregister: öffnen / schließen"/>
+        <text name="input_AS_FIELDS" text="Felder: öffnen / schließen"/>
         <text name="vtpas_wx_title" text="Wetter"/>
         <text name="vtpas_wx_now" text="Jetzt"/>
         <text name="vtpas_wx_nowShort" text="Jetzt"/>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<i3D name="Flaque.i3d" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
+  <Asset>
+    <Export program="GIANTS Editor 64bit" version="10.0.13"/>
+  </Asset>
+
+  <Files>
+    <File fileId="2" filename="$data/maps/textures/shared/water_normal.png"/>
+    <File fileId="4" filename="$data/shaders/oceanShader.xml"/>
+  </Files>
+
+
+  <Materials>
+    <Material name="waterSim_01_mat" materialId="5" diffuseColor="1 1 1 1" specularColor="1 1 0.988235" alphaBlending="true" customShaderId="4">
+      <Normalmap fileId="2"/>
+      <Refractionmap coeff="1" bumpScale="0.01" withSSRData="true"/>
+      <CustomParameter name="underwaterFogColor" value="0.015 0.04 0.031 1"/>
+      <CustomParameter name="underwaterFogDepth" value="1.5 1.5 1 1"/>
+      <CustomParameter name="depthScale" value="1.1"/>
+    </Material>
+    <Material name="waterSim_01_mat" materialId="6" diffuseColor="1 1 1 1" specularColor="1 1 1" customShaderId="4">
+      <Normalmap fileId="2"/>
+      <Refractionmap coeff="1" bumpScale="0.01" withSSRData="true"/>
+      <CustomParameter name="underwaterFogColor" value="0.015 0.04 0.031 1"/>
+      <CustomParameter name="underwaterFogDepth" value="1.5 1.5 1 1"/>
+      <CustomParameter name="depthScale" value="1.1"/>
+    </Material>
+  </Materials>
+
+
+  <Shapes externalShapesFile="flaque.i3d.shapes">
+  </Shapes>
+
+  <Scene>
+    <Shape name="right" rotation="0 -2.13443e-07 0" shapeId="1" kinematic="true" collisionFilterGroup="0x80000000" collisionFilterMask="0x1" angularDamping="0.52" clipDistance="200" nodeId="10" castsShadows="false" receiveShadows="true" materialIds="5"/>
+    <Shape name="left" shapeId="2" kinematic="true" collisionFilterGroup="0x80000000" collisionFilterMask="0x1" angularDamping="0.52" clipDistance="200" nodeId="11" castsShadows="false" receiveShadows="true" materialIds="6"/>
+  </Scene>
+
+</i3D>

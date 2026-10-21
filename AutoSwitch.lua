@@ -30,7 +30,9 @@
 --   LightRange    lumières des véhicules visibles de plus loin
 --   GrassTrample  herbe piétinée : recul de pousse au lieu du fauchage de Mud System Physics
 --   WindSway      vent visible : arbres, cultures et herbe bougent selon la force du vent (x2,2)
+--   Puddles       flaques : type de sol Precision Farming -> Mud System Physics, flaques visibles
 --   Weather       fenêtre Météo (Ctrl droit + M) : prévisions du jeu lisibles
+--   Fields        fenêtre Champs (Ctrl droit + C ou icône) : culture, stade, semis, engrais, herbicide, récolte
 --   Overdraft     découvert : achat / location jusqu'à un plafond, agios chaque jour
 --   CoopPay       coopératives payées en fin de mois (ventes « À payer » dans le registre)
 --   Register      registre des pesées (AutoDrive Addon) et des ventes (Ctrl droit + R)
@@ -100,7 +102,9 @@ local FILES = {
     "scripts/LightRange.lua",
     "scripts/WindSway.lua",
     "scripts/GrassTrample.lua",
+    "scripts/Puddles.lua",
     "scripts/Weather.lua",
+    "scripts/Fields.lua",
     "scripts/Overdraft.lua",
     "scripts/CoopPay.lua",
     "scripts/Register.lua",
@@ -115,7 +119,8 @@ local FILES = {
 -- cuts : modules non chargés si le mod manque (v1.0.0.87)
 local MSP_CUTS = { "scripts/SeedProtect.lua", "scripts/DirectResow.lua", "scripts/Duals.lua",
     "scripts/GrassTrample.lua", "scripts/MudPreset.lua", "scripts/MudWheelDrag.lua",
-    "scripts/ImplementStabilizer.lua", "scripts/TireDirtKeep.lua", "scripts/TtdBridge.lua" }
+    "scripts/ImplementStabilizer.lua", "scripts/TireDirtKeep.lua", "scripts/TtdBridge.lua",
+    "scripts/Puddles.lua" }
 local MR_CUTS = { "scripts/WetGrip.lua", "scripts/MudWheelDrag.lua", "scripts/ImplementStabilizer.lua" }
 local REQUIRED = {
     { "FS25_VariableTirePressure",    "1.0.0.13", "Variable Tire Pressure", cuts = { "scripts/Tires.lua", "scripts/VtpFix.lua" } },

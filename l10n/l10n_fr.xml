@@ -198,6 +198,7 @@
         <text name="vtpas_weatherWidget_tip" text="Affiche le temps actuel et le prochain changement à gauche de l'horloge. Déplaçable à la souris quand le curseur est visible ; un clic ouvre la fenêtre Météo (Ctrl droit + M)."/>
         <text name="input_AS_WEATHER" text="Météo : ouvrir / fermer"/>
         <text name="input_AS_REGISTER" text="Registre des pesées et des ventes : ouvrir / fermer"/>
+        <text name="input_AS_FIELDS" text="Champs : ouvrir / fermer"/>
         <text name="vtpas_wx_title" text="Météo"/>
         <text name="vtpas_wx_now" text="Maintenant"/>
         <text name="vtpas_wx_nowShort" text="Maint."/>

@@ -7,6 +7,25 @@ AS_MOD_DIR = g_currentModDirectory or ""   -- dossier du mod (pour l'icône de p
 
 AS_VERBOSE = false
 
+-- (v1.0.1.7) logs dans log.txt coupables module par module (menu Paramètres, onglet AUTOSWITCH).
+-- Chaque ligne d'AutoSwitch commence par son étiquette ([AS_Champs], [AutoSwitch]...) :
+-- coupées par défaut pour les joueurs ; AS_LOGS[étiquette] == true les réactive.
+-- Les erreurs sont toujours écrites.
+AS_LOGS = AS_LOGS or {}
+local rawPrint = print
+AS.rawPrint = rawPrint
+print = function(...)
+    if select("#", ...) > 0 then
+        local s = tostring((...))
+        local tag = s:match("^%[([%w_]+)%]")
+        if tag ~= nil and AS_LOGS[tag] ~= true then
+            local low = s:lower()
+            if not (low:find("erreur", 1, true) or low:find("error", 1, true) or low:find("échec", 1, true)) then return end
+        end
+    end
+    return rawPrint(...)
+end
+
 -- (v1.25) Journal : seules les erreurs sont écrites dans log.txt. Mettre true pour le diagnostic.
 
 local function vtpInfo(...)
@@ -394,29 +413,50 @@ AS.getMudClass = getMudClass
 AS.modGlobal = modGlobal
 AS.shGetControlledVehicle = shGetControlledVehicle
 
--- (v1.0.0.82) fond des fenêtres (Météo, Registre) : coins arrondis comme la fenêtre de pesée
--- d'AutoDrive Addon. Bandes de 1 px rentrées selon le quart de cercle, sans chevauchement
--- (même transparence partout). py / pxw : conversion pixels -> écran de la fenêtre.
-function AS_drawPanelBg(x0, y0, W, H, titleH, py, pxw, bodyAlpha)
-    local R = 12
-    local function rounded(x, y, w, h, roundTop, roundBottom, r, g, b, a)
-        local step = py(1)
-        local n = math.min(R, math.floor(h / step / 2))
-        local top, bottom = y + h, y
-        for i = 0, n - 1 do
-            local dy = R - i - 0.5
-            local inset = pxw(R - math.sqrt(math.max(0, R * R - dy * dy)))
-            if roundTop then
-                drawFilledRect(x + inset, top - step * (i + 1), w - 2 * inset, step, r, g, b, a)
-            end
-            if roundBottom then
-                drawFilledRect(x + inset, bottom + step * i, w - 2 * inset, step, r, g, b, a)
-            end
+-- (v1.0.1.7) fond des fenêtres (Météo, Registre, Champs) : coins arrondis faits d'une petite
+-- image de quart de cercle (hud/as_corner_*.dds) teintée, et de rectangles pleins calés sur
+-- les vrais pixels de l'écran (plus de bandes de 1 px qui laissaient des traits).
+local cornerOv = nil
+local function corners()
+    if cornerOv == nil then
+        cornerOv = {}
+        for _, k in ipairs({ "tl", "tr", "bl", "br" }) do
+            local ok, o = pcall(createImageOverlay, Utils.getFilename("hud/as_corner_" .. k .. ".dds", AS_MOD_DIR))
+            if ok and o ~= nil and o ~= 0 then cornerOv[k] = o else cornerOv = false break end
         end
-        if roundTop then top = top - step * n end
-        if roundBottom then bottom = bottom + step * n end
-        drawFilledRect(x, bottom, w, top - bottom, r, g, b, a)
     end
-    rounded(x0, y0, W, H - titleH, false, true, 0.05, 0.07, 0.10, bodyAlpha or 0.88)
-    rounded(x0, y0 + H - titleH, W, titleH, true, false, 0.10, 0.14, 0.20, 0.95)
+    return cornerOv or nil
+end
+function AS_drawPanelBg(x0, y0, W, H, titleH, py, pxw, bodyAlpha)
+    local sw, sh = math.max(1, g_screenWidth or 1920), math.max(1, g_screenHeight or 1080)
+    local function sx(v) return math.floor(v * sw + 0.5) / sw end
+    local function sy(v) return math.floor(v * sh + 0.5) / sh end
+    local left, right = sx(x0), sx(x0 + W)
+    local bottom, top = sy(y0), sy(y0 + H)
+    local mid = sy(y0 + H - titleH)
+    local rh = sy(y0 + py(12)) - bottom
+    local rw = sx(x0 + pxw(12)) - left
+    local cs = corners()
+    local function part(yb, yt, roundTop, roundBottom, r, g, b, a)
+        if cs == nil then
+            drawFilledRect(left, yb, right - left, yt - yb, r, g, b, a)
+            return
+        end
+        local b2, t2 = yb, yt
+        if roundBottom then
+            drawFilledRect(left + rw, yb, right - left - 2 * rw, rh, r, g, b, a)
+            setOverlayColor(cs.bl, r, g, b, a); renderOverlay(cs.bl, left, yb, rw, rh)
+            setOverlayColor(cs.br, r, g, b, a); renderOverlay(cs.br, right - rw, yb, rw, rh)
+            b2 = yb + rh
+        end
+        if roundTop then
+            drawFilledRect(left + rw, yt - rh, right - left - 2 * rw, rh, r, g, b, a)
+            setOverlayColor(cs.tl, r, g, b, a); renderOverlay(cs.tl, left, yt - rh, rw, rh)
+            setOverlayColor(cs.tr, r, g, b, a); renderOverlay(cs.tr, right - rw, yt - rh, rw, rh)
+            t2 = yt - rh
+        end
+        if t2 > b2 then drawFilledRect(left, b2, right - left, t2 - b2, r, g, b, a) end
+    end
+    part(bottom, mid, false, true, 0.05, 0.07, 0.10, bodyAlpha or 0.88)
+    part(mid, top, true, false, 0.10, 0.14, 0.20, 0.95)
 end

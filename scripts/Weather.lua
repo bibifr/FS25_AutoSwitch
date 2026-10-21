@@ -811,6 +811,7 @@ function AS_Weather:setOpen(open)
     self.isOpen = open
     self.data = nil
     self.closeBox, self.closeHover = nil, false
+    if open and AS_Fields ~= nil and AS_Fields.isOpen then AS_Fields:setOpen(false) end
     if g_inputBinding == nil or g_inputBinding.setShowMouseCursor == nil then return end
     if open then
         self.cursorBefore = g_inputBinding.getShowMouseCursor ~= nil and g_inputBinding:getShowMouseCursor() == true
