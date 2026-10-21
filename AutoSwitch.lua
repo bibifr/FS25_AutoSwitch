@@ -37,6 +37,7 @@
 --   OpeningHours  horaires d'ouverture du magasin et des points de vente
 --   HudDedup      affichages en double des autres mods masqués (Enhanced Vehicle...)
 --   NoOvertake    les voitures du trafic ne doublent plus les tracteurs
+--   TrafficSensor capteur des voitures du trafic réduit à 80 % (elles ne freinent plus en croisant un tracteur)
 --   Settings      menu Paramètres et sauvegarde des réglages (toujours en dernier)
 --
 -- v1.0.0.29 : contrôle des versions. Chaque mod requis doit être au moins à la
@@ -105,6 +106,7 @@ local FILES = {
     "scripts/Register.lua",
     "scripts/OpeningHours.lua",
     "scripts/HudDedup.lua",
+    "scripts/TrafficSensor.lua",
     "scripts/NoOvertake.lua",
     "scripts/Settings.lua",
 }

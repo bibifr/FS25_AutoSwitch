@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.1.3 | Trafic : les voitures ne freinent plus quand elles croisent un tracteur. Au chargement, la largeur de détection de chaque voiture du trafic est réduite à 80 % (copies écrites dans modSettings/FS25_AutoSwitch/traffic, fichiers du jeu inchangés). Aussi avec Traffic Density Control |
 | 1.0.1.2 | Usure des pneus facultative : sans Use Your Tyres ni Real Physics - Tire Wear, AutoSwitch ne signale plus rien et l'usure n'est simplement pas gérée ; dans l'onglet AUTOSWITCH la ligne affiche « Facultatif (Use Your Tyres recommandé) » en gris. Avec l'un des deux, rien ne change |
 | 1.0.1.1 | Différentiels : en mode AUTO, une charrue abaissée verrouille le différentiel arrière (notification « charrue en terre »), il est déverrouillé quand la charrue est relevée ; pendant le labour la règle de patinage et le déblocage en virage ne touchent plus au différentiel arrière. En mode MANUEL rien ne change |
 | 1.0.1.0 | Coopératives : les lignes [AS_CoopPay] sont remises dans log.txt (type de chaque point de vente, somme à recevoir, versement de fin de mois) |
