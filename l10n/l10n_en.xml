@@ -249,12 +249,20 @@
         <text name="vtpas_wx_dir_SW" text="SW"/>
         <text name="vtpas_wx_dir_W" text="W"/>
         <text name="vtpas_wx_dir_NW" text="NW"/>
-        <text name="vtpas_beamRange_label" text="Headlight reach (lit area)"/>
-        <text name="vtpas_beamRange_tip" text="Distance lit by the headlights and work lights of all vehicles, yours included. x1 = base game. Costs some FPS at night."/>
-        <text name="vtpas_beamGlow_label" text="Lit area brightness"/>
-        <text name="vtpas_beamGlow_tip" text="Strength of the ground lighting from the headlights and work lights of all vehicles, yours included. x1 = base game."/>
         <text name="vtpas_beamEnabled_label" text="Enhanced headlights"/>
         <text name="vtpas_beamEnabled_tip" text="Yes: headlight reach and brightness set below. No: base game headlights, no processing (better performance)."/>
+        <text name="vtpas_light_road_label" text="Headlights"/>
+        <text name="vtpas_light_road_tip" text="Low and high beams, roof lights. Reach and brightness together, from x1.1 to x2.5."/>
+        <text name="vtpas_light_workFront_label" text="Front work lights"/>
+        <text name="vtpas_light_workFront_tip" text="Work lights facing forward (and vehicle-specific work lights)."/>
+        <text name="vtpas_light_workBack_label" text="Rear work lights"/>
+        <text name="vtpas_light_workBack_tip" text="Work lights facing backward."/>
+        <text name="vtpas_light_beacon_label" text="Beacon lights"/>
+        <text name="vtpas_light_beacon_tip" text="Light cast by the beacon lights."/>
+        <text name="vtpas_light_signal_label" text="Signal lights"/>
+        <text name="vtpas_light_signal_tip" text="Turn signals, brake lights and reverse lights."/>
+        <text name="vtpas_light_other_label" text="Other lights"/>
+        <text name="vtpas_light_other_tip" text="Interior lighting and lights that are in none of the game lists."/>
         <text name="vtpas_tracksMax_label" text="Tire tracks kept (points)"/>
         <text name="vtpas_tracksMax_tip" text="Number of tire track points kept and saved with the game. Fewer = less memory and processing."/>
         <!-- Aide (menu Échap > Aide) : help/helpLine.xml -->
@@ -344,7 +352,7 @@
         <text name="as_help_road_p2_title" text="AutoDrive speed"/>
         <text name="as_help_road_p2_text" text="AutoSwitch sets AutoDrive's speed by the ground: 20 km/h in fields, 30 km/h on tracks, no limit on the road (adjustable). AutoDrive still slows down in turns and at arrival."/>
         <text name="as_help_road_p3_title" text="Lights"/>
-        <text name="as_help_road_p3_text" text="Headlights and work lights of all vehicles, yours included, reach twice as far and twice as bright (range and brightness adjustable from x1 to x4). &quot;Enhanced headlights: No&quot; restores the base game ones, with no computing at all."/>
+        <text name="as_help_road_p3_text" text="The lights of all vehicles, yours included, reach further and shine brighter, with one setting per light type (reach and brightness together, from x1.1 to x2.5):&#10;• headlights: x2;&#10;• front and rear work lights: x2;&#10;• beacon lights, signal lights (turn signals, brake, reverse) and other lights: x1.1.&#10;&#10;&quot;Enhanced headlights: No&quot; restores the base game lights, with no computing at all."/>
         <text name="as_help_files_title" text="Files and advanced settings"/>
         <text name="as_help_files_p1_title" text="modSettings/FS25_AutoSwitch folder"/>
         <text name="as_help_files_p1_text" text="These files are created by AutoSwitch and can be corrected by hand, with the game closed:&#10;• transmissions.xml: drivetrain of each machine. &quot;detected&quot; is what AutoSwitch read; fill in &quot;forced&quot; with 4x4, front (front axle only) or rear (rear axle only) to impose yours.&#10;• cooperatives.xml: each selling point with coop=&quot;true&quot; or &quot;false&quot;, to correct what counts as a cooperative.&#10;• horaires.xml: opening hours of a specific selling point. -1 = hours from the menu; open=&quot;0&quot; close=&quot;24&quot; = open 24/7."/>

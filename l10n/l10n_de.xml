@@ -249,12 +249,20 @@
         <text name="vtpas_wx_dir_SW" text="SW"/>
         <text name="vtpas_wx_dir_W" text="W"/>
         <text name="vtpas_wx_dir_NW" text="NW"/>
-        <text name="vtpas_beamRange_label" text="Scheinwerfer-Reichweite (beleuchtete Fläche)"/>
-        <text name="vtpas_beamRange_tip" text="Von Scheinwerfern und Arbeitsscheinwerfern aller Fahrzeuge beleuchtete Entfernung, Ihres eingeschlossen. x1 = Basisspiel. Kostet nachts etwas FPS."/>
-        <text name="vtpas_beamGlow_label" text="Helligkeit der beleuchteten Fläche"/>
-        <text name="vtpas_beamGlow_tip" text="Stärke der Bodenbeleuchtung durch Scheinwerfer und Arbeitsscheinwerfer aller Fahrzeuge, Ihres eingeschlossen. x1 = Basisspiel."/>
         <text name="vtpas_beamEnabled_label" text="Verstärkte Scheinwerfer"/>
         <text name="vtpas_beamEnabled_tip" text="Ja: Reichweite und Helligkeit wie unten eingestellt. Nein: Scheinwerfer des Basisspiels, keine Berechnung (bessere Leistung)."/>
+        <text name="vtpas_light_road_label" text="Scheinwerfer"/>
+        <text name="vtpas_light_road_tip" text="Abblend- und Fernlicht, Dachscheinwerfer. Reichweite und Helligkeit zusammen, von x1,1 bis x2,5."/>
+        <text name="vtpas_light_workFront_label" text="Arbeitsscheinwerfer vorne"/>
+        <text name="vtpas_light_workFront_tip" text="Nach vorne gerichtete Arbeitsscheinwerfer (und fahrzeugeigene Arbeitsscheinwerfer)."/>
+        <text name="vtpas_light_workBack_label" text="Arbeitsscheinwerfer hinten"/>
+        <text name="vtpas_light_workBack_tip" text="Nach hinten gerichtete Arbeitsscheinwerfer."/>
+        <text name="vtpas_light_beacon_label" text="Rundumleuchten"/>
+        <text name="vtpas_light_beacon_tip" text="Licht der Rundumleuchten."/>
+        <text name="vtpas_light_signal_label" text="Signalleuchten"/>
+        <text name="vtpas_light_signal_tip" text="Blinker, Bremslichter und Rückfahrscheinwerfer."/>
+        <text name="vtpas_light_other_label" text="Andere Leuchten"/>
+        <text name="vtpas_light_other_tip" text="Innenbeleuchtung und Leuchten, die in keiner Liste des Spiels stehen."/>
         <text name="vtpas_tracksMax_label" text="Gespeicherte Reifenspuren (Punkte)"/>
         <text name="vtpas_tracksMax_tip" text="Anzahl der Reifenspurpunkte, die behalten und mit dem Spielstand gespeichert werden. Weniger = weniger Speicher und Rechenaufwand."/>
         <!-- Aide (menu Échap > Aide) : help/helpLine.xml -->
@@ -344,7 +352,7 @@
         <text name="as_help_road_p2_title" text="AutoDrive-Geschwindigkeit"/>
         <text name="as_help_road_p2_text" text="AutoSwitch gibt AutoDrive die Geschwindigkeit nach Untergrund vor: 20 km/h auf dem Feld, 30 km/h auf Wegen, ohne Begrenzung auf der Straße (einstellbar). AutoDrive bremst in Kurven und bei der Ankunft weiterhin ab."/>
         <text name="as_help_road_p3_title" text="Scheinwerfer"/>
-        <text name="as_help_road_p3_text" text="Scheinwerfer und Arbeitsscheinwerfer aller Fahrzeuge, Ihres eingeschlossen, leuchten doppelt so weit und doppelt so hell (Reichweite und Helligkeit einstellbar von x1 bis x4). „Verstärkte Scheinwerfer: Nein“ stellt die des Grundspiels wieder her, ohne jede Berechnung."/>
+        <text name="as_help_road_p3_text" text="Die Leuchten aller Fahrzeuge, Ihres eingeschlossen, leuchten weiter und heller, mit einer Einstellung pro Lichtart (Reichweite und Helligkeit zusammen, von x1,1 bis x2,5):&#10;• Scheinwerfer: x2;&#10;• Arbeitsscheinwerfer vorne und hinten: x2;&#10;• Rundumleuchten, Signalleuchten (Blinker, Bremse, Rückfahren) und andere Leuchten: x1,1.&#10;&#10;„Verstärkte Scheinwerfer: Nein“ stellt die Leuchten des Grundspiels wieder her, ohne jede Berechnung."/>
         <text name="as_help_files_title" text="Dateien und erweiterte Einstellungen"/>
         <text name="as_help_files_p1_title" text="Ordner modSettings/FS25_AutoSwitch"/>
         <text name="as_help_files_p1_text" text="Diese Dateien werden von AutoSwitch angelegt und können bei geschlossenem Spiel von Hand korrigiert werden:&#10;• transmissions.xml: Antrieb jeder Maschine. „detected“ ist das, was AutoSwitch gelesen hat; tragen Sie bei „forced“ 4x4, front (nur vorne) oder rear (nur hinten) ein, um Ihren festzulegen.&#10;• cooperatives.xml: jede Verkaufsstelle mit coop=&quot;true&quot; oder &quot;false&quot;, um zu korrigieren, was eine Genossenschaft ist.&#10;• horaires.xml: eigene Öffnungszeiten einer Verkaufsstelle. -1 = Zeiten aus dem Menü; open=&quot;0&quot; close=&quot;24&quot; = rund um die Uhr geöffnet."/>

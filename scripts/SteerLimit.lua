@@ -185,7 +185,15 @@ local function updateLocks(self, vehicle)
     local prevFront, prevRear = lk.front, lk.rear
     lk.front, lk.rear = front, rear
 
-    if not (front or rear) or not cutEnabled() or self.fitsLocks(vehicle, front, rear) then
+    -- (v1.0.1.7) charrue abaissée (mode AUTO) : le blocage arrière passe avant le braquage,
+    -- il n'est jamais coupé ; seul un blocage avant reste soumis à son seuil (20 %)
+    local plowHold = AS_Diff ~= nil and AS_Diff.plowHolds ~= nil and AS_Diff.plowHolds(vehicle)
+    local rearCut = rear and not plowHold
+    if plowHold and self.alert ~= nil and self.alert.vehicle == vehicle then
+        self.alert = nil
+    end
+
+    if not (front or rearCut) or not cutEnabled() or self.fitsLocks(vehicle, front, rearCut) then
         return
     end
     -- (v1.0.0.50) mode manuel : ni coupure ni refus, angle physique bridé (physScale)
@@ -193,7 +201,19 @@ local function updateLocks(self, vehicle)
         return
     end
 
-    local newLock = (front and not prevFront) or (rear and not prevRear)
+    local newLock = (front and not prevFront) or (rearCut and not prevRear)
+    if plowHold then
+        -- seul le blocage avant est coupé, l'arrière reste tenu par la charrue
+        local vd2 = vehicle.vData
+        vd2.want[1] = asState(vd2.want[1], false)
+        if vehicle.raiseDirtyFlags ~= nil and vehicle.vehicleDirtyFlag ~= nil then
+            pcall(vehicle.raiseDirtyFlags, vehicle, vehicle.vehicleDirtyFlag)
+        end
+        lk.front = false
+        if AS_Diff.state[vehicle] ~= nil then AS_Diff.state[vehicle].eng[1] = nil end
+        dlog("%s : charrue abaissée, blocage avant coupé, arrière gardé", vehicle:getName())
+        return
+    end
     releaseLocks(vehicle)
     lk.front, lk.rear = false, false
 
@@ -244,11 +264,14 @@ function AS_Steer:update(dt)
     end
 
     -- fin de l'alerte : roues redressées (après au moins 3 s), ou 10 s écoulées, ou autre véhicule
+    -- (v1.0.1.7) en mode AUTO, l'alerte s'efface dès que les roues sont redressées (sans attendre 3 s)
     local a = self.alert
     if a ~= nil then
         local elapsed = g_time - a.since
+        local auto = AS_Diff == nil or AS_Diff.isManual == nil or not AS_Diff.isManual(a.vehicle)
+        local minMs = auto and 0 or self.ALERT_MIN_MS
         if a.vehicle ~= shGetControlledVehicle() or elapsed >= self.ALERT_MAX_MS
-           or (elapsed >= self.ALERT_MIN_MS and self.fitsLocks(a.vehicle, a.front, a.rear)) then
+           or (elapsed >= minMs and self.fitsLocks(a.vehicle, a.front, a.rear)) then
             self.alert = nil
         end
     end

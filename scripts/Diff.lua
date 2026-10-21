@@ -38,6 +38,14 @@ AS_Diff.AUTO_ON_HELPER   = true   -- (v1.0.0.50) AutoDrive / Courseplay qui pren
 AS_Diff.state = setmetatable({}, { __mode = "k" })   -- (v1.0.0.83) véhicule vendu oublié
 
 -- (v1.0.0.50) vrai si AutoSwitch laisse ce véhicule au joueur
+-- (v1.0.1.7) Vrai si la charrue abaissée tient le blocage arrière (mode AUTO) :
+-- SteerLimit.lua ne coupe alors jamais ce blocage, même roues braquées.
+function AS_Diff.plowHolds(vehicle)
+    if not AS_Diff.PLOW_LOCK or AS_Diff.isManual(vehicle) then return false end
+    local st = AS_Diff.state[vehicle]
+    return st ~= nil and st.plowLock == true
+end
+
 function AS_Diff.isManual(vehicle)
     if not AS_Diff.MANUAL then return false end
     if AS_Diff.AUTO_ON_HELPER and vehicle ~= nil
@@ -425,6 +433,7 @@ function AS_Diff:update(dt)
                                 local front = idx == 1 or axleLocked(vehicle, 1)
                                 local rear  = idx == 2 or axleLocked(vehicle, 2)
                                 if not four then front, rear = false, true end
+                                if plowDown and idx ~= rearIdx then rear = false end   -- (v1.0.1.7) arrière tenu par la charrue
                                 local fits = AS_Steer == nil or AS_Steer.fitsLocks(vehicle, front, rear)
                                 if fits and (g_time - st.onSince[idx]) >= self.SLIP_ON_MS then
                                     if setAxle(vehicle, idx, true) then

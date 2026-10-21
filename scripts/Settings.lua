@@ -60,9 +60,10 @@ AS_Settings.hintPosX = nil          -- position déplacée à la souris (nil = p
 AS_Settings.hintPosY = nil
 AS_Settings.iconPosX = nil          -- (v1.0.0.36) position du tracteur (nil = par défaut)
 AS_Settings.iconPosY = nil
-AS_Settings.beamRange = 2          -- (v1.0.0.75) portée des vrais faisceaux (x1 = jeu de base)
-AS_Settings.beamGlow = 2           -- (v1.0.0.75) luminosité de la zone éclairée (x1 = jeu de base)
-AS_Settings.BEAM_LIST = { 1, 2, 3, 4 }
+-- (v1.0.1.7) phares : un facteur par type de feu, en dixièmes (portée et luminosité ensemble)
+AS_Settings.LIGHT_TYPES = { "road", "workFront", "workBack", "beacon", "signal", "other" }
+AS_Settings.lights = { road = 20, workFront = 20, workBack = 20, beacon = 11, signal = 11, other = 11 }
+AS_Settings.LIGHT_LIST = { 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 }
 AS_Settings.beamEnabled = true     -- (v1.0.0.83) phares renforcés (Oui / Non)
 AS_Settings.tracksMax = 60000      -- (v1.0.0.83) points de traces de pneus gardés
 AS_Settings.TRACKS_MAX_LIST = { 10000, 20000, 30000, 40000, 60000, 80000, 100000 }
@@ -128,8 +129,9 @@ function AS_Settings:save()
             setXMLBool(xml, "vtpAutoSwitch.seedCoverFill#enabled", self.seedCoverFill)
             setXMLInt(xml, "vtpAutoSwitch.notifDuration#diffs", self.durDiffs)
             setXMLInt(xml, "vtpAutoSwitch.notifDuration#alert", self.durAlert)
-            setXMLInt(xml, "vtpAutoSwitch.lightRange#beamRange", self.beamRange)
-            setXMLInt(xml, "vtpAutoSwitch.lightRange#beamGlow", self.beamGlow)
+            for _, k in ipairs(self.LIGHT_TYPES) do
+                setXMLInt(xml, "vtpAutoSwitch.lights#" .. k, self.lights[k])
+            end
             setXMLBool(xml, "vtpAutoSwitch.lightRange#enabled", self.beamEnabled)
             setXMLInt(xml, "vtpAutoSwitch.tireTracks#maxPoints", self.tracksMax)
             setXMLInt(xml, "vtpAutoSwitch.windSway#factor10", self.windSway)
@@ -228,10 +230,16 @@ function AS_Settings:load()
                 if d2 ~= nil then self.durDiffs = math.max(1, math.min(60, d2)) end
                 local d3 = getXMLInt(xml, "vtpAutoSwitch.notifDuration#alert")
                 if d3 ~= nil then self.durAlert = math.max(1, math.min(60, d3)) end
+                -- (v1.0.1.7) ancien réglage unique (portée x1 à x4) repris pour les phares de route et de travail
                 local br = getXMLInt(xml, "vtpAutoSwitch.lightRange#beamRange")
-                if br ~= nil then self.beamRange = math.max(1, math.min(4, br)) end
-                local bg = getXMLInt(xml, "vtpAutoSwitch.lightRange#beamGlow")
-                if bg ~= nil then self.beamGlow = math.max(1, math.min(4, bg)) end
+                if br ~= nil then
+                    local v = math.max(11, math.min(25, br * 10))
+                    self.lights.road, self.lights.workFront, self.lights.workBack = v, v, v
+                end
+                for _, k in ipairs(self.LIGHT_TYPES) do
+                    local v = getXMLInt(xml, "vtpAutoSwitch.lights#" .. k)
+                    if v ~= nil then self.lights[k] = math.max(11, math.min(25, v)) end
+                end
                 local be = getXMLBool(xml, "vtpAutoSwitch.lightRange#enabled")
                 if be ~= nil then self.beamEnabled = be end
                 local tm = getXMLInt(xml, "vtpAutoSwitch.tireTracks#maxPoints")
@@ -320,7 +328,9 @@ function AS_Settings:apply()
     AS_NotifyDuration.alert = self.durAlert * 1000
     AS_SpeedHint.POS_X, AS_SpeedHint.POS_Y = self.hintPosX, self.hintPosY
     AS_SpeedHint.ICON_X, AS_SpeedHint.ICON_Y = self.iconPosX, self.iconPosY
-    AS_LightRange:setBeams(self.beamRange, self.beamGlow)
+    local f = {}
+    for _, k in ipairs(self.LIGHT_TYPES) do f[k] = self.lights[k] / 10 end
+    AS_LightRange:setFactors(f)
     AS_LightRange:setEnabled(self.beamEnabled)
     if AS_TireTracksSave ~= nil then AS_TireTracksSave:setMaxPoints(self.tracksMax) end
     if AS_WindSway ~= nil then AS_WindSway:setFactor(self.windSway / 10) end
@@ -647,21 +657,14 @@ function AS_Settings:onTracksMaxChanged(state, element)
     end
 end
 
-function AS_Settings:onBeamRangeChanged(state, element)
-    local v = self.BEAM_LIST[state]
+-- (v1.0.1.7) un réglage par type de feu
+function AS_Settings:onLightChanged(kind, state)
+    local v = self.LIGHT_LIST[state]
     if v ~= nil then
-        self.beamRange = v
+        self.lights[kind] = v
         self:apply()
         self:save()
-    end
-end
-
-function AS_Settings:onBeamGlowChanged(state, element)
-    local v = self.BEAM_LIST[state]
-    if v ~= nil then
-        self.beamGlow = v
-        self:apply()
-        self:save()
+        sprint("phares %s : x%.1f", kind, v / 10)
     end
 end
 
@@ -958,6 +961,7 @@ AS_Settings.LOG_LIST = {
     { "AS_Hours", "Horaires d'ouverture", "Opening hours" },
     { "AS_TrafficSensor", "Capteurs du trafic", "Traffic sensors" },
     { "AS_Help", "Aide (menu Échap > Aide)", "Help (Esc > Help menu)" },
+    { "AS_Lights", "Phares (types de feux)", "Lights (light types)" },
 }
 
 local function isFr()
@@ -1277,9 +1281,9 @@ function AS_Settings:buildUI(frame)
         callback = AS_Settings.onProtectSeedChanged,
     })
 
-    local beamTexts = {}
-    for i, v in ipairs(self.BEAM_LIST) do
-        beamTexts[i] = (v == 1) and L("vtpas_lightRange_base") or ("x" .. v)
+    local lightTexts = {}
+    for i, v in ipairs(self.LIGHT_LIST) do
+        lightTexts[i] = string.format("x%.1f", v / 10):gsub("%.", L("vtpas_decimal"))
     end
     if layout ~= srcLayout then self:addHeader(layout, headerTemplate, L("vtpas_secWorld")) end
     self.options.beamEnabled = self:addRow(layout, template, {
@@ -1289,20 +1293,17 @@ function AS_Settings:buildUI(frame)
         state = self.beamEnabled and 2 or 1,
         callback = AS_Settings.onBeamEnabledChanged,
     })
-    self.options.beamRange = self:addRow(layout, template, {
-        label = L("vtpas_beamRange_label"),
-        tip = L("vtpas_beamRange_tip"),
-        texts = beamTexts,
-        state = self:getIndex(self.BEAM_LIST, self.beamRange),
-        callback = AS_Settings.onBeamRangeChanged,
-    })
-    self.options.beamGlow = self:addRow(layout, template, {
-        label = L("vtpas_beamGlow_label"),
-        tip = L("vtpas_beamGlow_tip"),
-        texts = beamTexts,
-        state = self:getIndex(self.BEAM_LIST, self.beamGlow),
-        callback = AS_Settings.onBeamGlowChanged,
-    })
+    self.options.lights = {}
+    for _, k in ipairs(self.LIGHT_TYPES) do
+        local kind = k
+        self.options.lights[kind] = self:addRow(layout, template, {
+            label = L("vtpas_light_" .. kind .. "_label"),
+            tip = L("vtpas_light_" .. kind .. "_tip"),
+            texts = lightTexts,
+            state = self:getIndex(self.LIGHT_LIST, self.lights[kind]),
+            callback = function(target, state, element) AS_Settings:onLightChanged(kind, state) end,
+        })
+    end
     local windTexts = {}
     for i, v in ipairs(self.WIND_SWAY_LIST) do
         windTexts[i] = (v == 10) and L("vtpas_lightRange_base") or string.format("x%.1f", v / 10)
@@ -1469,8 +1470,7 @@ function AS_Settings:refreshStates()
     if o.speedHint ~= nil then o.speedHint:setState(self.speedHint and 2 or 1) end
     if o.beamEnabled ~= nil then o.beamEnabled:setState(self.beamEnabled and 2 or 1) end
     if o.tracksMax ~= nil then o.tracksMax:setState(self:getIndex(self.TRACKS_MAX_LIST, self.tracksMax)) end
-    if o.beamRange ~= nil then o.beamRange:setState(self:getIndex(self.BEAM_LIST, self.beamRange)) end
-    if o.beamGlow ~= nil then o.beamGlow:setState(self:getIndex(self.BEAM_LIST, self.beamGlow)) end
+    for k, opt in pairs(o.lights or {}) do opt:setState(self:getIndex(self.LIGHT_LIST, self.lights[k])) end
     if o.windSway ~= nil then o.windSway:setState(self:getIndex(self.WIND_SWAY_LIST, self.windSway)) end
     if o.weatherWidget ~= nil then o.weatherWidget:setState(self.weatherWidget and 2 or 1) end
     if o.hudDedup ~= nil then o.hudDedup:setState(self.hudDedup and 2 or 1) end

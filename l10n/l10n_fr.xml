@@ -249,12 +249,20 @@
         <text name="vtpas_wx_dir_SW" text="SO"/>
         <text name="vtpas_wx_dir_W" text="O"/>
         <text name="vtpas_wx_dir_NW" text="NO"/>
-        <text name="vtpas_beamRange_label" text="Portée des phares (zone éclairée)"/>
-        <text name="vtpas_beamRange_tip" text="Distance éclairée par les phares et phares de travail de tous les véhicules, le vôtre compris. x1 = jeu de base. Coûte un peu de FPS la nuit."/>
-        <text name="vtpas_beamGlow_label" text="Luminosité de la zone éclairée"/>
-        <text name="vtpas_beamGlow_tip" text="Force de l'éclairage au sol des phares et phares de travail de tous les véhicules, le vôtre compris. x1 = jeu de base."/>
         <text name="vtpas_beamEnabled_label" text="Phares renforcés"/>
         <text name="vtpas_beamEnabled_tip" text="Oui : portée et luminosité des phares réglées ci-dessous. Non : phares du jeu de base, aucun calcul (meilleures performances)."/>
+        <text name="vtpas_light_road_label" text="Phares de route"/>
+        <text name="vtpas_light_road_tip" text="Phares de croisement et de route, feux de toit. Portée et luminosité ensemble, de x1,1 à x2,5."/>
+        <text name="vtpas_light_workFront_label" text="Phares de travail avant"/>
+        <text name="vtpas_light_workFront_tip" text="Phares de travail tournés vers l'avant (et phares de travail propres au véhicule)."/>
+        <text name="vtpas_light_workBack_label" text="Phares de travail arrière"/>
+        <text name="vtpas_light_workBack_tip" text="Phares de travail tournés vers l'arrière."/>
+        <text name="vtpas_light_beacon_label" text="Gyrophares"/>
+        <text name="vtpas_light_beacon_tip" text="Lumière projetée par les gyrophares."/>
+        <text name="vtpas_light_signal_label" text="Signalisation"/>
+        <text name="vtpas_light_signal_tip" text="Clignotants, feux stop et feux de recul."/>
+        <text name="vtpas_light_other_label" text="Autres lumières"/>
+        <text name="vtpas_light_other_tip" text="Éclairage intérieur et lumières qui ne sont dans aucune liste du jeu."/>
         <text name="vtpas_tracksMax_label" text="Traces de pneus gardées (points)"/>
         <text name="vtpas_tracksMax_tip" text="Nombre de points de traces de pneus gardés et sauvegardés avec la partie. Moins = moins de mémoire et de calcul."/>
         <!-- Aide (menu Échap > Aide) : help/helpLine.xml -->
@@ -344,7 +352,7 @@
         <text name="as_help_road_p2_title" text="Vitesse d'AutoDrive"/>
         <text name="as_help_road_p2_text" text="AutoSwitch impose la vitesse d'AutoDrive selon le terrain : 20 km/h au champ, 30 km/h sur les chemins, sans limite sur la route (réglable). AutoDrive ralentit toujours dans les virages et aux arrivées."/>
         <text name="as_help_road_p3_title" text="Phares"/>
-        <text name="as_help_road_p3_text" text="Les phares et phares de travail de tous les véhicules, le vôtre compris, éclairent deux fois plus loin et deux fois plus fort (portée et luminosité réglables de x1 à x4). « Phares renforcés : Non » remet ceux du jeu de base, sans aucun calcul."/>
+        <text name="as_help_road_p3_text" text="Les lumières de tous les véhicules, le vôtre compris, éclairent plus loin et plus fort, avec un réglage par type de feu (portée et luminosité ensemble, de x1,1 à x2,5) :&#10;• phares de route : x2 ;&#10;• phares de travail avant et arrière : x2 ;&#10;• gyrophares, signalisation (clignotants, stop, recul) et autres lumières : x1,1.&#10;&#10;« Phares renforcés : Non » remet les lumières du jeu de base, sans aucun calcul."/>
         <text name="as_help_files_title" text="Fichiers et réglages avancés"/>
         <text name="as_help_files_p1_title" text="Dossier modSettings/FS25_AutoSwitch"/>
         <text name="as_help_files_p1_text" text="Ces fichiers sont créés par AutoSwitch et peuvent être corrigés à la main, jeu fermé :&#10;• transmissions.xml : transmission de chaque machine. « detected » est ce qu'AutoSwitch a lu ; remplissez « forced » avec 4x4, front (avant seul) ou rear (arrière seul) pour imposer la vôtre.&#10;• cooperatives.xml : chaque point de vente avec coop=&quot;true&quot; ou &quot;false&quot;, pour corriger ce qui est une coopérative.&#10;• horaires.xml : horaires propres à un point de vente. -1 = horaires du menu ; open=&quot;0&quot; close=&quot;24&quot; = ouvert 24 h/24."/>
