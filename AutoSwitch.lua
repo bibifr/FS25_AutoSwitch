@@ -52,6 +52,8 @@
 -- v1.0.0.94 : usure des pneus avec Use Your Tyres OU Reifenverschleiß (entrée anyOf
 -- de REQUIRED) ; si les deux sont activés, Use Your Tyres gagne et TireWear.lua bloque
 -- Reifenverschleiß (adhérence, antidémarrage, limite AutoDrive, neige).
+-- v1.0.1.2 : usure des pneus facultative : sans Use Your Tyres ni Reifenverschleiß,
+-- rien n'est signalé, l'onglet affiche « Facultatif (Use Your Tyres recommandé) ».
 -- v1.0.0.46 : Crop Destruction Overhaul n'est plus requis.
 -- v1.0.0.47 : herbe piétinée corrigée (setParallelogramWorldCoords), stade le plus bas coupé.
 -- v1.0.0.48 : herbe piétinée plus douce (sec dès 11 km/h, humide dès 7 km/h, un stade).
@@ -130,7 +132,7 @@ local REQUIRED = {
     { anyOf = {
         { "FS25_useYourTyres",       "1.1.0.0",  "Use Your Tyres" },
         { "FS25_Reifenverschleiss*", "1.2.2.67", "Real Physics - Tire Wear" },
-    }, title = "Use Your Tyres / Real Physics - Tire Wear" },
+    }, title = "Use Your Tyres / Real Physics - Tire Wear", optional = true },  -- (v1.0.1.2) facultatif
 }
 
 -- Modules coupés : table vide à leur place, pour les autres modules qui lisent leurs réglages
@@ -250,6 +252,8 @@ local function checkAnyOf(req, final)
         if ok and bad ~= nil and bad.status ~= "absent" and firstBad == nil then firstBad = bad end
     end
     if firstBad ~= nil then return firstBad end
+    -- (v1.0.1.2) entrée facultative : aucun des mods installé = rien à signaler
+    if req.optional then return nil, nil, true end
     local versions = {}
     for _, alt in ipairs(req.anyOf) do versions[#versions + 1] = alt[2] end
     return { title = req.title, status = "absent", required = table.concat(versions, " / ") }
@@ -311,10 +315,13 @@ function AS_ModCheck:update(dt)
     if g_currentMission == nil or g_modIsLoaded == nil then return end
     self.done = true
     for _, req in ipairs(REQUIRED) do
-        local ok, bad, altIndex = pcall(checkEntry, req, true)
+        local ok, bad, altIndex, none = pcall(checkEntry, req, true)
         local entry
         if req.anyOf ~= nil then
-            if altIndex ~= nil then
+            if ok and none == true then
+                entry = { title = req.title, required = "", status = "optional" }
+                print(string.format("[AutoSwitch] %s : aucun installé (facultatif), usure des pneus non gérée", req.title))
+            elseif altIndex ~= nil then
                 local alt = req.anyOf[altIndex]
                 local mod, name = findRequired(alt)
                 entry = { title = name, required = alt[2], found = mod ~= nil and mod.version or nil }
@@ -350,6 +357,8 @@ function AS_ModCheck:statusText(m)
         return text("vtpas_reqAbsent", "Absent")
     elseif m.status == "inactive" then
         return text("vtpas_reqInactive", "Pas activé")
+    elseif m.status == "optional" then
+        return text("vtpas_reqOptional", "Facultatif (Use Your Tyres recommandé)")
     end
     return string.format(text("vtpas_reqOk", "OK (%s)"), tostring(m.found))
 end

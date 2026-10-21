@@ -145,6 +145,7 @@
         <text name="vtpas_reqInactive" text="X  Nicht aktiviert"/>
         <text name="vtpas_reqOld" text="X  Version %s (%s erforderlich)"/>
         <text name="vtpas_reqBlocked" text="%s (%s blockiert)"/>
+        <text name="vtpas_reqOptional" text="Optional (Use Your Tyres empfohlen)"/>
         <text name="vtpas_secDiff" text="Differenziale"/>
         <text name="vtpas_secTires" text="Reifen"/>
         <text name="vtpas_secAlerts" text="Meldungen und Warnungen"/>

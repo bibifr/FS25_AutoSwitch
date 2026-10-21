@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <modDesc descVersion="106">
     <author>Fabien</author>
-    <version>1.0.1.1</version>
+    <version>1.0.1.2</version>
     <multiplayer supported="true"/>
 
     <title>
@@ -31,7 +31,7 @@
 
 Settings: Settings > General > AutoSwitch.
 
-Required mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, MoreRealistic, moreRealisticXmlDatabank, MudSystemPhysics, TractorTerrainDynamics, DynamicDrivePro, Reifenverschleiss (Real Physics - Tire Wear), RealisticHarvesting, MoistureSystem.]]></en>
+Required mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, MoreRealistic, moreRealisticXmlDatabank, MudSystemPhysics, TractorTerrainDynamics, DynamicDrivePro, RealisticHarvesting, MoistureSystem. Optional: Use Your Tyres (recommended) or Real Physics - Tire Wear for tire wear.]]></en>
         <fr><![CDATA[Mod compagnon qui automatise la pression des pneus et les différentiels et rend la traction réaliste, en faisant travailler ensemble Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics et Tractor Terrain Dynamics, sans modifier ces mods.
 
 - Pression des pneus : avec AutoDrive / Courseplay, dégonflage au champ et gonflage sur route. En conduite manuelle : Automatique ou Manuel. Le regonflage automatique de VTP à 30 km/h est désactivé.
@@ -52,7 +52,7 @@ Required mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, Mor
 
 Réglages : Paramètres > Général > AutoSwitch.
 
-Mods requis : VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, MoreRealistic, moreRealisticXmlDatabank, MudSystemPhysics, TractorTerrainDynamics, DynamicDrivePro, Reifenverschleiss (Real Physics - Tire Wear), RealisticHarvesting, MoistureSystem.]]></fr>
+Mods requis : VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, MoreRealistic, moreRealisticXmlDatabank, MudSystemPhysics, TractorTerrainDynamics, DynamicDrivePro, RealisticHarvesting, MoistureSystem. Facultatif : Use Your Tyres (recommandé) ou Real Physics - Tire Wear pour l'usure des pneus.]]></fr>
         <de><![CDATA[Begleit-Mod, der Reifendruck und Differenzialsperren automatisiert und die Traktion realistisch macht, indem er Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics und Tractor Terrain Dynamics zusammenarbeiten lässt, ohne diese Mods zu verändern.
 
 - Reifendruck: mit AutoDrive / Courseplay Luft ablassen auf dem Feld, aufpumpen auf der Straße. Beim Selbstfahren: Automatisch oder Manuell. Das automatische Aufpumpen von VTP bei 30 km/h ist deaktiviert.
@@ -73,7 +73,7 @@ Mods requis : VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, More
 
 Einstellungen: Einstellungen > Allgemein > AutoSwitch.
 
-Benötigte Mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, MoreRealistic, moreRealisticXmlDatabank, MudSystemPhysics, TractorTerrainDynamics, DynamicDrivePro, Reifenverschleiss (Real Physics - Tire Wear), RealisticHarvesting, MoistureSystem.]]></de>
+Benötigte Mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, MoreRealistic, moreRealisticXmlDatabank, MudSystemPhysics, TractorTerrainDynamics, DynamicDrivePro, RealisticHarvesting, MoistureSystem. Optional: Use Your Tyres (empfohlen) oder Real Physics - Tire Wear für den Reifenverschleiß.]]></de>
     </description>
 
     <iconFilename>icon_AutoSwitch.dds</iconFilename>

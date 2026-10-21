@@ -2,6 +2,7 @@
 
 | Version | Changements |
 | --- | --- |
+| 1.0.1.2 | Usure des pneus facultative : sans Use Your Tyres ni Real Physics - Tire Wear, AutoSwitch ne signale plus rien et l'usure n'est simplement pas gérée ; dans l'onglet AUTOSWITCH la ligne affiche « Facultatif (Use Your Tyres recommandé) » en gris. Avec l'un des deux, rien ne change |
 | 1.0.1.1 | Différentiels : en mode AUTO, une charrue abaissée verrouille le différentiel arrière (notification « charrue en terre »), il est déverrouillé quand la charrue est relevée ; pendant le labour la règle de patinage et le déblocage en virage ne touchent plus au différentiel arrière. En mode MANUEL rien ne change |
 | 1.0.1.0 | Coopératives : les lignes [AS_CoopPay] sont remises dans log.txt (type de chaque point de vente, somme à recevoir, versement de fin de mois) |
 | 1.0.0.97 | Onglet AUTOSWITCH : placé juste après « Paramètres généraux » au lieu du bout de la barre ; titre de la page « AutoSwitch » (plus de « MISSING vtpas_tabTitle ») ; la molette fait défiler la page vers le bas (la page vient maintenant de gui/AS_SettingsPage.xml au lieu d'une copie de « Paramètres généraux ») |

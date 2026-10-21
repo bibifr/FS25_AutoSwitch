@@ -934,6 +934,7 @@ function AS_Settings:addRequiredMods(layout, template, headerTemplate)
             local ok = m.status == nil
             local r, g, b = 0.95, 0.25, 0.2
             if ok then r, g, b = 0.35, 0.85, 0.3 end
+            if m.status == "optional" then r, g, b = 0.7, 0.7, 0.7 end  -- (v1.0.1.2) facultatif : gris
             local row = option.parent
             if row ~= nil and row.elements ~= nil then
                 for _, c in ipairs(row.elements) do
