@@ -21,6 +21,7 @@
         <text name="vtpas_notif_diffUnlocked" text="%s : différentiels déverrouillés"/>
         <text name="vtpas_notif_diffRearLocked" text="%s : différentiel arrière verrouillé (patinage %.0f %%)"/>
         <text name="vtpas_notif_diffRearUnlocked" text="%s : différentiel arrière déverrouillé"/>
+        <text name="vtpas_notif_diffRearPlowLocked" text="%s : différentiel arrière verrouillé (charrue en terre)"/>
         <text name="vtpas_notif_diffFrontLocked" text="%s : différentiel avant verrouillé (patinage %.0f %%)"/>
         <text name="vtpas_notif_diffFrontUnlocked" text="%s : différentiel avant déverrouillé"/>
         <text name="vtpas_notif_tiresInflated" text="%s : pneus gonflés (pression route)"/>

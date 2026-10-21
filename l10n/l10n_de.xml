@@ -21,6 +21,7 @@
         <text name="vtpas_notif_diffUnlocked" text="%s: Differenzialsperren gelöst"/>
         <text name="vtpas_notif_diffRearLocked" text="%s: Differenzialsperre hinten eingerastet (Schlupf %.0f %%)"/>
         <text name="vtpas_notif_diffRearUnlocked" text="%s: Differenzialsperre hinten gelöst"/>
+        <text name="vtpas_notif_diffRearPlowLocked" text="%s: Differenzialsperre hinten eingerastet (Pflug abgesenkt)"/>
         <text name="vtpas_notif_diffFrontLocked" text="%s: Differenzialsperre vorne eingerastet (Schlupf %.0f %%)"/>
         <text name="vtpas_notif_diffFrontUnlocked" text="%s: Differenzialsperre vorne gelöst"/>
         <text name="vtpas_notif_tiresInflated" text="%s: Reifen aufgepumpt (Straßendruck)"/>

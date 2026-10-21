@@ -21,6 +21,7 @@
         <text name="vtpas_notif_diffUnlocked" text="%s: differentials unlocked"/>
         <text name="vtpas_notif_diffRearLocked" text="%s: rear differential locked (slip %.0f%%)"/>
         <text name="vtpas_notif_diffRearUnlocked" text="%s: rear differential unlocked"/>
+        <text name="vtpas_notif_diffRearPlowLocked" text="%s: rear differential locked (plough lowered)"/>
         <text name="vtpas_notif_diffFrontLocked" text="%s: front differential locked (slip %.0f%%)"/>
         <text name="vtpas_notif_diffFrontUnlocked" text="%s: front differential unlocked"/>
         <text name="vtpas_notif_tiresInflated" text="%s: tires inflated (road pressure)"/>

@@ -31,6 +31,7 @@ AS_Diff.TURN_ON_DEG      = 15     -- braquage au-delà duquel on considère un v
 AS_Diff.TURN_OFF_DEG     = 8      -- braquage en dessous duquel le virage est terminé
 AS_Diff.AUTO_4WD         = true   -- (v1.30) 4x4 dans les champs, 4x2 sur route (Enhanced Vehicle) ; v1.0.0.34 : 4x2 sur le dur seulement
 AS_Diff.ZONE_CHECK_MS    = 1000
+AS_Diff.PLOW_LOCK        = true   -- (v1.0.1.1) charrue abaissée : différentiel arrière verrouillé (mode AUTO)
 AS_Diff.MANUAL           = false  -- (v1.0.0.50) mode MANUEL (touche Ctrl droit + Flèche haut) : différentiels
                                   -- et 4x2 / 4x4 laissés au joueur, blocages jamais coupés (braquage bridé)
 AS_Diff.AUTO_ON_HELPER   = true   -- (v1.0.0.50) AutoDrive / Courseplay qui prend la main repasse en AUTO
@@ -143,9 +144,26 @@ local function setDriveMode(vehicle, mode)
     return true
 end
 
+-- (v1.0.1.1) Vrai si une charrue attachée (même derrière un autre outil) est abaissée
+local function isPlowLowered(vehicle, depth)
+    depth = depth or 0
+    if depth > 4 or vehicle.getAttachedImplements == nil then return false end
+    for _, impl in ipairs(vehicle:getAttachedImplements() or {}) do
+        local obj = impl.object
+        if obj ~= nil then
+            if obj.spec_plow ~= nil and obj.getIsLowered ~= nil then
+                local ok, lowered = pcall(obj.getIsLowered, obj, false)
+                if ok and lowered then return true end
+            end
+            if isPlowLowered(obj, depth + 1) then return true end
+        end
+    end
+    return false
+end
+
 -- Notification à l'écran indiquant quel véhicule verrouille / déverrouille ses différentiels.
 -- (v1.0.0.21) idx = 1 (avant) ou 2 (arrière) pour un seul différentiel, nil pour les deux
-local function notifyDiff(vehicle, locked, slip, idx)
+local function notifyDiff(vehicle, locked, slip, idx, reason)
     if not AS_Diff.NOTIFY or g_currentMission == nil then return end
 
     local name = vehicle:getName()
@@ -156,7 +174,11 @@ local function notifyDiff(vehicle, locked, slip, idx)
     local text
     local axle = idx == 1 and "Front" or (idx == 2 and "Rear" or "")
     if locked then
-        text = string.format(L("vtpas_notif_diff" .. axle .. "Locked"), name, slip or 0)
+        if reason == "Plow" then
+            text = string.format(L("vtpas_notif_diffRearPlowLocked"), name)
+        else
+            text = string.format(L("vtpas_notif_diff" .. axle .. "Locked"), name, slip or 0)
+        end
     else
         text = string.format(L("vtpas_notif_diff" .. axle .. "Unlocked"), name)
     end
@@ -245,6 +267,7 @@ function AS_Diff:update(dt)
                 -- (v1.0.0.83) tables vidées une seule fois au passage en MANUEL (plus à chaque image)
                 if not st.manualCleared then
                     st.onSince, st.offSince, st.eng = {}, {}, {}
+                    st.plowLock = nil
                     st.manualCleared = true
                 end
             else
@@ -282,8 +305,34 @@ function AS_Diff:update(dt)
                 st.lastCheck = g_time
                 local slip = getMaxSlipPercent(vehicle)
 
+                -- (v1.0.1.1) charrue abaissée : différentiel arrière verrouillé (mode AUTO seulement)
+                local rearIdx = four and 2 or 1
+                local plowDown = self.PLOW_LOCK and isPlowLowered(vehicle)
+                if plowDown then
+                    st.turning = false
+                    st.onSince[rearIdx], st.offSince[rearIdx] = nil, nil
+                    if not st.plowLock then
+                        st.plowLock = true
+                        if not axleLocked(vehicle, rearIdx) then
+                            setAxle(vehicle, rearIdx, true)
+                            notifyDiff(vehicle, true, nil, rearIdx, "Plow")
+                        end
+                        st.eng[rearIdx], st.engAt[rearIdx] = true, g_time
+                        print(string.format("[AS_Diff] %s : charrue abaissée -> différentiel arrière verrouillé", vehicle:getName()))
+                    elseif not axleLocked(vehicle, rearIdx) and (g_time - (st.engAt[rearIdx] or 0)) > 2000 then
+                        setAxle(vehicle, rearIdx, true)   -- charrue toujours en terre : on remet le blocage
+                        st.eng[rearIdx], st.engAt[rearIdx] = true, g_time
+                    end
+                elseif st.plowLock then
+                    st.plowLock = nil
+                    setAxle(vehicle, rearIdx, false)
+                    st.eng[rearIdx], st.onSince[rearIdx], st.offSince[rearIdx] = nil, nil, nil
+                    notifyDiff(vehicle, false, nil, rearIdx)
+                    print(string.format("[AS_Diff] %s : charrue relevée -> différentiel arrière déverrouillé", vehicle:getName()))
+                end
+
                 -- (v1.30) virage : déverrouillage obligatoire, pas de verrouillage pendant le virage
-                if self.TURN_UNLOCK then
+                if self.TURN_UNLOCK and not plowDown then
                     if AS_Steer ~= nil then
                         -- (v1.0.0.21) virage = braquage au-delà du seuil de coupure des blocages posés
                         -- par AutoSwitch (SteerLimit.lua : 50 % arrière seul, 10 % les deux) ;
@@ -366,7 +415,9 @@ function AS_Diff:update(dt)
                     end
                     for _, ax in ipairs(axes) do
                         local idx = ax.idx
-                        if ax.use and ax.on > 0 and slip >= ax.on then
+                        if plowDown and idx == rearIdx then
+                            -- (v1.0.1.1) blocage arrière tenu par la charrue : pas de règle de patinage
+                        elseif ax.use and ax.on > 0 and slip >= ax.on then
                             st.offSince[idx] = nil
                             if not st.eng[idx] and not axleLocked(vehicle, idx) then
                                 st.onSince[idx] = st.onSince[idx] or g_time
