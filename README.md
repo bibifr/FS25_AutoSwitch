@@ -1,3 +1,6 @@
+<img width="2056" height="765" alt="ChatGPT Image 22 oct  2026, 17_12_23" src="https://github.com/user-attachments/assets/bc467ab8-f289-47a8-91c0-67e536e2cdfd" />
+
+
 ### Discord https://discord.gg/S7gGzqnSEp
 ## LAST VERSION AUTOSWITCH https://github.com/bibifr/FS25_AutoSwitch/releases/latest/download/FS25_AutoSwitch.zip
 ## ADDON Autodrive for some Forget function https://github.com/bibifr/FS25_AutoDriveAddon/releases
