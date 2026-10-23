@@ -144,7 +144,8 @@
         <text name="vtpas_reqAbsent" text="X  Fehlt"/>
         <text name="vtpas_reqInactive" text="X  Nicht aktiviert"/>
         <text name="vtpas_reqOld" text="X  Version %s (%s erforderlich)"/>
-        <text name="vtpas_reqBlocked" text="%s (%s blockiert)"/>
+        <text name="vtpas_reqBlockedMod" text="X  Von AutoSwitch blockiert"/>
+        <text name="vtpas_rvBlockedNotif" text="Real Physics - Reifenverschleiß: von AutoSwitch deaktiviert und blockiert (Use Your Tyres ist der Reifenverschleiß-Mod)"/>
         <text name="vtpas_reqOptional" text="Optional (Use Your Tyres empfohlen)"/>
         <text name="vtpas_secDiff" text="Differenziale"/>
         <text name="vtpas_secTires" text="Reifen"/>

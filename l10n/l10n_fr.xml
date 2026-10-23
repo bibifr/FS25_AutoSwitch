@@ -144,7 +144,8 @@
         <text name="vtpas_reqAbsent" text="X  Absent"/>
         <text name="vtpas_reqInactive" text="X  Pas activé"/>
         <text name="vtpas_reqOld" text="X  Version %s (%s requise)"/>
-        <text name="vtpas_reqBlocked" text="%s (%s bloqué)"/>
+        <text name="vtpas_reqBlockedMod" text="X  Bloqué par AutoSwitch"/>
+        <text name="vtpas_rvBlockedNotif" text="Real Physics - Tire Wear : désactivé et bloqué par AutoSwitch (Use Your Tyres est le mod d'usure)"/>
         <text name="vtpas_reqOptional" text="Facultatif (Use Your Tyres recommandé)"/>
         <text name="vtpas_secDiff" text="Différentiels"/>
         <text name="vtpas_secTires" text="Pneus"/>

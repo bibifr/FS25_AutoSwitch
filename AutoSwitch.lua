@@ -23,8 +23,8 @@
 --   ImplementStabilizer outils stables à l'arrêt (rayon des roues figé)
 --   MudWheelDrag  résistance de boue sur les roues sans frein
 --   TtdBridge     pont MSP -> TTD : humidité locale, pas de résistance en double
---   TireWear      usure Reifenverschleiß : adhérence du sol gardée, effet slick sur route
---   DeletedVehicles véhicules supprimés oubliés par Reifenverschleiß et la carte
+--   TireWear      Real Physics - Tire Wear (Reifenverschleiß) désactivé et bloqué
+--   DeletedVehicles icône de carte d'un véhicule supprimé retirée
 --   TireDirtKeep  la saleté des pneus part moins vite en roulant
 --   SleepPlus     menu Dormir : avancer de X heures ou de X jours
 --   LightRange    lumières des véhicules visibles de plus loin
@@ -57,6 +57,9 @@
 -- Reifenverschleiß (adhérence, antidémarrage, limite AutoDrive, neige).
 -- v1.0.1.2 : usure des pneus facultative : sans Use Your Tyres ni Reifenverschleiß,
 -- rien n'est signalé, l'onglet affiche « Facultatif (Use Your Tyres recommandé) ».
+-- v1.0.2.0 : Real Physics - Tire Wear retiré des mods d'usure : Use Your Tyres seul
+-- (facultatif, recommandé). Si Reifenverschleiß est activé, TireWear.lua le désactive
+-- et le bloque, et l'onglet AUTOSWITCH l'affiche en rouge « Bloqué par AutoSwitch ».
 -- v1.0.0.46 : Crop Destruction Overhaul n'est plus requis.
 -- v1.0.0.47 : herbe piétinée corrigée (setParallelogramWorldCoords), stade le plus bas coupé.
 -- v1.0.0.48 : herbe piétinée plus douce (sec dès 11 km/h, humide dès 7 km/h, un stade).
@@ -136,12 +139,15 @@ local REQUIRED = {
     { "moreRealisticXmlDatabank",     "1.0.0.1",  "MoreRealistic XML Databank", cuts = MR_CUTS },
     { "FS25_RealisticHarvesting",     "1.6.0.0",  "Realistic Harvesting" },
     { "FS25_MoistureSystem",          "2.0.0.8",  "Moisture System" },
-    -- (v1.0.0.94) usure des pneus : l'un OU l'autre, Use Your Tyres prioritaire si les deux
-    -- sont activés (TireWear.lua bloque alors Reifenverschleiß)
+    -- usure des pneus (v1.0.1.2 facultatif ; v1.0.2.0 Real Physics - Tire Wear retiré)
     { anyOf = {
         { "FS25_useYourTyres",       "1.1.0.0",  "Use Your Tyres" },
-        { "FS25_Reifenverschleiss*", "1.2.2.67", "Real Physics - Tire Wear" },
-    }, title = "Use Your Tyres / Real Physics - Tire Wear", optional = true },  -- (v1.0.1.2) facultatif
+    }, title = "Use Your Tyres", optional = true },
+}
+
+-- (v1.0.2.0) mods désactivés et bloqués par AutoSwitch s'ils sont activés (TireWear.lua)
+local BLOCKED = {
+    { "FS25_Reifenverschleiss*", "", "Real Physics - Tire Wear" },
 }
 
 -- Modules coupés : table vide à leur place, pour les autres modules qui lisent leurs réglages
@@ -334,13 +340,6 @@ function AS_ModCheck:update(dt)
                 local alt = req.anyOf[altIndex]
                 local mod, name = findRequired(alt)
                 entry = { title = name, required = alt[2], found = mod ~= nil and mod.version or nil }
-                -- les deux en règle : la suivante est bloquée (Reifenverschleiß, voir TireWear.lua)
-                local nextAlt = req.anyOf[altIndex + 1]
-                local okN, badN = true, true
-                if nextAlt ~= nil then okN, badN = pcall(checkRequired, nextAlt, true) end
-                if okN and badN == nil then
-                    entry.title = string.format(text("vtpas_reqBlocked", "%s (%s bloqué)"), name, nextAlt[3])
-                end
             else
                 entry = { title = req.title, required = ok and bad ~= nil and bad.required or "",
                     found = ok and bad ~= nil and bad.found or nil }
@@ -356,6 +355,14 @@ function AS_ModCheck:update(dt)
         end
         self.all[#self.all + 1] = entry
     end
+    -- (v1.0.2.0) mods bloqués, en rouge dans l'onglet s'ils sont activés
+    for _, b in ipairs(BLOCKED) do
+        local mod, name = findRequired(b)
+        if mod ~= nil and g_modIsLoaded[mod.modName] == true then
+            self.all[#self.all + 1] = { title = name, required = "", found = mod.version, status = "blocked",
+                tip = text("vtpas_rvBlockedNotif", "Désactivé et bloqué par AutoSwitch") }
+        end
+    end
 end
 
 -- texte d'état d'un mod requis pour le menu
@@ -366,6 +373,8 @@ function AS_ModCheck:statusText(m)
         return text("vtpas_reqAbsent", "Absent")
     elseif m.status == "inactive" then
         return text("vtpas_reqInactive", "Pas activé")
+    elseif m.status == "blocked" then
+        return text("vtpas_reqBlockedMod", "X  Bloqué par AutoSwitch")
     elseif m.status == "optional" then
         return text("vtpas_reqOptional", "Facultatif (Use Your Tyres recommandé)")
     end

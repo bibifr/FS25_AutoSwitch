@@ -945,7 +945,7 @@ AS_Settings.LOG_LIST = {
     { "AS_Duals", "Roues jumelées", "Dual wheels" },
     { "AS_DualRack", "Palettes de pneus", "Tire racks" },
     { "AS_VtpFix", "Correctif VTP", "VTP fix" },
-    { "AS_TireWear", "Usure des pneus", "Tire wear" },
+    { "AS_TireWear", "Blocage Real Physics - Tire Wear", "Real Physics - Tire Wear block" },
     { "AS_TireTracksSave", "Traces de pneus", "Tire tracks" },
     { "AS_MudPreset", "Réglages Mud / TTD", "Mud / TTD presets" },
     { "AS_MudWheelDrag", "Résistance de la boue", "Mud wheel drag" },
@@ -998,7 +998,7 @@ function AS_Settings:addRequiredMods(layout, template, headerTemplate)
     for _, m in ipairs(AS_ModCheck.all) do
         local option = self:addRow(layout, template, {
             label = m.title,
-            tip = string.format(L("vtpas_reqTip"), m.required),
+            tip = m.tip or string.format(L("vtpas_reqTip"), m.required),
             texts = { AS_ModCheck:statusText(m) },
             state = 1,
             callback = function() end,

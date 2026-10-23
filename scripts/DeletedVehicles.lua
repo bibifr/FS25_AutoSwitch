@@ -1,5 +1,5 @@
 -- AutoSwitch : véhicules supprimés oubliés par les autres mods
--- Fichier chargé par AutoSwitch.lua (après TireWear.lua).
+-- Fichier chargé par AutoSwitch.lua.
 -------------------------------------------------------------------------------
 -- v1.0.0.88 : quand un véhicule est supprimé (changement de roues par la palette,
 --   vente, réinitialisation), deux références restaient vers lui :
@@ -10,6 +10,7 @@
 --     chaque image dans IngameMap.drawHotspot (« entityExists ... Nil »).
 --   AutoSwitch efface la référence de Reifenverschleiß et retire l'icône de la
 --   carte. Rien n'est modifié dans les fichiers des autres mods ni du jeu.
+-- v1.0.2.0 : Reifenverschleiß est bloqué (TireWear.lua), seule l'icône de la carte reste.
 -------------------------------------------------------------------------------
 
 AS_DeletedVehicles = {}
@@ -20,15 +21,6 @@ local function isGone(vehicle)
         return true
     end
     return entityExists ~= nil and not entityExists(vehicle.rootNode)
-end
-
-function AS_DeletedVehicles:update(dt)
-    local core = AS_TireWear ~= nil and AS_TireWear.core or nil
-    if type(core) == "table" and core.currentVehicle ~= nil and isGone(core.currentVehicle) then
-        core.currentVehicle = nil
-        core.manifest = nil
-        print("[AutoSwitch] Reifenverschleiß : véhicule supprimé oublié")
-    end
 end
 
 if IngameMap ~= nil and IngameMap.drawHotspot ~= nil then
@@ -47,5 +39,3 @@ if IngameMap ~= nil and IngameMap.drawHotspot ~= nil then
         return superFunc(self, hotspot, ...)
     end)
 end
-
-addModEventListener(AS_DeletedVehicles)
