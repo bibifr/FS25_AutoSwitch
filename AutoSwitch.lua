@@ -112,6 +112,7 @@ local FILES = {
     "scripts/HudDedup.lua",
     "scripts/TrafficSensor.lua",
     "scripts/NoOvertake.lua",
+    "scripts/ForageReach.lua",
     "scripts/Help.lua",
     "scripts/Settings.lua",
 }
@@ -125,7 +126,7 @@ local MSP_CUTS = { "scripts/SeedProtect.lua", "scripts/DirectResow.lua", "script
 local MR_CUTS = { "scripts/WetGrip.lua", "scripts/MudWheelDrag.lua", "scripts/ImplementStabilizer.lua" }
 local REQUIRED = {
     { "FS25_VariableTirePressure",    "1.0.0.13", "Variable Tire Pressure", cuts = { "scripts/Tires.lua", "scripts/VtpFix.lua" } },
-    { "FS25_AutoDrive",               "3.0.1.4",  "AutoDrive" },
+    { "FS25_AutoDrive",               "3.0.1.4",  "AutoDrive", cuts = { "scripts/ForageReach.lua" } },
     { "FS25_Courseplay",              "8.1.0.3",  "Courseplay" },
     { "FS25_EnhancedVehicle",         "1.1.7.1",  "Enhanced Vehicle", cuts = { "scripts/Diff.lua", "scripts/SteerLimit.lua", "scripts/HudDedup.lua" } },
     { "FS25_MudSystemPhysics",        "1.3.6.0",  "Mud System Physics", cuts = MSP_CUTS },
