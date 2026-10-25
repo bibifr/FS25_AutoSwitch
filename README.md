@@ -59,10 +59,6 @@ Les jumelées doivent exister dans la **même marque de pneus** que ceux du trac
 - [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases) : version 1.6.0.0 minimum
 - [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025) : version 2.0.0.8 minimum
 
-- [Use Your Tyres](https://www.farming-simulator.com/mod.php?mod_id=321793&title=fs2025) : version 1.1.0.0 minimum (facultatif, recommandé pour l'usure des pneus)
-
-Bloqué : Real Physics - Tire Wear (Reifenverschleiß). S'il est activé, AutoSwitch le désactive et le bloque.
-
 AutoSwitch fait partie d'un ensemble réaliste global : ces mods sont prévus, au moins dans la version indiquée. S'il en manque un (absent, pas activé ou plus ancien), AutoSwitch démarre quand même, sans les fonctions qui dépendent de ce mod, et un cadre en bas à gauche de l'écran liste les mods manquants.
 
 ## Installation
@@ -127,10 +123,6 @@ Dual wheels must exist in the **same tire brand** as the tractor's tires. Wheel 
 - [DynamicDrive Pro](https://www.farming-simulator.com/mod.php?mod_id=352451&title=fs2025) : version 1.0.1.0 minimum 
 - [Realistic Harvesting](https://github.com/exekx/FS25_RealisticHarvesting/releases) : version 1.6.0.0 minimum
 - [Moisture System](https://www.farming-simulator.com/mod.php?mod_id=354130&title=fs2025) : version 2.0.0.8 minimum
-
-- [Use Your Tyres](https://www.farming-simulator.com/mod.php?mod_id=321793&title=fs2025) : version 1.1.0.0 minimum (optional, recommended for tire wear)
-
-Blocked: Real Physics - Tire Wear (Reifenverschleiß). If it is enabled, AutoSwitch disables and blocks it.
 
 AutoSwitch is part of a global realistic pack: these mods are expected, at least in the version shown. If one is missing (not installed, not enabled or older), AutoSwitch still starts without the features that depend on it, and a box at the bottom left of the screen lists the missing mods.
 
