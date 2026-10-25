@@ -84,13 +84,13 @@ function AS_TireWear:block(core, modName)
         -- plus aucun véhicule verrouillé : les écritures de l'antidémarrage sont ignorées
         wfs.lockedVehicles = setmetatable({}, { __mode = "k", __newindex = noop })
     end
-    print(string.format("[AS_TireWear] %s désactivé et bloqué par AutoSwitch (Use Your Tyres est le mod d'usure)", modName))
+    print(string.format("[AS_TireWear] %s désactivé et bloqué par AutoSwitch (l'usure des pneus est gérée par AutoSwitch)", modName))
 end
 
 function AS_TireWear:notify()
     if self.notified or g_currentMission == nil or g_currentMission.addIngameNotification == nil then return end
     self.notified = true
-    local text = "Real Physics - Tire Wear : désactivé et bloqué par AutoSwitch (Use Your Tyres est le mod d'usure)"
+    local text = "Real Physics - Tire Wear : désactivé et bloqué par AutoSwitch (l'usure des pneus est gérée par AutoSwitch)"
     if g_i18n ~= nil and g_i18n.hasText ~= nil and g_i18n:hasText("vtpas_rvBlockedNotif") then
         text = g_i18n:getText("vtpas_rvBlockedNotif")
     end

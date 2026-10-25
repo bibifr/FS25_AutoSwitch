@@ -379,7 +379,7 @@ function AS_ModCheck:statusText(m)
     elseif m.status == "blocked" then
         return text("vtpas_reqBlockedMod", "X  Bloqué par AutoSwitch")
     elseif m.status == "optional" then
-        return text("vtpas_reqOptional", "Facultatif (Use Your Tyres recommandé)")
+        return text("vtpas_reqOptional", "Facultatif")
     end
     return string.format(text("vtpas_reqOk", "OK (%s)"), tostring(m.found))
 end
