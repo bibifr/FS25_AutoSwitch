@@ -146,7 +146,7 @@
         <text name="vtpas_reqOld" text="X  Version %s (%s requise)"/>
         <text name="vtpas_reqBlockedMod" text="X  Bloqué par AutoSwitch"/>
         <text name="vtpas_rvBlockedNotif" text="Real Physics - Tire Wear : désactivé et bloqué par AutoSwitch (Use Your Tyres est le mod d'usure)"/>
-        <text name="vtpas_reqOptional" text="Facultatif (Use Your Tyres recommandé)"/>
+        <text name="vtpas_reqOptional" text="Facultatif (usure gérée par AutoSwitch)"/>
         <text name="vtpas_secDiff" text="Différentiels"/>
         <text name="vtpas_secTires" text="Pneus"/>
         <text name="vtpas_secAlerts" text="Notifications et alertes"/>
@@ -297,7 +297,7 @@
         <text name="as_help_tires_p3_title" text="Avantages des jumelées"/>
         <text name="as_help_tires_p3_text" text="La largeur réelle des jumelées est prise en compte par Mud System Physics (moins d'enfoncement) et elles accrochent mieux en sol humide. Un correctif de Variable Tire Pressure est appliqué pour les pneus à variantes de marques."/>
         <text name="as_help_tires_p4_title" text="Usure et saleté"/>
-        <text name="as_help_tires_p4_text" text="L'usure des pneus est facultative : Use Your Tyres (recommandé) ou Real Physics - Tire Wear. Si les deux sont activés, Use Your Tyres est utilisé et l'autre est bloqué. L'usure s'applique par-dessus l'adhérence du sol ; sur la route, un pneu usé accroche un peu mieux (effet slick).&#10;&#10;Les pneus salis par la boue le restent bien plus longtemps en roulant (au moins une heure de route) ; l'eau, la pluie et le lavage les nettoient toujours."/>
+        <text name="as_help_tires_p4_text" text="Les pneus et les chenilles s'usent avec AutoSwitch : distance roulée, patinage (une roue qui patine s'use beaucoup plus), charge réelle de la roue, sol (la route use environ 3 fois plus que le champ), pression (pneu dégonflé sur route = usure rapide), vitesse sur route et chaleur. Chaque jeu de roues garde sa propre usure.&#10;&#10;Un pneu usé accroche moins au champ, sur la terre et la neige ; sur route sèche il accroche un peu mieux (effet slick), sur route mouillée moins. Son rayon diminue un peu.&#10;&#10;Le tracteur du HUD montre une barre par roue (vert, jaune, orange, rouge = reste du pneu), la gomme prend un aspect usé, la boîte d'info du véhicule donne le pourcentage, et une alerte s'affiche à 75 % et 90 %. À l'atelier, le bouton « Pneus neufs » remplace les pneus usés à 25 % ou plus. Réglages dans l'onglet AUTOSWITCH (marche / arrêt, durée de vie). Si Use Your Tyres est activé, c'est lui qui gère l'usure.&#10;&#10;Les pneus salis par la boue le restent bien plus longtemps en roulant (au moins une heure de route) ; l'eau, la pluie et le lavage les nettoient toujours."/>
         <text name="as_help_ground_title" text="Adhérence, sol et boue"/>
         <text name="as_help_ground_p1_title" text="Adhérence en sol humide"/>
         <text name="as_help_ground_p1_text" text="MoreRealistic ne tient pas compte de l'adhérence calculée par Mud System Physics et Tractor Terrain Dynamics. AutoSwitch réduit donc l'adhérence au champ selon l'humidité locale (à partir de 20 %, maximum à 70 %) et le type de sol.&#10;&#10;Cinq niveaux : Débutant, Facile, Normal (par défaut), Dur, Extrême. À 60 % d'humidité, la perte va d'environ 34 % (Débutant) à 78 % (Extrême)."/>
@@ -360,5 +360,18 @@
         <text name="as_help_files_p2_title" text="Dans la sauvegarde"/>
         <text name="as_help_files_p2_text" text="• AutoSwitch_fields.xml : dates et champs réunis de la fenêtre Champs.&#10;• AutoSwitch_register.xml : pesées et ventes du registre.&#10;• AutoSwitch_coop.xml : ce que les coopératives doivent encore.&#10;&#10;Les traces de pneus et les réglages de l'onglet AUTOSWITCH sont aussi gardés avec la partie."/>
         <!-- fin de l'aide -->
+        <text name="vtpas_tireLife_label" text="Usure des pneus"/>
+        <text name="vtpas_tireLife_tip" text="Pneus et chenilles s'usent selon la distance, le patinage, la charge, le sol, la pression et la météo. Pneu usé : moins d'adhérence au champ, un peu plus sur route sèche."/>
+        <text name="vtpas_tireLife_uyt" text="Use Your Tyres est activé : c'est lui qui gère l'usure, ce réglage est sans effet."/>
+        <text name="vtpas_tireLifeKm_label" text="Durée de vie des pneus"/>
+        <text name="vtpas_tireLifeKm_tip" text="Distance sur route, à charge normale, pour user un pneu de 2 m. Le champ use environ 3 fois moins, le patinage beaucoup plus."/>
+        <text name="vtpas_tl_info" text="Usure des pneus"/>
+        <text name="vtpas_tl_front" text="AV"/>
+        <text name="vtpas_tl_rear" text="AR"/>
+        <text name="vtpas_tl_alertWorn" text="%s : pneus usés (%d %%)"/>
+        <text name="vtpas_tl_alertCritical" text="%s : pneus à remplacer (%d %%), passez à l'atelier"/>
+        <text name="vtpas_tl_trackCut" text="%s : chenille entaillée, à remplacer à l'atelier"/>
+        <text name="vtpas_tl_replace" text="Pneus neufs"/>
+        <text name="vtpas_tl_replaceAsk" text="Monter %d pneus neufs pour %s ?"/>
     </texts>
 </l10n>

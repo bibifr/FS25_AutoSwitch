@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<i3D name="asTireMaterial.i3d" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
+  <!-- AutoSwitch : worn tire materials (shaders/asTireShader.xml for the rubber,
+       shaders/asTireMudShader.xml for the mud stuck on the tire). Only used to create the
+       materials in game; the shapes are the tire of the pallet (tireRackAR : rubber 6, mud 7). -->
+  <Asset>
+    <Export program="AutoSwitch" version="1.0.3.0"/>
+  </Asset>
+
+  <Files>
+    <File fileId="1" filename="../../shaders/asTireShader.xml"/>
+    <File fileId="2" filename="$data/shared/white_diffuse.png"/>
+    <File fileId="3" filename="$data/shared/default_normal.png"/>
+    <File fileId="4" filename="../../shaders/asTireMudShader.xml"/>
+    <File fileId="5" filename="$data/shared/detailLibrary/nonMetallic/dirt_diffuse.png"/>
+    <File fileId="6" filename="$data/shared/detailLibrary/nonMetallic/mud_normal.png"/>
+    <File fileId="7" filename="$data/shared/detailLibrary/nonMetallic/dirt_specular.png"/>
+  </Files>
+
+  <Materials>
+    <Material name="asTireWear_mat" materialId="1" customShaderId="1" customShaderVariation="tirePressureDeformation">
+      <Texture fileId="2"/>
+      <Normalmap fileId="3"/>
+    </Material>
+    <Material name="asTireWearMud_mat" materialId="2" customShaderId="4">
+      <Texture fileId="5"/>
+      <Normalmap fileId="6"/>
+      <Glossmap fileId="7"/>
+    </Material>
+  </Materials>
+
+  <Shapes externalShapesFile="tireRackAR.i3d.shapes">
+  </Shapes>
+
+  <Scene>
+    <Shape name="asTireMaterialHolder" shapeId="6" nodeId="1" castsShadows="false" receiveShadows="false" materialIds="1"/>
+    <Shape name="asTireMudMaterialHolder" shapeId="7" nodeId="2" castsShadows="false" receiveShadows="false" materialIds="2"/>
+  </Scene>
+
+</i3D>

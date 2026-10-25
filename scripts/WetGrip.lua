@@ -1,4 +1,4 @@
--- AutoSwitch : adhérence en sol humide (MoreRealistic), bonus différentiels, usure Use Your Tyres
+-- AutoSwitch : adhérence en sol humide (MoreRealistic), bonus différentiels, usure des pneus (Use Your Tyres ou AutoSwitch)
 -- Fichier chargé par AutoSwitch.lua (après Common.lua).
 
 local vtpInfo, L, showTimedNotification, getVtpClass, isAutoDriveActive, isCourseplayActive, isVehicleInField, getVehicles, getEvClass, getMaxSlipPercent, getRearSlipPercent, asState, isLockedValue, shClamp, shSmootherstep, getMudClass, shGetControlledVehicle
@@ -94,8 +94,19 @@ function AS_WetGrip:getVtpCapMul(wp)
     return cap / vtpMul
 end
 
+-- (v1.0.3.0) usure des pneus d'AutoSwitch (TireLife.lua), sans Use Your Tyres
+function AS_WetGrip:isTireLifeActive()
+    return AS_TireLife ~= nil and AS_TireLife.active == true and AS_TireLife.ENABLED == true
+end
+
 -- (v1.32) usure des pneus de Use Your Tyres (même formule que ce mod)
+-- (v1.0.3.0) ou usure d'AutoSwitch quand Use Your Tyres n'est pas activé
 function AS_WetGrip:getWearMul(wp)
+    if self:isTireLifeActive() then
+        local ok, m = pcall(AS_TireLife.getGripMul, AS_TireLife, wp)
+        if ok and type(m) == "number" then return m end
+        return 1
+    end
     local uyt = UseYourTyres
     if uyt == nil and type(FS25_useYourTyres) == "table" then uyt = FS25_useYourTyres.UseYourTyres end
     if uyt == nil or uyt.getWearAmount == nil or wp.wheel == nil or wp.wheel.vehicle == nil
@@ -170,10 +181,12 @@ function AS_WetGrip:install()
             -- MoreRealistic calcule l'adhérence sans tenir compte des autres mods :
             -- après lui, on réécrit son adhérence avec notre facteur (et l'usure Use Your Tyres)
             superFunc(wp)
-            if math.abs(mul - 1) > 0.001 then
+            -- (v1.0.3.0) usure seule (sol sec) aussi réappliquée
+            local total = mul * AS_WetGrip:getWearMul(wp)
+            if math.abs(total - 1) > 0.001 then
                 local dyn = tonumber(wp.mrDynamicFrictionScale) or 1
                 setWheelShapeTireFriction(wp.wheel.node, wp.wheelShape, wp.maxLongStiffness, wp.maxLatStiffness,
-                    wp.maxLatStiffnessLoad, wp.tireGroundFrictionCoeff * dyn * mul * AS_WetGrip:getWearMul(wp))
+                    wp.maxLatStiffnessLoad, wp.tireGroundFrictionCoeff * dyn * total)
             end
             return
         end
@@ -183,7 +196,7 @@ function AS_WetGrip:install()
         -- multiplient chacun. On y ajoute notre facteur (et l'usure Use Your Tyres si ModMixer
         -- bloque aussi ce mod), sec ou humide : pas de saut quand le sol change.
         local extra = mul * AS_WetGrip:getVtpCapMul(wp)
-        if AS_WetGrip.uytFrictionVetoed then
+        if AS_WetGrip.uytFrictionVetoed or AS_WetGrip:isTireLifeActive() then
             extra = extra * AS_WetGrip:getWearMul(wp)
         end
         if math.abs(extra - 1) <= 0.001 then

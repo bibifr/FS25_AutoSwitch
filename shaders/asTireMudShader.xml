@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- AutoSwitch : tireMudShader.xml du jeu (Giants), avec les paramètres asTireWear et
+     asTrackWear : la boue collée à un pneu ou à une chenille caoutchouc usés est coupée comme
+     la gomme (shaders/asTireShader.xml). -->
+
+<CustomShader version="5">
+    <Groups/>
+    <Parameters>
+        <Parameter name="mudAmount"         target="mudAmount"         type="float"  group="base"             defaultValue="0.0"                  minValue="0.0"               maxValue="1.0"               description="X - deform mud mesh from 0..1"/>
+        <Parameter name="prevMudAmount"     target="prevMudAmount"     type="float"  group="base"             defaultValue="0.0"                  minValue="0.0"               maxValue="1.0"               description="mudAmount from previous frame, set by LUA"/>
+        <Parameter name="morphPos"          target="morphPos"          type="float4" group="base"             defaultValue="-0.45 -0.915 0.5 0.1" minValue="-4.0 -4.0 0.0 0.0" maxValue="2.0 2.0 1.0 1.0"   description="X - start deforming position ( objectSpace by Y )\nY - end deforming position ( objectSpace by Y )\nZ - not used\nW - PushUp deformation in meters"/>
+        <Parameter name="prevMorphPos"      target="prevMorphPos"      type="float4" group="base"             defaultValue="-0.45 -0.915 0.5 0.1" minValue="-4.0 -4.0 0.0 0.0" maxValue="2.0 2.0 1.0 1.0"   description="morphPos from previous frame, set by LUA"/>
+        <Parameter name="dirtColor"         target="dirtColor"         type="float3" group="base"             defaultValue="0.20 0.14 0.08"       minValue="0.0 0.0 0.0"       maxValue="1.0 1.0 1.0"       description="XYZ - rgb color of the dirt"/>
+        <Parameter name="snowDirtRatio"     target="snowDirtRatio"     type="float"  group="base"             defaultValue="0.0"                  minValue="0.0"               maxValue="1.0"               description="X - Snow Amount, 0 - Dirt, 1 - Snow"/>
+        <Parameter name="wetness"           target="wetness"           type="float"  group="base"             defaultValue="0.0"                  minValue="0.0"               maxValue="1.0"               description="X - Wetness Amount"/>
+        <Parameter name="porosity"          target="porosity"          type="float"  group="base"             defaultValue="1.0"                  minValue="0.0"               maxValue="1.0"               description="X - makes darker incoming original diffuse, porosity==1 - maximum darkening 0.5*original (wood, fabric, snow, etc)"/>
+        <Parameter name="asTireWear"        target="asTireWear"        type="float4" group="base"             defaultValue="0.0 0.0 0.0 0.0"      minValue="0.0 0.0 0.0 0.0"   maxValue="4.0 4.0 4.0 8.0"   description="AutoSwitch tire wear, set by LUA ( objectSpace, wheel axis X )
+X - cut radius at the crown, 0 = no wear
+Y - radius of the profile center
+Z - half width of the cut
+W - profile exponent"/>
+        <Parameter name="asTrackWear"       target="asTrackWear"       type="float4" group="base"             defaultValue="0.0 0.0 0.0 0.0"      minValue="-10.0 0.0 0.0 0.0" maxValue="10.0 1.0 1.0 1.0"  description="AutoSwitch rubber track wear (motionPathRubber), set by LUA ( objectSpace )\nX - ground level of the crawler ( objectSpace by Y ) = tips of the lugs\nY - cut depth plus mud gap, 0 = no wear\nZ - not used\nW - not used"/>
+        <Parameter name="scrollPos"         target="scrollPos"         type="float4" group="track"            defaultValue="0.0 0.0 0.0 0.0"      minValue="-1.0 0.0 0.0 0.0"  maxValue="1.0 10.0 10.0 1.0" description="X - position of the caterpillar elements (scrolling time based parameter)\nY - motion_path_source (index 0,1,2,...)\nZ - motion_path_target (index 0,1,2,...)\nW - blending between motion_path_source and motion_path_target"/>
+        <Parameter name="prevScrollPos"     target="prevScrollPos"     type="float4" group="track"            defaultValue="0.0 0.0 0.0 0.0"      minValue="-1.0 0.0 0.0 0.0"  maxValue="1.0 10.0 10.0 1.0" description="scrollPos from previous frame, set by LUA"/>
+        <Parameter name="crawlerRealLength" target="crawlerRealLength" type="float"  group="motionPathRubber" defaultValue="10.0"                 minValue="0.1"               maxValue="20.0"              description="X - real length of the crawler"/>
+    </Parameters>
+    <UvUsages>
+        <UvUsage textureName="baseMap"    uvType="custom"/>
+        <UvUsage textureName="normalMap"  uvType="custom"/>
+        <UvUsage textureName="glossMap"   uvType="custom"/>
+        <UvUsage textureName="trackArray" uvType="custom"/>
+    </UvUsages>
+    <Textures>
+        <Texture name="trackArray" group="track" defaultColorProfile="linearRGB" type="2dArray" defaultFilename="$data/shared/crawlers/claas/terraTracLexion/terraTracLexionArray.png"/>
+    </Textures>
+    <VertexAttributes>
+        <VertexAttribute name="color" group="base"/>
+    </VertexAttributes>
+    <Variations>
+        <Variation name="motionPathRubber" groups="base track motionPathRubber">
+<![CDATA[
+    // Enables vertex shader motionPath based on texture for rubber like objects.
+    // Usually used with continuously connected vertices.
+    // Texture index is defined by the z value of the vertices, there is no 1:1 object to pixel/objectData mapping.
+    // Object needs to be 10m long.
+    #define MOTION_PATH_RUBBER
+]]>
+        </Variation>
+        <Variation name="motionPath" groups="base track">
+<![CDATA[
+    // Enables vertex shader motionPath based on texture
+    #define MOTION_PATH
+]]>
+        </Variation>
+    </Variations>
+    <LodLevel startDistance="0">
+        <CodeInjections>
+            <CodeInjection position="VS_INPUT">
+<![CDATA[
+    float3 gPosMorphedByVtxColor;     // morphed deformation by vertex color
+    float3 gPrevPosMorphedByVtxColor; // gPosMorphedByVtxColor from previous frame
+#if defined(MOTION_PATH) || defined(MOTION_PATH_RUBBER)
+    float4 gPosition; // positions from trackArray
+    float4 gOrient;   // rotations from trackArray
+    float4 gPrevPosition; // gPosition from previous frame, needed for motionblur
+    float4 gPrevOrient;   // gOrient   from previous frame, needed for motionblur
+#endif
+#if defined(MOTION_PATH_RUBBER)
+    float gAsTrackCut;    // AutoSwitch : lowest local y kept on the outer side (worn lugs)
+#endif
+]]>
+            </CodeInjection>
+            <CodeInjection position="OBJECT_PARAMETERS">
+<![CDATA[
+    float mudAmount; // deform mud mesh from 0..1
+    float prevMudAmount; // // mudAmount from previous frame, set by LUA
+    float snowDirtRatio; // X - Snow Amount, 0 - Dirt, 1 - Snow
+    float3 dirtColor; // color of the dirt
+    float wetness; // Wetness Amount
+    float porosity; // makes darker incoming original diffuse porosity==1 - maximum darkening 0.5*original (wood, rubber, snow, etc)
+    float4 asTrackWear; // AutoSwitch : x = ground level of the crawler (object Y), y = cut depth (0 = off)
+    float4 asTireWear; // AutoSwitch : x = cut radius at the crown (0 = off), y = profile center radius, z = cut half width, w = exponent
+/*
+    Enables tirePressureDeformation uses morphPos parameter
+    morphPos.x - start deforming position ( objectSpace by "Y" )
+    morphPos.y - end deforming position ( objectSpace by "Y" )
+    morphPos.z - mPushOutRatio HARDCODED // relationship between deformation and mPushOut ( 0 - [do noting], 1 - [mPushOut == mPushUp] )
+    morphPos.w - mPushUp - deformation in meters
+*/
+    float4 morphPos;
+    float4 prevMorphPos; // morphPos from previous frame, set by LUA
+#if defined(MOTION_PATH) || defined(MOTION_PATH_RUBBER)
+/*
+    MOTION_PATH, MOTION_PATH_RUBBER:
+
+    scrollPos.x - position of the caterpillar elements (scrolling time based parameter)
+    scrollPos.y - motion_path_source (index 0,1,2,...)
+    scrollPos.z - motion_path_target (index 0,1,2,...)
+    scrollPos.w - blending between motion_path_source and motion_path_target
+*/
+    float4 scrollPos;
+    float4 prevScrollPos; // scrollPos from previous frame, set by LUA, needed for TAA
+#endif
+#if defined(MOTION_PATH_RUBBER)
+    float crawlerRealLength; // X - real length of the crawler
+#endif
+]]>
+            </CodeInjection>
+            <CodeInjection position="LIB_FUNCTION">
+<![CDATA[
+// Custom pixel/vertex functions
+#include "$data/shaders/sharedFunctions.gsl"
+// Extra functions related to the tireMudShader only
+]]>
+            </CodeInjection>
+            <CodeInjection position="LIB_FUNCTION_VS">
+<![CDATA[
+// Custom vertex functions
+#include "$data/shaders/sharedFunctions_vs.gsl"
+// Extra functions related to the tireMudShader only
+
+// AutoSwitch tire wear : the mud stuck on a worn tire is cut like the rubber
+// (shaders/asTireShader.xml), its cut being set a few mm above the rubber's by LUA.
+// wear = (cut radius at the crown, radius of the profile center, half width of the cut,
+// profile exponent), object space, wheel axis = X ; wear.x = 0 : off.
+float asWornS(float2 q, float4 wear)
+{
+    float2 k = float2(q.x / wear.z, max(q.y, 0.0) / max(wear.x - wear.y, 0.0001));
+    return pow(pow(k.x, wear.w) + pow(k.y, wear.w), 1.0 / wear.w);
+}
+float2 asWornGrad(float2 q, float4 wear)
+{
+    float b = max(wear.x - wear.y, 0.0001);
+    float2 g = float2(pow(q.x / wear.z, wear.w - 1.0) / wear.z, pow(max(q.y, 0.0) / b, wear.w - 1.0) / b);
+    return normalize(g + float2(0.0, 0.000001));
+}
+float2 asWornProject(float2 q, float4 wear)
+{
+    float2 q1 = q / max(asWornS(q, wear), 0.000001);
+    float2 g = asWornGrad(q1, wear);
+    float2 q2 = q - dot(q - q1, g) * g;
+    q2.x = max(q2.x, 0.0);
+    return q2 / max(asWornS(q2, wear), 0.000001);
+}
+float3 asWornMudPos(float3 p, float4 wear)
+{
+    if (wear.x <= 0.0) return p;
+    float r = length(p.yz);
+    float2 q = float2(abs(p.x), r - wear.y);
+    if (q.y <= 0.0 || r < 0.0001) return p;
+    if (asWornS(q, wear) <= 1.0) return p;
+    float2 q3 = asWornProject(q, wear);
+    p.x = sign(p.x) * q3.x;
+    p.yz = p.yz * ((wear.y + q3.y) / r);
+    return p;
+}
+
+//@description blendShape vertex deformation. Offset values (difference between source and target) stored in vertex colors.
+//@inParam inPosition input local position of the mesh, usually its In.position.xyz
+//@inParam vtxColor XYZ - compressed vtxOffset\n W - noise 0..1
+//@inParam amount - 0..1 animated control
+float3 getMorphedDeformationByVtxColor(float3 inPosition, float4 vtxColor, float mudAmount){
+// vtxColor.xyz - compressed vtxOffset
+// vtxColor.w   - noise 0..1
+    float3 mDeformedPosition = inPosition.xyz;
+    float3 mVertexOffset = 2.0 * vtxColor.xyz - 1.0; // values compressed between -1.0 .. 1.0
+    mDeformedPosition += mVertexOffset * (1.0-gradientAnimate01(vtxColor.a, 0.25, mudAmount));
+    return mDeformedPosition;
+}
+
+#if defined( MOTION_PATH_RUBBER )
+    // AutoSwitch : mud on a worn rubber track, cut like the lugs (shaders/asTireShader.xml) :
+    // local -y = outward, lug tips at asTrackWear.x - lowest path Y. -1000 = no cut.
+    float asTrackCutY(ObjectParameters& object)
+    {
+        float4 wear = object.asTrackWear;
+        if (wear.y <= 0.0) return -1000.0;
+        float pathMinY = 1000.0;
+        for (int k = 0; k < 32; k++) {
+            float4 p = getMotionPathObjectDataPosition(trackArray, float2((float(k) + 0.5) / 32.0, 0.5), object.scrollPos);
+            pathMinY = min(pathMinY, p.y);
+        }
+        float tip = wear.x - pathMinY;
+        if (tip > -0.005 || tip < -0.3) return -1000.0;
+        return min(tip + wear.y, -0.002);
+    }
+#endif
+#if defined( MOTION_PATH ) || defined( MOTION_PATH_RUBBER )
+    float3 getMotionPathPos(float3 inPosition, float4 mPosition, float4 mOrient){
+        float3 mDeformPos = inPosition.xyz;
+        // apply quaternion rotation
+        #if defined( MOTION_PATH_RUBBER )
+            mDeformPos.z -= inPosition.z; // move vertices to 0
+        #endif
+        mDeformPos = quaternionRotate( mOrient, mDeformPos );
+        // apply translation
+        mDeformPos += mPosition.xyz;
+        return mDeformPos;
+    }
+#endif
+]]>
+            </CodeInjection>
+            <CodeInjection position="VS_OUTPUT">
+<![CDATA[
+    float3 localPosition : TEXCOORDn;
+    float3 localNormal   : TEXCOORDn;
+]]>
+            </CodeInjection>
+            <CodeInjection position="POST_SET_TEXCOORDS_VS">
+<![CDATA[
+    Out.localPosition = 3.0 * In.position.xyz;
+#if defined(MOTION_PATH)
+    // offset projected uvs for each MergeChildrenObject by some value in order to remove repetition
+    Out.localPosition.xyz += float3(0.11,0.05,0.12) * getMergeChildrenObjectDataIndexAsFloat(In);
+#elif defined(MOTION_PATH_RUBBER)
+    // scale projected uvs based on real size of the crawler in order to remove uv stretching
+    Out.localPosition.z *= ( 0.1 * object.crawlerRealLength );
+#endif
+    Out.localNormal = normalize(In.normal.xyz);
+]]>
+            </CodeInjection>
+            <CodeInjection position="VS_END">
+<![CDATA[
+    if (object.mudAmount < 0.0001){
+        //Out.position = float4(0,0,0,-1); // remove from pixel shader
+        Out.position = float4(-1000000.0f, -1000000.0f, -1000000.0f, 1.0f);
+    }
+]]>
+            </CodeInjection>
+            <CodeInjection position="FILL_VERTEX_INPUT_VS">
+<![CDATA[
+    In.gPosMorphedByVtxColor     = getMorphedDeformationByVtxColor(In.position.xyz, In.color.rgba, object.mudAmount);
+    In.gPrevPosMorphedByVtxColor = getMorphedDeformationByVtxColor(In.position.xyz, In.color.rgba, object.prevMudAmount);
+#if !defined(MOTION_PATH) && !defined(MOTION_PATH_RUBBER)
+    // AutoSwitch : worn tire
+    In.gPosMorphedByVtxColor     = asWornMudPos(In.gPosMorphedByVtxColor, object.asTireWear);
+    In.gPrevPosMorphedByVtxColor = asWornMudPos(In.gPrevPosMorphedByVtxColor, object.asTireWear);
+#endif
+#if defined(MOTION_PATH) || defined(MOTION_PATH_RUBBER)
+    // deformed position by vertexColor
+    // get the indexes
+    #if defined( MOTION_PATH )
+        float2 objectDataIndexMP     = getMotionPathDataIndex( In, trackArray, object.scrollPos ).xy;
+        float2 prevObjectDataIndexMP = getMotionPathDataIndex( In, trackArray, object.prevScrollPos ).xy;
+    #elif defined(MOTION_PATH_RUBBER)
+        float2 objectDataIndexMP     = getMotionPathRubberDataIndex(In.gPosMorphedByVtxColor, object.scrollPos).xy;
+        float2 prevObjectDataIndexMP = getMotionPathRubberDataIndex(In.gPrevPosMorphedByVtxColor, object.prevScrollPos).xy;
+    #endif
+    // calculate rotations
+    In.gOrient     = getMotionPathObjectDataOrient(trackArray, objectDataIndexMP,     object.scrollPos);
+    In.gPrevOrient = getMotionPathObjectDataOrient(trackArray, prevObjectDataIndexMP, object.prevScrollPos);
+    // calculate positions
+    In.gPosition     = getMotionPathObjectDataPosition(trackArray, objectDataIndexMP,     object.scrollPos);
+    In.gPrevPosition = getMotionPathObjectDataPosition(trackArray, prevObjectDataIndexMP, object.prevScrollPos);
+    #if defined(MOTION_PATH_RUBBER)
+        // AutoSwitch : worn rubber track (the path index above uses z only)
+        float asCut = asTrackCutY(object);
+        In.gAsTrackCut = asCut;
+        In.gPosMorphedByVtxColor.y     = max(In.gPosMorphedByVtxColor.y, asCut);
+        In.gPrevPosMorphedByVtxColor.y = max(In.gPrevPosMorphedByVtxColor.y, asCut);
+    #endif
+#endif
+]]>
+            </CodeInjection>
+            <CodeInjection position="GET_POSITION_VS">
+<![CDATA[
+#if defined( MOTION_PATH ) || defined( MOTION_PATH_RUBBER )
+    return getMotionPathPos(In.gPosMorphedByVtxColor, In.gPosition, In.gOrient);
+#else // DEFAULT BEHAVIOUR
+    #if defined( SKINNING )
+        return skinPoint(In.gPosMorphedByVtxColor.xyz, In, instance, object);
+    #else
+        return getTirePressureDeformation(instance, In.gPosMorphedByVtxColor.xyz, object.morphPos );
+    #endif
+#endif
+]]>
+            </CodeInjection>
+            <CodeInjection position="GET_PREV_POSITION_VS">
+<![CDATA[
+#if defined( MOTION_PATH ) || defined( MOTION_PATH_RUBBER )
+    return getMotionPathPos(In.gPrevPosMorphedByVtxColor, In.gPrevPosition, In.gPrevOrient);
+#else // DEFAULT BEHAVIOUR
+    #if defined( SKINNING )
+        return skinPrevPoint(In.gPrevPosMorphedByVtxColor.xyz, In, instance, object);
+    #else
+        return getTirePressureDeformation(instance, In.gPrevPosMorphedByVtxColor.xyz, object.prevMorphPos );
+    #endif
+#endif
+]]>
+            </CodeInjection>
+            <CodeInjection position="POST_GET_WORLD_POSE_VS">
+<![CDATA[
+#if !defined(SKINNING)
+    prevWorldPosition = mul(instance.prevModelMatrix, float4(prevPosition, 1));
+#endif
+]]>
+            </CodeInjection>
+            <CodeInjection position="GET_NORMAL_VS">
+<![CDATA[
+#if defined( MOTION_PATH_RUBBER )
+    // AutoSwitch : worn mud is flat, it faces outward (local -y)
+    if (In.gPosMorphedByVtxColor.y <= In.gAsTrackCut + 0.0005) return quaternionRotate( In.gOrient, float3(0.0, -1.0, 0.0) );
+#endif
+#if defined( MOTION_PATH ) || defined( MOTION_PATH_RUBBER )
+    // apply quaternion rotation
+    return quaternionRotate( In.gOrient, In.normal.xyz );
+#endif
+]]>
+            </CodeInjection>
+            <CodeInjection position="GET_TANGENT_VS">
+<![CDATA[
+#if defined( MOTION_PATH ) || defined( MOTION_PATH_RUBBER )
+    // apply quaternion rotation
+    return quaternionRotate( In.gOrient, In.tangent.xyz );
+#endif
+]]>
+            </CodeInjection>
+            <CodeInjection position="GET_BITANGENT_VS">
+<![CDATA[
+#if defined( MOTION_PATH ) || defined( MOTION_PATH_RUBBER )
+    return cross(getNormal(In, instance, object), getTangent(In, instance, object))*getBitangentSide(In, object);
+#endif
+]]>
+            </CodeInjection>
+            <CodeInjection position="LIB_FUNCTION_FS">
+<![CDATA[
+// Custom pixel functions
+#include "$data/shaders/sharedFunctions_fs.gsl"
+// Extra functions related to the tireMudShader only
+]]>
+            </CodeInjection>
+            <CodeInjection position="FS_GLOBALS">
+<![CDATA[
+    float3 gCustomDiffuse;
+    float3 gCustomSpecular;
+    float3 gCustomTangentSpaceNormal;
+    float3 gCustomWorldSpaceNormal;
+]]>
+            </CodeInjection>
+            <CodeInjection position="START_FS">
+<![CDATA[
+{
+    globals.gCustomDiffuse = float3(0.7,0.7,0.7);
+    globals.gCustomSpecular = float3(0.1,1.0,0.0);
+    globals.gCustomTangentSpaceNormal = float3(0.0,0.0,0.5);
+    globals.gCustomWorldSpaceNormal = float3(0.0,0.0,0.5);
+
+    float snowControl = object.snowDirtRatio;
+    snowControl = snowControl * snowControl;
+    float snowMask = In.vs.vertexColor.a;
+    float snowWeight = 0.0;
+
+    float3 mSnowDiffuse  = float3(0.7300,0.7668,0.8356);
+    float3 mSnowSpecular = float3(0.1922,0.8706,0.0000);
+    float3 baseDiffuse = float3(0.5,0.5,0.5);
+    float3 mDirtSpecular =  float3(0.1,1.0,0.0);
+
+    #if defined( MOTION_PATH ) || defined( MOTION_PATH_RUBBER ) || defined( SKINNING )
+        float2 uvs = getProjectedUVsLocal(In.vs.localNormal,In.vs.localPosition);
+        // diffuse
+        #if defined( ALBEDO_MAP )
+            baseDiffuse = tex2DSample( baseMap, ALBEDO_MAP_SAMPLER, uvs ).rgb;
+        #endif
+        // normal
+        #if defined( NORMAL_MAP )
+            globals.gCustomTangentSpaceNormal = tex2DSample( normalMap, NORMAL_MAP_SAMPLER, uvs ).xyz - 0.5;
+            globals.gCustomWorldSpaceNormal = mTangentSpaceNormalToWorldNormal(In,globals,instance,object,globals.gCustomTangentSpaceNormal);
+        #endif
+        // specular
+        #if defined( GLOSS_MAP )
+            mDirtSpecular = tex2DSample(glossMap, GLOSS_MAP_SAMPLER, uvs ).xyz;
+        #endif
+    #else // DEFAULT BEHAVIOUR
+        // diffuse
+        #if defined( ALBEDO_MAP )
+            baseDiffuse = getProjectedStandardMap(In.vs.localNormal,In.vs.localPosition,baseMap).xyz;
+        #endif
+        // normal
+        #if defined( NORMAL_MAP )
+            globals.gCustomWorldSpaceNormal = getProjectedNormalMap(In,globals,instance,object,In.vs.localNormal,In.vs.localPosition,normalMap);
+            // transform blendedNormal (in worldspace) *back* into whatever tangentspace was defined on the object
+            globals.gCustomTangentSpaceNormal = mWorldNormalToTangentSpaceNormal(In,globals,instance,object,globals.gCustomWorldSpaceNormal);
+        #endif
+        // specular
+        #if defined( GLOSS_MAP )
+            mDirtSpecular = getProjectedStandardMap(In.vs.localNormal,In.vs.localPosition,glossMap).xyz;
+        #endif
+    #endif
+    // SHARED BLENDING
+    snowMask = In.vs.vertexColor.a * baseDiffuse.x;
+    snowWeight = gradientAnimate01(snowMask, 0.25, snowControl);
+    float3 mDirtDiffuse = object.dirtColor.rgb * baseDiffuse;
+    globals.gCustomDiffuse = lerp(mDirtDiffuse,mSnowDiffuse,snowWeight);
+    globals.gCustomSpecular = lerp(mDirtSpecular,mSnowSpecular,snowWeight);
+    globals.gCustomSpecular.r = makeWetSmoothness(globals.gCustomSpecular.r,object.wetness);
+    globals.gCustomDiffuse = makeWetDiffuse(globals.gCustomDiffuse.xyz,globals.gCustomSpecular.b,object.porosity,object.wetness);
+}
+]]>
+            </CodeInjection>
+            <CodeInjection position="GET_UNNORMALIZED_TANGENT_SPACE_NORMAL_FS">
+<![CDATA[
+#if defined( NORMAL_MAP )
+    return globals.gCustomTangentSpaceNormal;
+#endif
+]]>
+            </CodeInjection>
+            <CodeInjection position="GET_NORMAL_FS">
+<![CDATA[
+#if defined( NORMAL_MAP )
+    return globals.gCustomWorldSpaceNormal;
+#endif
+]]>
+            </CodeInjection>
+            <CodeInjection position="POST_DIFFUSE_COLOR_FS">
+<![CDATA[
+#if defined( DIFFUSE )
+    diffuseColor = globals.gCustomDiffuse;
+#endif
+]]>
+            </CodeInjection>
+            <CodeInjection position="POST_GLOSS_COLOR_FS">
+<![CDATA[
+    roughness = 1 - globals.gCustomSpecular.x;
+    bakedAO   = globals.gCustomSpecular.y;
+    metalness = globals.gCustomSpecular.z;
+]]>
+            </CodeInjection>
+        </CodeInjections>
+    </LodLevel>
+</CustomShader>

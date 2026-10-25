@@ -146,7 +146,7 @@
         <text name="vtpas_reqOld" text="X  Version %s (%s erforderlich)"/>
         <text name="vtpas_reqBlockedMod" text="X  Von AutoSwitch blockiert"/>
         <text name="vtpas_rvBlockedNotif" text="Real Physics - Reifenverschleiß: von AutoSwitch deaktiviert und blockiert (Use Your Tyres ist der Reifenverschleiß-Mod)"/>
-        <text name="vtpas_reqOptional" text="Optional (Use Your Tyres empfohlen)"/>
+        <text name="vtpas_reqOptional" text="Optional (Verschleiß über AutoSwitch)"/>
         <text name="vtpas_secDiff" text="Differenziale"/>
         <text name="vtpas_secTires" text="Reifen"/>
         <text name="vtpas_secAlerts" text="Meldungen und Warnungen"/>
@@ -297,7 +297,7 @@
         <text name="as_help_tires_p3_title" text="Vorteile der Zwillingsräder"/>
         <text name="as_help_tires_p3_text" text="Die tatsächliche Breite der Zwillingsräder wird von Mud System Physics berücksichtigt (weniger Einsinken), und sie haften auf nassem Boden besser. Für Reifen mit Markenvarianten wird eine Korrektur von Variable Tire Pressure angewendet."/>
         <text name="as_help_tires_p4_title" text="Verschleiß und Schmutz"/>
-        <text name="as_help_tires_p4_text" text="Reifenverschleiß ist optional: Use Your Tyres (empfohlen) oder Real Physics - Tire Wear. Sind beide aktiviert, wird Use Your Tyres verwendet und der andere blockiert. Der Verschleiß wirkt zusätzlich zur Bodenhaftung; auf der Straße haftet ein abgefahrener Reifen etwas besser (Slick-Effekt).&#10;&#10;Verschmutzte Reifen bleiben beim Fahren viel länger schmutzig (mindestens eine Stunde Straße); Wasser, Regen und Waschen reinigen sie weiterhin."/>
+        <text name="as_help_tires_p4_text" text="Reifen und Raupen verschleißen mit AutoSwitch: gefahrene Strecke, Schlupf (ein durchdrehendes Rad verschleißt viel schneller), tatsächliche Radlast, Untergrund (Straße etwa 3-mal mehr als Feld), Druck (wenig Druck auf der Straße = schneller Verschleiß), Straßentempo und Hitze. Jeder Radsatz behält seinen eigenen Verschleiß.&#10;&#10;Ein abgefahrener Reifen greift auf Feld, Erde und Schnee schlechter; auf trockener Straße etwas besser (Slick-Effekt), auf nasser Straße schlechter. Sein Radius wird etwas kleiner.&#10;&#10;Der Traktor im HUD zeigt einen Balken pro Rad (grün, gelb, orange, rot = Restprofil), die Info-Box des Fahrzeugs zeigt den Prozentwert, Warnung bei 75 % und 90 %. In der Werkstatt ersetzt die Taste « Neue Reifen » Reifen ab 25 % Verschleiß. Einstellungen im Reiter AUTOSWITCH (an / aus, Lebensdauer). Ist Use Your Tyres aktiv, übernimmt es den Verschleiß.&#10;&#10;Mit Schlamm verschmutzte Reifen bleiben beim Fahren viel länger schmutzig (mindestens eine Stunde Straße); Wasser, Regen und Waschen reinigen sie immer."/>
         <text name="as_help_ground_title" text="Haftung, Boden und Schlamm"/>
         <text name="as_help_ground_p1_title" text="Haftung auf nassem Boden"/>
         <text name="as_help_ground_p1_text" text="MoreRealistic ignoriert die von Mud System Physics und Tractor Terrain Dynamics berechnete Haftung. AutoSwitch senkt deshalb die Haftung auf dem Feld je nach örtlicher Feuchtigkeit (ab 20 %, Maximum bei 70 %) und Bodenart.&#10;&#10;Fünf Stufen: Anfänger, Leicht, Normal (Standard), Schwer, Extrem. Bei 60 % Feuchtigkeit beträgt der Verlust etwa 34 % (Anfänger) bis 78 % (Extrem)."/>
@@ -360,5 +360,18 @@
         <text name="as_help_files_p2_title" text="Im Spielstand"/>
         <text name="as_help_files_p2_text" text="• AutoSwitch_fields.xml: Daten und zusammengelegte Felder des Fensters Felder.&#10;• AutoSwitch_register.xml: Wiegungen und Verkäufe des Registers.&#10;• AutoSwitch_coop.xml: was die Genossenschaften noch schulden.&#10;&#10;Reifenspuren und die Einstellungen des Reiters AUTOSWITCH werden ebenfalls mit dem Spiel gespeichert."/>
         <!-- fin de l'aide -->
+        <text name="vtpas_tireLife_label" text="Reifenverschleiß"/>
+        <text name="vtpas_tireLife_tip" text="Reifen und Raupen verschleißen je nach Strecke, Schlupf, Last, Untergrund, Druck und Wetter. Abgefahrene Reifen: weniger Grip auf dem Feld, etwas mehr auf trockener Straße."/>
+        <text name="vtpas_tireLife_uyt" text="Use Your Tyres ist aktiv: es übernimmt den Verschleiß, diese Einstellung hat keine Wirkung."/>
+        <text name="vtpas_tireLifeKm_label" text="Reifenlebensdauer"/>
+        <text name="vtpas_tireLifeKm_tip" text="Straßenstrecke bei normaler Last, bis ein 2-m-Reifen abgefahren ist. Auf dem Feld etwa 3-mal weniger Verschleiß, bei Schlupf deutlich mehr."/>
+        <text name="vtpas_tl_info" text="Reifenverschleiß"/>
+        <text name="vtpas_tl_front" text="VA"/>
+        <text name="vtpas_tl_rear" text="HA"/>
+        <text name="vtpas_tl_alertWorn" text="%s: Reifen abgenutzt (%d %%)"/>
+        <text name="vtpas_tl_alertCritical" text="%s: Reifen wechseln (%d %%), ab in die Werkstatt"/>
+        <text name="vtpas_tl_trackCut" text="%s: Gummiraupe eingeschnitten, in der Werkstatt ersetzen"/>
+        <text name="vtpas_tl_replace" text="Neue Reifen"/>
+        <text name="vtpas_tl_replaceAsk" text="%d neue Reifen für %s montieren?"/>
     </texts>
 </l10n>

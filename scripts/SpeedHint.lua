@@ -447,8 +447,16 @@ function AS_SpeedHint:draw()
         -- (v1.0.0.50) mode AUTO / MANUEL écrit au-dessus du tracteur (compris dans le bloc déplaçable)
         local modeSize = py(12)
         local modeH = modeSize + py(4)
-        by = shClamp(by, 0, math.max(0, 1 - iconH - modeH))
-        self.iconBox = { x = bx, y = by, w = blockW, h = iconH + modeH }
+        -- (v1.0.3.0) pneus des outils attelés derrière : sous le tracteur, qui monte d'autant
+        local toolH = 0
+        if AS_TireLife ~= nil and AS_TireLife.rearToolsHeight ~= nil then
+            local okH, h = pcall(AS_TireLife.rearToolsHeight, AS_TireLife, vehicle, py)
+            if okH and type(h) == "number" then toolH = h end
+        end
+        by = shClamp(by, 0, math.max(0, 1 - iconH - modeH - toolH))
+        self.iconBox = { x = bx, y = by, w = blockW, h = iconH + modeH + toolH }
+        local toolY = by
+        by = by + toolH
         local manual = AS_Diff ~= nil and AS_Diff.isManual ~= nil and AS_Diff.isManual(vehicle)
         if drawFilledRect ~= nil then
             drawFilledRect(bx, by + iconH, blockW, modeH, 0, 0, 0, 0.6)
@@ -489,6 +497,26 @@ function AS_SpeedHint:draw()
                     if a.l ~= nil then shDrawPct(bx + labelW * 0.5, a.y, pctSize, a.l, lpX, lpY) end
                     if a.r ~= nil then shDrawPct(iconX + iconW + labelW * 0.5, a.y, pctSize, a.r, lpX, lpY) end
                 end
+            end
+        end
+        -- (v1.0.3.0) usure des pneus : barre de chaque coin, de part et d'autre du véhicule
+        if AS_TireLife ~= nil and AS_TireLife.drawIconWear ~= nil then
+            local fy, ry = 55, 195
+            if kind == "combine" then fy, ry = 73, 207 elseif kind == "forage" then fy, ry = 70, 212 end
+            local ok, err = pcall(AS_TireLife.drawIconWear, AS_TireLife, vehicle, iconX, iconW, iconH,
+                { by + iconH * (1 - fy / 256), by + iconH * (1 - ry / 256) }, pxw, py, labelW, pctSize)
+            if not ok and not self.loggedWearError then
+                self.loggedWearError = true
+                print("[AS_SpeedHint] erreur usure : " .. tostring(err))
+            end
+        end
+        -- (v1.0.3.0) pneus des outils et remorques attelés derrière, sous le bloc
+        if toolH > 0 and AS_TireLife ~= nil and AS_TireLife.drawRearTools ~= nil then
+            local ok, err = pcall(AS_TireLife.drawRearTools, AS_TireLife, vehicle, bx, toolY, blockW,
+                labelW, iconW, pxw, py, pctSize)
+            if not ok and not self.loggedToolError then
+                self.loggedToolError = true
+                print("[AS_SpeedHint] erreur pneus de l'outil : " .. tostring(err))
             end
         end
     end

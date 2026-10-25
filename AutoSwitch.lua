@@ -13,6 +13,7 @@
 --   SeedProtect   protection du semis (Mud System Physics)
 --   SeedCoverFill remplissage du semoir couvercle fermé
 --   WetGrip       adhérence en sol humide (MoreRealistic), bonus différentiels, usure
+--   TireLife      usure des pneus et des chenilles (sans Use Your Tyres) : adhérence, rayon, atelier
 --   Duals         roues jumelées (largeur réelle pour Mud, adhérence)
 --   VtpFix        correctif VTP pour pneus à variantes de marques
 --   DualRack      palette de pneus : simple <-> jumelées (Ctrl droit + I)
@@ -60,6 +61,8 @@
 -- v1.0.2.0 : Real Physics - Tire Wear retiré des mods d'usure : Use Your Tyres seul
 -- (facultatif, recommandé). Si Reifenverschleiß est activé, TireWear.lua le désactive
 -- et le bloque, et l'onglet AUTOSWITCH l'affiche en rouge « Bloqué par AutoSwitch ».
+-- v1.0.3.0 : usure des pneus écrite pour AutoSwitch (TireLife.lua). Use Your Tyres reste
+-- facultatif : s'il est activé, il garde l'usure et TireLife.lua se coupe.
 -- v1.0.0.46 : Crop Destruction Overhaul n'est plus requis.
 -- v1.0.0.47 : herbe piétinée corrigée (setParallelogramWorldCoords), stade le plus bas coupé.
 -- v1.0.0.48 : herbe piétinée plus douce (sec dès 11 km/h, humide dès 7 km/h, un stade).
@@ -88,6 +91,7 @@ local FILES = {
     "scripts/SeedProtect.lua",
     "scripts/SeedCoverFill.lua",
     "scripts/WetGrip.lua",
+    "scripts/TireLife.lua",
     "scripts/Duals.lua",
     "scripts/VtpFix.lua",
     "scripts/DualRack.lua",
@@ -335,7 +339,7 @@ function AS_ModCheck:update(dt)
         if req.anyOf ~= nil then
             if ok and none == true then
                 entry = { title = req.title, required = "", status = "optional" }
-                print(string.format("[AutoSwitch] %s : aucun installé (facultatif), usure des pneus non gérée", req.title))
+                print(string.format("[AutoSwitch] %s : aucun installé (facultatif), usure des pneus gérée par AutoSwitch", req.title))
             elseif altIndex ~= nil then
                 local alt = req.anyOf[altIndex]
                 local mod, name = findRequired(alt)

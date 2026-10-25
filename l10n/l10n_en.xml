@@ -146,7 +146,7 @@
         <text name="vtpas_reqOld" text="X  Version %s (%s required)"/>
         <text name="vtpas_reqBlockedMod" text="X  Blocked by AutoSwitch"/>
         <text name="vtpas_rvBlockedNotif" text="Real Physics - Tire Wear: disabled and blocked by AutoSwitch (Use Your Tyres is the tire wear mod)"/>
-        <text name="vtpas_reqOptional" text="Optional (Use Your Tyres recommended)"/>
+        <text name="vtpas_reqOptional" text="Optional (wear handled by AutoSwitch)"/>
         <text name="vtpas_secDiff" text="Differentials"/>
         <text name="vtpas_secTires" text="Tires"/>
         <text name="vtpas_secAlerts" text="Notifications and alerts"/>
@@ -297,7 +297,7 @@
         <text name="as_help_tires_p3_title" text="Benefits of dual wheels"/>
         <text name="as_help_tires_p3_text" text="The real width of dual wheels is used by Mud System Physics (less sinking) and they grip better on wet ground. A Variable Tire Pressure fix is applied for tires with brand variants."/>
         <text name="as_help_tires_p4_title" text="Wear and dirt"/>
-        <text name="as_help_tires_p4_text" text="Tire wear is optional: Use Your Tyres (recommended) or Real Physics - Tire Wear. If both are activated, Use Your Tyres is used and the other one is blocked. Wear is applied on top of ground grip; on the road, a worn tire grips a little better (slick effect).&#10;&#10;Muddy tires stay dirty much longer while driving (at least one hour on the road); water, rain and washing still clean them."/>
+        <text name="as_help_tires_p4_text" text="Tires and tracks wear with AutoSwitch: distance driven, wheel slip (a spinning wheel wears much faster), real wheel load, ground (roads wear about 3 times more than fields), pressure (low pressure on the road = fast wear), road speed and heat. Each wheel set keeps its own wear.&#10;&#10;A worn tire grips less in the field, on dirt and snow; on dry roads it grips a bit better (slick effect), on wet roads less. Its radius shrinks a little.&#10;&#10;The tractor in the HUD shows one bar per wheel (green, yellow, orange, red = tread left), the vehicle info box shows the percentage, and a warning appears at 75 % and 90 %. In the workshop, the « New tires » button replaces tires worn 25 % or more. Settings in the AUTOSWITCH tab (on / off, tire life). If Use Your Tyres is active, it handles tire wear instead.&#10;&#10;Tires dirty with mud stay dirty much longer while driving (at least one hour on the road); water, rain and washing always clean them."/>
         <text name="as_help_ground_title" text="Grip, ground and mud"/>
         <text name="as_help_ground_p1_title" text="Grip on wet ground"/>
         <text name="as_help_ground_p1_text" text="MoreRealistic ignores the grip computed by Mud System Physics and Tractor Terrain Dynamics. AutoSwitch therefore lowers grip in the field depending on local moisture (from 20 %, maximum at 70 %) and the soil type.&#10;&#10;Five levels: Beginner, Easy, Normal (default), Hard, Extreme. At 60 % moisture, the loss goes from about 34 % (Beginner) to 78 % (Extreme)."/>
@@ -360,5 +360,18 @@
         <text name="as_help_files_p2_title" text="In the savegame"/>
         <text name="as_help_files_p2_text" text="• AutoSwitch_fields.xml: dates and merged fields of the Fields window.&#10;• AutoSwitch_register.xml: weighings and sales of the register.&#10;• AutoSwitch_coop.xml: what the cooperatives still owe.&#10;&#10;Tire tracks and the AUTOSWITCH tab settings are also kept with the game."/>
         <!-- fin de l'aide -->
+        <text name="vtpas_tireLife_label" text="Tire wear"/>
+        <text name="vtpas_tireLife_tip" text="Tires and tracks wear with distance, wheel slip, load, ground, pressure and weather. Worn tires: less grip in the field, a bit more on dry roads."/>
+        <text name="vtpas_tireLife_uyt" text="Use Your Tyres is active: it handles tire wear, this setting has no effect."/>
+        <text name="vtpas_tireLifeKm_label" text="Tire life"/>
+        <text name="vtpas_tireLifeKm_tip" text="Road distance, at normal load, to wear out a 2 m tire. Fields wear about 3 times less, wheel slip much more."/>
+        <text name="vtpas_tl_info" text="Tire wear"/>
+        <text name="vtpas_tl_front" text="Front"/>
+        <text name="vtpas_tl_rear" text="Rear"/>
+        <text name="vtpas_tl_alertWorn" text="%s: tires worn (%d %%)"/>
+        <text name="vtpas_tl_alertCritical" text="%s: tires must be replaced (%d %%), go to the workshop"/>
+        <text name="vtpas_tl_trackCut" text="%s: rubber track cut, replace it at the workshop"/>
+        <text name="vtpas_tl_replace" text="New tires"/>
+        <text name="vtpas_tl_replaceAsk" text="Fit %d new tires for %s?"/>
     </texts>
 </l10n>

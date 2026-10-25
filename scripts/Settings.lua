@@ -85,6 +85,9 @@ AS_Settings.weatherPosX = nil      -- position déplacée à la souris (nil = pa
 AS_Settings.weatherPosY = nil
 AS_Settings.overdraftPercent = 20  -- (v1.0.0.67) découvert : plafond en % de la valeur de revente des biens (0 = jeu de base)
 AS_Settings.OVERDRAFT_PERCENT_LIST = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 }
+AS_Settings.tireLife = true        -- (v1.0.3.0) usure des pneus d'AutoSwitch (sans Use Your Tyres)
+AS_Settings.tireLifeKm = 1500      -- (v1.0.3.0) durée de vie d'un pneu de 2 m sur route (km)
+AS_Settings.TIRE_LIFE_LIST = { 250, 500, 750, 1000, 1500, 2000, 3000, 5000, 8000 }
 AS_Settings.overdraftRate = 10     -- (v1.0.0.67) agios : taux annuel en %
 AS_Settings.OVERDRAFT_RATE_LIST = { 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 }
 
@@ -147,6 +150,8 @@ function AS_Settings:save()
             setXMLBool(xml, "vtpAutoSwitch.shopTwins#blocked", self.shopBlockTwins)
             setXMLInt(xml, "vtpAutoSwitch.overdraft#percent", self.overdraftPercent)
             setXMLInt(xml, "vtpAutoSwitch.overdraft#rate", self.overdraftRate)
+            setXMLBool(xml, "vtpAutoSwitch.tireLife#enabled", self.tireLife)
+            setXMLInt(xml, "vtpAutoSwitch.tireLife#lifeKm", self.tireLifeKm)
             -- (v1.0.1.7) logs coupés dans log.txt
             local on = {}
             for tag, v in pairs(AS_LOGS or {}) do if v == true then on[#on + 1] = tag end end
@@ -273,6 +278,10 @@ function AS_Settings:load()
                 if odp ~= nil then self.overdraftPercent = math.max(0, math.min(100, odp)) end
                 local odr = getXMLInt(xml, "vtpAutoSwitch.overdraft#rate")
                 if odr ~= nil then self.overdraftRate = math.max(0, math.min(20, odr)) end
+                local tle = getXMLBool(xml, "vtpAutoSwitch.tireLife#enabled")
+                if tle ~= nil then self.tireLife = tle end
+                local tlk = getXMLInt(xml, "vtpAutoSwitch.tireLife#lifeKm")
+                if tlk ~= nil then self.tireLifeKm = math.max(100, math.min(20000, tlk)) end
                 AS_LOGS = AS_LOGS or {}
                 for tag in (getXMLString(xml, "vtpAutoSwitch.logs#on") or ""):gmatch("[%w_]+") do AS_LOGS[tag] = true end
                 local ww = getXMLBool(xml, "vtpAutoSwitch.weatherWidget#enabled")
@@ -343,6 +352,10 @@ function AS_Settings:apply()
         AS_Hours.SELL_OPEN, AS_Hours.SELL_CLOSE = self.sellOpen, self.sellClose
     end
     if AS_DualRack ~= nil then AS_DualRack.shopBlockTwins = self.shopBlockTwins end
+    if AS_TireLife ~= nil then
+        AS_TireLife:setEnabled(self.tireLife)
+        AS_TireLife.LIFE_KM = self.tireLifeKm
+    end
     if AS_Overdraft ~= nil then
         AS_Overdraft.PERCENT = self.overdraftPercent
         AS_Overdraft.RATE = self.overdraftRate
@@ -616,11 +629,30 @@ function AS_Settings:onShopCloseChanged(state) self:setHour("shopClose", self.HO
 function AS_Settings:onSellOpenChanged(state) self:setHour("sellOpen", self.HOUR_OPEN_LIST, state) end
 function AS_Settings:onSellCloseChanged(state) self:setHour("sellClose", self.HOUR_CLOSE_LIST, state) end
 
+function AS_Settings:onTireLifeChanged(state, element)
+    self.tireLife = (state == 2)
+    self:apply()
+    self:save()
+    sprint("usure des pneus : %s", tostring(self.tireLife))
+end
+
+function AS_Settings:onTireLifeKmChanged(state, element)
+    local v = self.TIRE_LIFE_LIST[state]
+    if v ~= nil then
+        self.tireLifeKm = v
+        self:apply()
+        self:save()
+        sprint("durée de vie des pneus : %d km", v)
+    end
+end
+
 function AS_Settings:onNoOvertakeChanged(state, element)
     self.noOvertake = (state == 2)
     self:apply()
     self:save()
     sprint("voitures sans dépassement des tracteurs : %s", tostring(self.noOvertake))
+end
+
 end
 
 function AS_Settings:onShopBlockTwinsChanged(state, element)
@@ -946,6 +978,7 @@ AS_Settings.LOG_LIST = {
     { "AS_DualRack", "Palettes de pneus", "Tire racks" },
     { "AS_VtpFix", "Correctif VTP", "VTP fix" },
     { "AS_TireWear", "Blocage Real Physics - Tire Wear", "Real Physics - Tire Wear block" },
+    { "AS_TireLife", "Usure des pneus", "Tire wear" },
     { "AS_TireTracksSave", "Traces de pneus", "Tire tracks" },
     { "AS_MudPreset", "Réglages Mud / TTD", "Mud / TTD presets" },
     { "AS_MudWheelDrag", "Résistance de la boue", "Mud wheel drag" },
@@ -1146,6 +1179,27 @@ function AS_Settings:buildUI(frame)
         state = self:getIndex(self.TIRE_DELAY_LIST, self.tireDelay),
         callback = AS_Settings.onTireDelayChanged,
     })
+
+    -- (v1.0.3.0) usure des pneus d'AutoSwitch
+    if AS_TireLife ~= nil then
+        local uyt = AS_TireLife.isUytActive ~= nil and AS_TireLife:isUytActive()
+        self.options.tireLife = self:addRow(layout, template, {
+            label = L("vtpas_tireLife_label"),
+            tip = uyt and L("vtpas_tireLife_uyt") or L("vtpas_tireLife_tip"),
+            texts = onOff,
+            state = self.tireLife and 2 or 1,
+            callback = AS_Settings.onTireLifeChanged,
+        })
+        local kmTexts = {}
+        for i, v in ipairs(self.TIRE_LIFE_LIST) do kmTexts[i] = v .. " km" end
+        self.options.tireLifeKm = self:addRow(layout, template, {
+            label = L("vtpas_tireLifeKm_label"),
+            tip = L("vtpas_tireLifeKm_tip"),
+            texts = kmTexts,
+            state = self:getIndex(self.TIRE_LIFE_LIST, self.tireLifeKm),
+            callback = AS_Settings.onTireLifeKmChanged,
+        })
+    end
 
     if layout ~= srcLayout then self:addHeader(layout, headerTemplate, L("vtpas_secAlerts")) end
     self.options.notifyDiff = self:addRow(layout, template, {
@@ -1476,6 +1530,8 @@ function AS_Settings:refreshStates()
     if o.hudDedup ~= nil then o.hudDedup:setState(self.hudDedup and 2 or 1) end
     if o.coopPay ~= nil then o.coopPay:setState(self.coopPay and 2 or 1) end
     if o.noOvertake ~= nil then o.noOvertake:setState(self.noOvertake and 2 or 1) end
+    if o.tireLife ~= nil then o.tireLife:setState(self.tireLife and 2 or 1) end
+    if o.tireLifeKm ~= nil then o.tireLifeKm:setState(self:getIndex(self.TIRE_LIFE_LIST, self.tireLifeKm)) end
     if o.hoursEnabled ~= nil then o.hoursEnabled:setState(self.hoursEnabled and 2 or 1) end
     if o.shopOpen ~= nil then o.shopOpen:setState(self:getIndex(self.HOUR_OPEN_LIST, self.shopOpen)) end
     if o.shopClose ~= nil then o.shopClose:setState(self:getIndex(self.HOUR_CLOSE_LIST, self.shopClose)) end

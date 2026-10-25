@@ -405,6 +405,7 @@ AS.getEvClass = getEvClass
 AS.getMaxSlipPercent = getMaxSlipPercent
 AS.getRearSlipPercent = getRearSlipPercent
 AS.getWheelSlips = getWheelSlips
+AS.wheelGroundSpeed = wheelGroundSpeed   -- (v1.0.3.0) usure des pneus (TireLife.lua)
 AS.asState = asState
 AS.isLockedValue = isLockedValue
 AS.shClamp = shClamp
