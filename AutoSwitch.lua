@@ -120,6 +120,7 @@ local FILES = {
     "scripts/TrafficSensor.lua",
     "scripts/NoOvertake.lua",
     "scripts/ForageReach.lua",
+    "scripts/CpResume.lua",
     "scripts/Help.lua",
     "scripts/Settings.lua",
 }

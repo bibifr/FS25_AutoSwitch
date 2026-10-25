@@ -192,6 +192,8 @@
         <text name="vtpas_hours_stationClosed" text="%s: geschlossen, öffnet um %s"/>
         <text name="vtpas_noOvertake_label" text="Traktoren nicht überholen"/>
         <text name="vtpas_noOvertake_tip" text="Verkehrsautos bleiben hinter Traktoren (AutoDrive oder gefahren) auf der Straße. Sie dürfen vorbei, wenn der Traktor seit 10 s steht oder die Warnblinker an sind."/>
+        <text name="vtpas_cpResume_label" text="Courseplay beim Laden neu starten"/>
+        <text name="vtpas_cpResume_tip" text="Fahrzeuge, die beim Speichern mit Courseplay fuhren, starten beim Laden des Spielstands wieder: Feldarbeit am Punkt, an dem sie aufgehört hat (sonst am nächsten Punkt), Überlader und andere Aufträge mit ihren Einstellungen."/>
         <text name="vtpas_shopBlockTwins_label" text="Zwillingsräder im Shop gesperrt"/>
         <text name="vtpas_shopBlockTwins_tip" text="Shop und Werkstatt bieten keine Zwillingsräder mehr an: sie werden mit den Reifenpaletten montiert. Traktoren mit Zwillingsrädern behalten sie, eine Palette kann sie auf Einzelräder zurückrüsten."/>
         <!-- v1.0.0.59 : fenêtre Météo -->

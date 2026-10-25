@@ -192,6 +192,8 @@
         <text name="vtpas_hours_stationClosed" text="%s: closed, opens at %s"/>
         <text name="vtpas_noOvertake_label" text="No overtaking of tractors"/>
         <text name="vtpas_noOvertake_tip" text="Traffic cars stay behind tractors (AutoDrive or driven) on the road. They may pass when the tractor has been stopped for 10 s or has its hazard lights on."/>
+        <text name="vtpas_cpResume_label" text="Restart Courseplay on load"/>
+        <text name="vtpas_cpResume_tip" text="Vehicles that were driven by Courseplay when the game was saved start again when the savegame is loaded: field work at the point where it stopped (or the nearest point), unloaders and other jobs with their settings."/>
         <text name="vtpas_shopBlockTwins_label" text="Dual wheels blocked in shop"/>
         <text name="vtpas_shopBlockTwins_tip" text="The shop and workshop no longer offer dual wheels: fit them with the tire pallets. Tractors already on duals keep them, and a pallet can switch them back to single wheels."/>
         <!-- v1.0.0.59 : fenêtre Météo -->

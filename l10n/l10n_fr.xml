@@ -192,6 +192,8 @@
         <text name="vtpas_hours_stationClosed" text="%s : fermé, ouvre à %s"/>
         <text name="vtpas_noOvertake_label" text="Interdire de doubler les tracteurs"/>
         <text name="vtpas_noOvertake_tip" text="Les voitures du trafic restent derrière les tracteurs (AutoDrive ou conduits) qui roulent sur la route. Elles peuvent passer si le tracteur est arrêté depuis 10 s ou a les warnings allumés."/>
+        <text name="vtpas_cpResume_label" text="Relancer Courseplay au chargement"/>
+        <text name="vtpas_cpResume_tip" text="Les véhicules où Courseplay roulait lors de la sauvegarde repartent au chargement de la partie : travail au champ au point où il s'était arrêté (sinon au point le plus proche), déchargeurs et autres travaux avec leurs réglages."/>
         <text name="vtpas_shopBlockTwins_label" text="Jumelées bloquées en magasin"/>
         <text name="vtpas_shopBlockTwins_tip" text="Le magasin et l'atelier ne proposent plus les roues jumelées : elles se montent avec les palettes de pneus. Les tracteurs déjà en jumelées les gardent et la palette peut les remettre en roues simples."/>
         <!-- v1.0.0.59 : fenêtre Météo -->

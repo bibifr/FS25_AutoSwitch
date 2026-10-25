@@ -79,6 +79,7 @@ AS_Settings.sellClose = 22
 AS_Settings.HOUR_OPEN_LIST = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23 }
 AS_Settings.HOUR_CLOSE_LIST = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24 }
 AS_Settings.noOvertake = true      -- (v1.0.0.84) les voitures du trafic ne doublent plus les tracteurs
+AS_Settings.cpResume = true        -- (v1.0.3.0) Courseplay relancé au chargement de la partie
 AS_Settings.shopBlockTwins = true  -- (v1.0.0.89) roues jumelées retirées du magasin (montage par palette)
 AS_Settings.weatherWidget = true   -- (v1.0.0.61) mini-météo à gauche de l'horloge
 AS_Settings.weatherPosX = nil      -- position déplacée à la souris (nil = par défaut)
@@ -142,6 +143,7 @@ function AS_Settings:save()
             setXMLBool(xml, "vtpAutoSwitch.hudDedup#enabled", self.hudDedup)
             setXMLBool(xml, "vtpAutoSwitch.coopPay#enabled", self.coopPay)
             setXMLBool(xml, "vtpAutoSwitch.noOvertake#enabled", self.noOvertake)
+            setXMLBool(xml, "vtpAutoSwitch.cpResume#enabled", self.cpResume)
             setXMLBool(xml, "vtpAutoSwitch.hours#enabled", self.hoursEnabled)
             setXMLInt(xml, "vtpAutoSwitch.hours#shopOpen", self.shopOpen)
             setXMLInt(xml, "vtpAutoSwitch.hours#shopClose", self.shopClose)
@@ -265,6 +267,8 @@ function AS_Settings:load()
                 if h4 ~= nil then self.sellClose = math.max(1, math.min(24, h4)) end
                 local no = getXMLBool(xml, "vtpAutoSwitch.noOvertake#enabled")
                 if no ~= nil then self.noOvertake = no end
+                local cr = getXMLBool(xml, "vtpAutoSwitch.cpResume#enabled")
+                if cr ~= nil then self.cpResume = cr end
                 local sb = getXMLBool(xml, "vtpAutoSwitch.shopTwins#blocked")
                 if sb ~= nil then self.shopBlockTwins = sb end
                 local ws = getXMLInt(xml, "vtpAutoSwitch.windSway#factor10")
@@ -346,6 +350,7 @@ function AS_Settings:apply()
     if AS_HudDedup ~= nil then AS_HudDedup:setEnabled(self.hudDedup) end
     if AS_CoopPay ~= nil then AS_CoopPay.ENABLED = self.coopPay end
     if AS_NoOvertake ~= nil then AS_NoOvertake:setEnabled(self.noOvertake) end
+    if AS_CpResume ~= nil then AS_CpResume.ENABLED = self.cpResume end
     if AS_Hours ~= nil then
         AS_Hours.ENABLED = self.hoursEnabled
         AS_Hours.SHOP_OPEN, AS_Hours.SHOP_CLOSE = self.shopOpen, self.shopClose
@@ -653,6 +658,11 @@ function AS_Settings:onNoOvertakeChanged(state, element)
     sprint("voitures sans dépassement des tracteurs : %s", tostring(self.noOvertake))
 end
 
+function AS_Settings:onCpResumeChanged(state, element)
+    self.cpResume = (state == 2)
+    self:apply()
+    self:save()
+    sprint("Courseplay relancé au chargement : %s", tostring(self.cpResume))
 end
 
 function AS_Settings:onShopBlockTwinsChanged(state, element)
@@ -1478,6 +1488,14 @@ function AS_Settings:buildUI(frame)
         callback = AS_Settings.onNoOvertakeChanged,
     })
 
+    self.options.cpResume = self:addRow(layout, template, {
+        label = L("vtpas_cpResume_label"),
+        tip = L("vtpas_cpResume_tip"),
+        texts = onOff,
+        state = self.cpResume and 2 or 1,
+        callback = AS_Settings.onCpResumeChanged,
+    })
+
     self.options.shopBlockTwins = self:addRow(layout, template, {
         label = L("vtpas_shopBlockTwins_label"),
         tip = L("vtpas_shopBlockTwins_tip"),
@@ -1530,6 +1548,7 @@ function AS_Settings:refreshStates()
     if o.hudDedup ~= nil then o.hudDedup:setState(self.hudDedup and 2 or 1) end
     if o.coopPay ~= nil then o.coopPay:setState(self.coopPay and 2 or 1) end
     if o.noOvertake ~= nil then o.noOvertake:setState(self.noOvertake and 2 or 1) end
+    if o.cpResume ~= nil then o.cpResume:setState(self.cpResume and 2 or 1) end
     if o.tireLife ~= nil then o.tireLife:setState(self.tireLife and 2 or 1) end
     if o.tireLifeKm ~= nil then o.tireLifeKm:setState(self:getIndex(self.TIRE_LIFE_LIST, self.tireLifeKm)) end
     if o.hoursEnabled ~= nil then o.hoursEnabled:setState(self.hoursEnabled and 2 or 1) end
