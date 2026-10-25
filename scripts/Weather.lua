@@ -636,7 +636,21 @@ local function clockAnchor()
     -- bord droit = juste avant le calendrier (la météo du jeu est cachée à sa gauche)
     local right = overlayX(gid.calendarIcon)
     if right == nil or right <= 0 or right >= x then return nil end
-    return right, y, h
+    -- (v1.0.3.0) bord gauche du fond de la barre (case météo refermée) : élément le plus à
+    -- gauche de la barre, pour que la mini-météo ne déborde plus sur ce fond sombre
+    local left = overlayX(gid.infoBgLeft)
+    if left ~= nil and (left >= right or left < right - 0.15) then left = nil end
+    if left == nil then for k, o in pairs(gid) do
+        if type(o) == "table" and k ~= "weatherIcon" and k ~= "weatherNextIcon" then
+            local ox = rawget(o, "x")
+            local ow = rawget(o, "width")
+            if type(ox) == "number" and type(ow) == "number" and ow > 0
+                and ox < right and ox > right - 0.15 and (left == nil or ox < left) then
+                left = ox
+            end
+        end
+    end end
+    return right, y, h, left
 end
 
 -- (v1.0.0.63) météo du jeu cachée dans la barre de l'horloge quand la mini-météo est
@@ -683,7 +697,9 @@ if GameInfoDisplay ~= nil and GameInfoDisplay.draw ~= nil then
         -- log.txt le 18/10/2026 : weatherIcon, weatherNextIcon, weatherNextIconOffsetX,
         -- weatherNextIconSpacing ; le jeu place les éléments au moment du dessin)
         local savedNum
-        if AS_Weather.WIDGET_X ~= nil then
+        -- (v1.0.3.0) case refermée aussi quand la mini-météo est à sa place : sinon le fond
+        -- vide de la barre restait visible derrière « Prévision » (capture de Fabien 25/10)
+        if true then
             savedNum = GW_NUM
             savedNum[1], savedNum[2] = self.weatherNextIconOffsetX, self.weatherNextIconSpacing
             for name in pairs(saved) do self[name].width = 0 end
@@ -719,7 +735,7 @@ function AS_Weather:drawWidget(d)
         renderOverlay(ov, x, y, w, h)
     end
 
-    local anchorRight, anchorTop, barH = clockAnchor()
+    local anchorRight, anchorTop, barH, barLeft = clockAnchor()
     self.anchored = anchorRight ~= nil
     local H = py(48)
     if barH ~= nil and barH > py(30) and barH < py(120) then H = barH end
@@ -755,7 +771,9 @@ function AS_Weather:drawWidget(d)
     -- place d'origine (dans la barre de l'horloge), gardée pour l'aimantation
     local x, top
     if anchorRight ~= nil then
-        x, top = anchorRight - pxw(14) - W, anchorTop
+        local r = anchorRight - pxw(14)
+        if barLeft ~= nil and barLeft - pxw(4) < r then r = barLeft - pxw(4) end
+        x, top = r - W, anchorTop
     else
         x, top = 1 - pxw(560) - W, 1 - py(20)
     end
