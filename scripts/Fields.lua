@@ -917,6 +917,10 @@ function AS_Fields:drawPanel()
     end
     text(x0 + pad + pxw(44), top - py(31), 20, T("Champs", "Fields"), C.title, nil, true)
     local now = gameDate()
+    -- total des hectares possédés, en haut entre le titre et la date (v1.0.3.0)
+    local total = 0
+    for _, r in ipairs(self.rows or {}) do total = total + (r.area or 0) end
+    text(x0 + W * 0.5, top - py(30), 15, string.format(T("%.1f ha possédés", "%.1f ha owned"), total / 10000), C.title, RenderText.ALIGN_CENTER, true)
     -- bouton X
     local bs, bw = py(30), pxw(30)
     local bx, by = x0 + W - pxw(8) - bw, top - py(7) - bs
