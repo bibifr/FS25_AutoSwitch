@@ -473,18 +473,24 @@ function AS_SpeedHint:draw()
         if drawFilledRect ~= nil then
             drawFilledRect(bx, by, blockW, iconH, 0, 0, 0, 0.35)
         end
-        local ov = self:getDriveOverlay(k, kind)
+        -- ensileuse 4x2 (pont avant moteur) : pont avant seul, gris ou rouge s'il est bloqué,
+        -- sans transmission (le dessin avec transmission grise montre un 4x4 débrayé)
+        local iconK = k
+        if kind == "forage" and not AS.is4wd(vehicle) and AS.drivenAxle(vehicle) == "front" then
+            iconK = k == 1 and 9 or 8
+        end
+        local ov = self:getDriveOverlay(iconK, kind)
         if ov ~= nil then
             setOverlayColor(ov, 1, 1, 1, 1)
             renderOverlay(ov, iconX, by, iconW, iconH)
         end
         -- ponts dans l'image (256 px) : tracteur avant à 55 px du haut, arrière à 195 px ;
-        -- moissonneuse avant à 73 px, arrière à 207 px ; ensileuse 95 / 210 px
+        -- moissonneuse avant à 73 px, arrière à 207 px ; ensileuse 70 / 212 px (dessin de Fabien)
         local ws = st.wheelVehicle == vehicle and st.wheelSlip or nil
         if ws ~= nil then
             local lpX, lpY = pxw(3), py(1.5)
             local fy, ry = 55, 195
-            if kind == "combine" then fy, ry = 73, 207 elseif kind == "forage" then fy, ry = 95, 210 end
+            if kind == "combine" then fy, ry = 73, 207 elseif kind == "forage" then fy, ry = 70, 212 end
             -- (v1.0.0.42) roues libres (non motrices) : pas de patinage affiché
             local axles = {
                 { y = by + iconH * (1 - fy / 256), l = frontDriven and ws.fl or nil, r = frontDriven and ws.fr or nil, locked = frontLocked and frontDriven },
