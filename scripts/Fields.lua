@@ -20,7 +20,7 @@ AS_Fields.MIN_SHARE     = 0.10    -- part du champ à travailler pour noter une 
 AS_Fields.GAP_DAYS      = 2       -- passages séparés de plus de 2 jours = nouveau passage
 AS_Fields.REFRESH_MS    = 2000    -- liste recalculée toutes les 2 s, fenêtre ouverte
 AS_Fields.ROWS          = 14
-AS_Fields.DEBUG         = true    -- version TEST : logs [AS_Champs] dans log.txt
+AS_Fields.DEBUG         = false   -- true : logs [AS_Champs] dans log.txt
 
 AS_Fields.records = {}            -- [fieldId] = { sow = {date, fruit}, fert = {date, n}, herb = {date} }
 AS_Fields.acc = {}                -- cumuls en cours [fieldId .. kind] = { m2, day, done }
