@@ -33,7 +33,7 @@ Objectif: Rendre le jeux plus realiste et performant
 | Saleté des pneus | Les pneus salis par la boue mettent au moins 1 h de route à se nettoyer (1 h à 2 h 10 selon la vitesse) ; l'eau, la pluie et le lavage les nettoient normalement. |
 | Outils stables | Rayon des roues figé sur les outils à l'arrêt : plus de sautillement dû à Mud System Physics + MoreRealistic. |
 | Boue sur roues sans frein | La résistance de boue de Mud System Physics freine aussi les roues sans frein (remorques, outils) avec MoreRealistic. |
-| Arbitrage des mods | AutoSwitch bloque ou ordonne lui-même les crochets en conflit (MoreRealistic, Use Your Tyres, DynamicDrivePro, Enhanced Vehicle, Recovery Winch), sans désactiver aucun mod. ModMixer n'est plus nécessaire. |
+| Arbitrage des mods | AutoSwitch bloque ou ordonne lui-même les crochets en conflit (MoreRealistic, DynamicDrivePro, Enhanced Vehicle, Recovery Winch), sans désactiver aucun mod. ModMixer n'est plus nécessaire. |
 | Dormir | Deux curseurs dans la fenêtre Dormir : temps en heures (+0 à +23 h) et temps en jours (+0 à +7), cumulés. Plus de limite de 24 h ; avec des jours, réveil à 8 h. Les jours passent normalement (cultures, ventes, salaires). |
 
 ## Utiliser les palettes de jumelées
@@ -98,7 +98,7 @@ Objective: Make game more realistic
 | Tire dirt | Muddy tires take at least 1 hour of driving to clean (1 h to 2 h 10 depending on speed); water, rain and washing clean them normally. |
 | Stable implements | Wheel radius frozen on stopped implements: no more bouncing caused by Mud System Physics + MoreRealistic. |
 | Mud on unbraked wheels | Mud System Physics mud drag also slows unbraked wheels (trailers, implements) with MoreRealistic. |
-| Mod arbitration | AutoSwitch blocks or orders the conflicting hooks itself (MoreRealistic, Use Your Tyres, DynamicDrivePro, Enhanced Vehicle, Recovery Winch), without disabling any mod. ModMixer is no longer needed. |
+| Mod arbitration | AutoSwitch blocks or orders the conflicting hooks itself (MoreRealistic, DynamicDrivePro, Enhanced Vehicle, Recovery Winch), without disabling any mod. ModMixer is no longer needed. |
 | Sleep | Two sliders in the Sleep dialog: time in hours (+0 to +23 h) and time in days (+0 to +7), added together. No more 24 h limit; with days, wake-up at 8 am. Days pass normally (crops, sales, wages). |
 
 ### Using the dual-wheel racks

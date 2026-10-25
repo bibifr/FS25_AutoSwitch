@@ -62,7 +62,8 @@
 -- (facultatif, recommandé). Si Reifenverschleiß est activé, TireWear.lua le désactive
 -- et le bloque, et l'onglet AUTOSWITCH l'affiche en rouge « Bloqué par AutoSwitch ».
 -- v1.0.3.0 : usure des pneus écrite pour AutoSwitch (TireLife.lua). Use Your Tyres reste
--- facultatif : s'il est activé, il garde l'usure et TireLife.lua se coupe.
+-- facultatif : s'il est activé, il garde l'usure et TireLife.lua se coupe. Il n'est plus
+-- listé dans les mods requis de l'onglet.
 -- v1.0.0.46 : Crop Destruction Overhaul n'est plus requis.
 -- v1.0.0.47 : herbe piétinée corrigée (setParallelogramWorldCoords), stade le plus bas coupé.
 -- v1.0.0.48 : herbe piétinée plus douce (sec dès 11 km/h, humide dès 7 km/h, un stade).
@@ -144,10 +145,7 @@ local REQUIRED = {
     { "moreRealisticXmlDatabank",     "1.0.0.1",  "MoreRealistic XML Databank", cuts = MR_CUTS },
     { "FS25_RealisticHarvesting",     "1.6.0.0",  "Realistic Harvesting" },
     { "FS25_MoistureSystem",          "2.0.0.8",  "Moisture System" },
-    -- usure des pneus (v1.0.1.2 facultatif ; v1.0.2.0 Real Physics - Tire Wear retiré)
-    { anyOf = {
-        { "FS25_useYourTyres",       "1.1.0.0",  "Use Your Tyres" },
-    }, title = "Use Your Tyres", optional = true },
+    -- (v1.0.3.0) plus de mod d'usure des pneus dans la liste : l'usure est dans AutoSwitch
 }
 
 -- (v1.0.2.0) mods désactivés et bloqués par AutoSwitch s'ils sont activés (TireWear.lua)

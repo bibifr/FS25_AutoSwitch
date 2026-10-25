@@ -25,7 +25,7 @@
 - Muddy tires stay dirty much longer while driving (at least 1 hour of driving to clean); water, rain and washing still clean them.
 - Implements stay still when stopped: no more bouncing caused by Mud System Physics and MoreRealistic.
 - Mud drag also on unbraked wheels: Mud System Physics mud slows trailers and implements again with MoreRealistic.
-- Mod arbitration: AutoSwitch blocks or orders the conflicting hooks between MoreRealistic, Use Your Tyres, DynamicDrivePro, Enhanced Vehicle and Recovery Winch itself, without disabling any mod (ModMixer is no longer needed).
+- Mod arbitration: AutoSwitch blocks or orders the conflicting hooks between MoreRealistic, DynamicDrivePro, Enhanced Vehicle and Recovery Winch itself, without disabling any mod (ModMixer is no longer needed).
 - Display: recommended speed range and top view of the tractor next to the speedometer (locked axles, 4WD, slip of each wheel or per locked axle), slip warning.
 - Lights: headlights and work lights of all vehicles reach twice as far and twice as bright (adjustable).
 - Sowing: seeding protection, seeder filling with the lid closed, direct re-sowing on crushed strips.
@@ -33,7 +33,7 @@
 
 Settings: Settings > General > AutoSwitch.
 
-Required mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, MoreRealistic, moreRealisticXmlDatabank, MudSystemPhysics, TractorTerrainDynamics, DynamicDrivePro, RealisticHarvesting, MoistureSystem. Tire wear is built in (it steps aside if Use Your Tyres is active). Real Physics - Tire Wear is disabled and blocked by AutoSwitch.]]></en>
+Required mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, MoreRealistic, moreRealisticXmlDatabank, MudSystemPhysics, TractorTerrainDynamics, DynamicDrivePro, RealisticHarvesting, MoistureSystem. Tire wear is built in, no tire mod needed. Real Physics - Tire Wear is disabled and blocked by AutoSwitch.]]></en>
         <fr><![CDATA[Mod compagnon qui automatise la pression des pneus et les différentiels et rend la traction réaliste, en faisant travailler ensemble Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics et Tractor Terrain Dynamics, sans modifier ces mods.
 
 - Pression des pneus : avec AutoDrive / Courseplay, dégonflage au champ et gonflage sur route. En conduite manuelle : Automatique ou Manuel. Le regonflage automatique de VTP à 30 km/h est désactivé.
@@ -48,7 +48,7 @@ Required mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, Mor
 - Les pneus salis par la boue le restent bien plus longtemps en roulant (au moins 1 h de route pour les nettoyer) ; l'eau, la pluie et le lavage les nettoient toujours.
 - Outils stables à l'arrêt : ils ne sautillent plus à cause de Mud System Physics et MoreRealistic.
 - Résistance de la boue aussi sur les roues sans frein : la boue de Mud System Physics freine de nouveau remorques et outils avec MoreRealistic.
-- Arbitrage des mods : AutoSwitch bloque ou ordonne lui-même les crochets en conflit entre MoreRealistic, Use Your Tyres, DynamicDrivePro, Enhanced Vehicle et Recovery Winch, sans désactiver aucun mod (ModMixer n'est plus nécessaire).
+- Arbitrage des mods : AutoSwitch bloque ou ordonne lui-même les crochets en conflit entre MoreRealistic, DynamicDrivePro, Enhanced Vehicle et Recovery Winch, sans désactiver aucun mod (ModMixer n'est plus nécessaire).
 - Affichage : plage de vitesse conseillée et tracteur vu de dessus près du compteur (ponts bloqués, 4x4, patinage de chaque roue ou par pont bloqué), alerte de patinage.
 - Lumières : les phares et phares de travail de tous les véhicules éclairent deux fois plus loin et deux fois plus fort (réglable).
 - Semis : protection du semis, remplissage du semoir couvercle fermé, ressemis direct sur bandes écrasées.
@@ -56,7 +56,7 @@ Required mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, Mor
 
 Réglages : Paramètres > Général > AutoSwitch.
 
-Mods requis : VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, MoreRealistic, moreRealisticXmlDatabank, MudSystemPhysics, TractorTerrainDynamics, DynamicDrivePro, RealisticHarvesting, MoistureSystem. L'usure des pneus est intégrée (elle s'efface si Use Your Tyres est activé). Real Physics - Tire Wear est désactivé et bloqué par AutoSwitch.]]></fr>
+Mods requis : VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, MoreRealistic, moreRealisticXmlDatabank, MudSystemPhysics, TractorTerrainDynamics, DynamicDrivePro, RealisticHarvesting, MoistureSystem. L'usure des pneus est intégrée, aucun mod de pneus nécessaire. Real Physics - Tire Wear est désactivé et bloqué par AutoSwitch.]]></fr>
         <de><![CDATA[Begleit-Mod, der Reifendruck und Differenzialsperren automatisiert und die Traktion realistisch macht, indem er Variable Tire Pressure, Enhanced Vehicle, MoreRealistic, Mud System Physics und Tractor Terrain Dynamics zusammenarbeiten lässt, ohne diese Mods zu verändern.
 
 - Reifendruck: mit AutoDrive / Courseplay Luft ablassen auf dem Feld, aufpumpen auf der Straße. Beim Selbstfahren: Automatisch oder Manuell. Das automatische Aufpumpen von VTP bei 30 km/h ist deaktiviert.
@@ -71,7 +71,7 @@ Mods requis : VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, More
 - Verschmutzte Reifen bleiben beim Fahren viel länger schmutzig (mindestens 1 Stunde Fahrt bis sauber); Wasser, Regen und Waschen reinigen sie weiterhin.
 - Geräte bleiben im Stand ruhig: kein Hüpfen mehr durch Mud System Physics und MoreRealistic.
 - Schlammwiderstand auch an ungebremsten Rädern: der Schlamm von Mud System Physics bremst Anhänger und Geräte mit MoreRealistic wieder.
-- Mod-Schiedsrichter: AutoSwitch blockiert oder ordnet die widersprüchlichen Hooks zwischen MoreRealistic, Use Your Tyres, DynamicDrivePro, Enhanced Vehicle und Recovery Winch selbst, ohne einen Mod zu deaktivieren (ModMixer wird nicht mehr benötigt).
+- Mod-Schiedsrichter: AutoSwitch blockiert oder ordnet die widersprüchlichen Hooks zwischen MoreRealistic, DynamicDrivePro, Enhanced Vehicle und Recovery Winch selbst, ohne einen Mod zu deaktivieren (ModMixer wird nicht mehr benötigt).
 - Anzeige: empfohlener Geschwindigkeitsbereich und Traktor von oben neben dem Tacho (gesperrte Achsen, Allrad, Schlupf jedes Rads oder pro gesperrter Achse), Schlupfwarnung.
 - Lichter: Scheinwerfer und Arbeitsscheinwerfer aller Fahrzeuge leuchten doppelt so weit und doppelt so hell (einstellbar).
 - Säen: Saatschutz, Befüllen der Sämaschine bei geschlossenem Deckel, Direktnachsaat auf überfahrenen Streifen.
@@ -79,7 +79,7 @@ Mods requis : VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, More
 
 Einstellungen: Einstellungen > Allgemein > AutoSwitch.
 
-Benötigte Mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, MoreRealistic, moreRealisticXmlDatabank, MudSystemPhysics, TractorTerrainDynamics, DynamicDrivePro, RealisticHarvesting, MoistureSystem. Der Reifenverschleiß ist eingebaut (er tritt zurück, wenn Use Your Tyres aktiv ist). Real Physics - Reifenverschleiß wird von AutoSwitch deaktiviert und blockiert.]]></de>
+Benötigte Mods: VariableTirePressure, EnhancedVehicle, AutoDrive, Courseplay, MoreRealistic, moreRealisticXmlDatabank, MudSystemPhysics, TractorTerrainDynamics, DynamicDrivePro, RealisticHarvesting, MoistureSystem. Der Reifenverschleiß ist eingebaut, kein Reifen-Mod nötig. Real Physics - Reifenverschleiß wird von AutoSwitch deaktiviert und blockiert.]]></de>
     </description>
 
     <iconFilename>icon_AutoSwitch.dds</iconFilename>
