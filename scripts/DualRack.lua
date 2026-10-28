@@ -87,12 +87,23 @@ local function jobTotal(j)
     return math.max(1, t)
 end
 
+-- (28/10) les noms de pneus contenant « Twin » (Trelleborg TwinRadial, TwinForestry...) ne sont
+-- pas des jumelées : la configuration créée par le jeu pour ce pneu était bloquée au magasin et
+-- la machine arrivait sans roues (Scorpio 550, rt24, rt16)
+local TIRE_TWIN_NAMES = { "TWINRADIAL", "TWIN RADIAL", "TWINFORESTRY", "TWIN FORESTRY", "TWINTRAC", "TWIN TRAC" }
+local function stripTireTwin(s)
+    s = string.upper(s or "")
+    for _, n in ipairs(TIRE_TWIN_NAMES) do
+        s = s:gsub(n:gsub("%s", "%%s"), "")
+    end
+    return s
+end
 local function isTwinItem(it)
     if it == nil then return false end
-    local sid = string.upper(it.saveId or "")
+    local sid = stripTireTwin(it.saveId)
     if string.find(sid, "TWIN", 1, true) ~= nil then return true end
     if twinTexts == nil then loadTwinTexts() end
-    local nm = string.lower(tostring(it.name or ""))
+    local nm = string.lower(stripTireTwin(tostring(it.name or "")))
     return containsAny(nm, twinTexts) or string.find(nm, "twin", 1, true) ~= nil
         or string.find(nm, "jumel", 1, true) ~= nil or string.find(nm, "zwilling", 1, true) ~= nil
 end
