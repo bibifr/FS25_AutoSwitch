@@ -22,6 +22,10 @@
 --     la valeur de base de TTD reste (terre 0,60, herbe 0,70, gravier 0,75, sable 0,50).
 --   - calibrateur de TTD bloqué : Ctrl+C et le clic molette prenaient les
 --     commandes du véhicule (contexte de saisie du calibrateur).
+-- 29/10 : TTD 3.8, TTDStateManager.updateState compare ws.roadRatio, que
+--   analyzeWheelStates ne calcule jamais (erreur « compare number <= nil » en boucle
+--   quand aucune surface ne dépasse 50 %). On complète roadRatio = 0 s'il manque :
+--   sans effet sur la 3.7 (pas de TTD_StateManager) ni sur une version corrigée.
 -------------------------------------------------------------------------------
 
 AS_TtdBridge = {}
@@ -211,6 +215,21 @@ function AS_TtdBridge:blockCalibrator()
     print("[AS_TtdBridge] calibrateur de TTD bloqué (Ctrl+C et clic molette sans effet)")
 end
 
+-- TTD 3.8 : roadRatio absent du résultat de analyzeWheelStates
+function AS_TtdBridge:patchRoadRatio()
+    local sm = ttd("TTD_StateManager") or ttd("g_TTD_StateManager")
+    if sm == nil or type(sm.analyzeWheelStates) ~= "function" then return end
+    local orig = sm.analyzeWheelStates
+    sm.analyzeWheelStates = function(...)
+        local ws = orig(...)
+        if type(ws) == "table" and ws.roadRatio == nil then
+            ws.roadRatio = 0
+        end
+        return ws
+    end
+    print("[AS_TtdBridge] TTD : roadRatio complété dans analyzeWheelStates (erreur TTDStateManager 3.8)")
+end
+
 function AS_TtdBridge:update(dt)
     -- au premier update, après MSP, TTD et AS_MudWheelDrag : nos fonctions passent par-dessus
     if self.installed then return end
@@ -223,6 +242,7 @@ function AS_TtdBridge:update(dt)
     self:hookDynamics()
     self:patchNaturalGrip()
     self:blockCalibrator()
+    self:patchRoadRatio()
 end
 
 addModEventListener(AS_TtdBridge)
