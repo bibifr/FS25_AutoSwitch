@@ -65,15 +65,24 @@ function AS_TireTracksSave:dropOldest()
     while self.pointCount > self.MAX_POINTS and #self.segments > 0 do
         local seg = self.segments[1]
         local excess = self.pointCount - self.MAX_POINTS
-        if #seg.pts > excess + 1 then
+        local first = seg.first or 1
+        local live = #seg.pts - first + 1
+        if live > excess + 1 then
             -- on raccourcit la plus ancienne trace par le début
-            local kept = {}
-            for k = excess + 1, #seg.pts do kept[#kept + 1] = seg.pts[k] end
-            seg.pts = kept
+            -- (27/10) sans recopie à chaque point : on avance le début, la trace n'est
+            -- recopiée qu'une fois la moitié de ses points abandonnés
+            first = first + excess
+            if first > 1024 and first > #seg.pts / 2 then
+                local kept = {}
+                for k = first, #seg.pts do kept[#kept + 1] = seg.pts[k] end
+                seg.pts = kept
+                first = 1
+            end
+            seg.first = first
             self.pointCount = self.pointCount - excess
         else
             table.remove(self.segments, 1)
-            self.pointCount = self.pointCount - #seg.pts
+            self.pointCount = self.pointCount - live
             for index, cur in pairs(self.current) do
                 if cur == seg then self.current[index] = nil end
             end
@@ -171,12 +180,14 @@ function AS_TireTracksSave:save()
     setXMLInt(xml, "tireTracks#version", 1)
     local i = 0
     for _, seg in ipairs(self.segments) do
-        if #seg.pts >= 2 then
+        local first = seg.first or 1
+        if #seg.pts - first + 1 >= 2 then
             local key = string.format("tireTracks.segment(%d)", i)
             setXMLFloat(xml, key .. "#width", seg.w)
             setXMLInt(xml, key .. "#atlas", seg.atlas)
             local parts = {}
-            for _, p in ipairs(seg.pts) do
+            for n = first, #seg.pts do
+                local p = seg.pts[n]
                 local vals = {}
                 for k = 1, 14 do vals[k] = fmt(p[k]) end
                 parts[#parts + 1] = table.concat(vals, ",")

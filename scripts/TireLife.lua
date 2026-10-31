@@ -1257,26 +1257,48 @@ local function hasTire(wheel)
 end
 
 -- essieux d'un outil, de l'avant vers l'arrière : { l = usure, r = usure, lCut, rCut }
-local function toolAxles(obj)
+-- (31/10) le regroupement des roues en essieux est mémorisé par outil : une roue qui braque
+-- (essieu suiveur, avant pivotant) décale gauche/droite de plus de 40 cm en virage, ce qui
+-- faisait voir un essieu de plus toutes les secondes (image <-> dessin de secours). On garde
+-- le regroupement qui donne le MOINS d'essieux (roues droites) ; un virage n'en ajoute jamais.
+local function toolLayout(obj)
     local pts = {}
     for _, wheel in ipairs(getWheels(obj) or {}) do
         local n = wheel.repr or wheel.driveNode or wheel.node
         if n ~= nil and n ~= 0 and hasTire(wheel) then
             local ok, x, _, z = pcall(localToLocal, n, obj.rootNode, 0, 0, 0)
-            if ok and type(z) == "number" then pts[#pts + 1] = { x = x, z = z, w = wheel.__asWear or 0, cut = wheel.__asCut } end
+            if ok and type(z) == "number" then pts[#pts + 1] = { x = x, z = z, wheel = wheel } end
         end
     end
     table.sort(pts, function(a, b) return a.z > b.z end)
-    local axles = {}
+    local groups = {}
     for _, p in ipairs(pts) do
-        local a = axles[#axles]
-        if a == nil or a.z - p.z > 0.4 then
-            a = { z = p.z }
-            axles[#axles + 1] = a
+        local g = groups[#groups]
+        if g == nil or g.z - p.z > 0.4 then
+            g = { z = p.z, wheels = {} }
+            groups[#groups + 1] = g
         end
-        local side = p.x >= 0 and "l" or "r"
-        if a[side] == nil or p.w > a[side] then a[side] = p.w end
-        if p.cut then a[side .. "Cut"] = true end
+        g.wheels[#g.wheels + 1] = { wheel = p.wheel, side = p.x >= 0 and "l" or "r" }
+    end
+    return groups, #pts
+end
+
+local function toolAxles(obj)
+    local groups, nWheels = toolLayout(obj)
+    local keep = obj.__asAxleLayout
+    if keep == nil or keep.nWheels ~= nWheels or #groups < #keep.groups then
+        keep = { nWheels = nWheels, groups = groups }
+        obj.__asAxleLayout = keep
+    end
+    local axles = {}
+    for _, g in ipairs(keep.groups) do
+        local a = {}
+        for _, e in ipairs(g.wheels) do
+            local w = e.wheel.__asWear or 0
+            if a[e.side] == nil or w > a[e.side] then a[e.side] = w end
+            if e.wheel.__asCut then a[e.side .. "Cut"] = true end
+        end
+        axles[#axles + 1] = a
     end
     while #axles > 8 do table.remove(axles) end
     return axles

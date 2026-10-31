@@ -238,6 +238,10 @@ function AS_Diff:update(dt)
     if not self.ENABLED then
         return
     end
+    -- (27/10) tous les véhicules parcourus toutes les 100 ms (plus à chaque image)
+    self.loopTimer = (self.loopTimer or 0) + (dt or 0)
+    if self.loopTimer < 100 then return end
+    self.loopTimer = 0
 
     for _, vehicle in pairs(getVehicles()) do
         local vd = vehicle.vData

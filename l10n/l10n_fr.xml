@@ -146,6 +146,7 @@
         <text name="vtpas_reqOld" text="X  Version %s (%s requise)"/>
         <text name="vtpas_reqBlockedMod" text="X  Bloqué par AutoSwitch"/>
         <text name="vtpas_rvBlockedNotif" text="Real Physics - Tire Wear : désactivé et bloqué par AutoSwitch (l'usure des pneus est gérée par AutoSwitch)"/>
+        <text name="vtpas_rmsBlockedNotif" text="Realistic Mechanical Systems : bloqué par AutoSwitch (Advanced Damage System est le mod de pannes)"/>
         <text name="vtpas_reqOptional" text="Facultatif (usure gérée par AutoSwitch)"/>
         <text name="vtpas_secDiff" text="Différentiels"/>
         <text name="vtpas_secTires" text="Pneus"/>

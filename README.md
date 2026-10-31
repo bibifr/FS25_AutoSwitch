@@ -7,7 +7,7 @@
 
 # FS25 AutoSwitch
 
-**Version 1.0.3.1** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
+**Version 1.0.3.2** · Farming Simulator 25 · Auteur : Fabien · FR / EN / DE
 
 ## French
 
@@ -91,7 +91,7 @@ AutoSwitch fait partie d'un ensemble réaliste global : ces mods sont prévus, a
 
 ## English
 
-**Version 1.0.3.1** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
+**Version 1.0.3.2** · Farming Simulator 25 · Author: Fabien · FR / EN / DE
 
 Companion mod that **harmonises the information of different mods to make them compatible with each other**!
 

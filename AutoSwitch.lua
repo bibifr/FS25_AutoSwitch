@@ -122,6 +122,7 @@ local FILES = {
     "scripts/NoOvertake.lua",
     "scripts/ForageReach.lua",
     "scripts/CpResume.lua",
+    "scripts/WorkshopLock.lua",
     "scripts/Help.lua",
     "scripts/Settings.lua",
 }
@@ -149,8 +150,11 @@ local REQUIRED = {
 }
 
 -- (v1.0.2.0) mods désactivés et bloqués par AutoSwitch s'ils sont activés (TireWear.lua)
+-- (v1.0.3.2) keep : bloqué seulement si ce mod est chargé aussi (RMS bloqué quand ADS est là, Arbiter.lua)
 local BLOCKED = {
-    { "FS25_Reifenverschleiss*", "", "Real Physics - Tire Wear" },
+    { "FS25_Reifenverschleiss*", "", "Real Physics - Tire Wear", tip = "vtpas_rvBlockedNotif" },
+    { "FS25_RealisticMechanicalSystems", "", "Realistic Mechanical Systems", tip = "vtpas_rmsBlockedNotif",
+        keep = "FS25_AdvancedDamageSystem" },
 }
 
 -- Modules coupés : table vide à leur place, pour les autres modules qui lisent leurs réglages
@@ -361,9 +365,10 @@ function AS_ModCheck:update(dt)
     -- (v1.0.2.0) mods bloqués, en rouge dans l'onglet s'ils sont activés
     for _, b in ipairs(BLOCKED) do
         local mod, name = findRequired(b)
-        if mod ~= nil and g_modIsLoaded[mod.modName] == true then
+        if mod ~= nil and g_modIsLoaded[mod.modName] == true
+            and (b.keep == nil or g_modIsLoaded[b.keep] == true) then
             self.all[#self.all + 1] = { title = name, required = "", found = mod.version, status = "blocked",
-                tip = text("vtpas_rvBlockedNotif", "Désactivé et bloqué par AutoSwitch") }
+                tip = text(b.tip, "Désactivé et bloqué par AutoSwitch") }
         end
     end
 end

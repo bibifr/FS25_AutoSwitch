@@ -31,7 +31,37 @@ AS_Arbiter.ORDERS = {
     ["WheelsUtil.getSmoothedAcceleratorAndBrakePedals"] = { "FS25_RecoveryWinch", "FS25_EnhancedVehicle" },
 }
 
+-- (v1.0.3.2) Advanced Damage System gardé : Realistic Mechanical Systems (fork d'ADS) est bloqué.
+--   RMS ne pose déjà plus sa spécialisation sur les véhicules quand ADS est chargé, mais ses
+--   crochets globaux (boîte, moteur, hydraulique, atelier, vente, inspection) restaient en
+--   place par-dessus ceux d'ADS : bouton Réparer de l'atelier rendu à ADS sur un engin non
+--   suivi, touche d'inspection en double... Ici, ces crochets ne sont pas installés.
+AS_Arbiter.MOD_BLOCKS = {
+    {
+        mod = "FS25_RealisticMechanicalSystems",
+        keep = "FS25_AdvancedDamageSystem",
+        targets = {
+            "VehicleMotor.getTorqueCurveValue", "VehicleMotor.getMinMaxGearRatio",
+            "VehicleMotor.applyTargetGear", "VehicleMotor.shiftGear",
+            "VehicleMotor.selectGear", "VehicleMotor.updateGear",
+            "TurnOnVehicle.getCanBeTurnedOn", "TurnOnVehicle.actionEventTurnOn",
+            "TurnOnVehicle.actionEventTurnOnAll", "TurnOnVehicle.actionControllerTurnOnEvent",
+            "AttacherJoints.onUpdateTick", "Cylindered.onUpdate",
+            "AttacherJointControl.onUpdate", "HydraulicHammer.hydraulicHammerRaycastCallback",
+            "WorkshopScreen.setVehicle", "InGameMenuStatisticsFrame.populateCellForItemInSection",
+            "ShopConfigScreen.processAttributeData", "SellVehicleEvent.run", "ShopController.sell",
+            "PlayerInputComponent.update", "PlayerInputComponent.registerActionEvents",
+            "HandToolHands.onDraw", "Vehicle.showInfo",
+        },
+    },
+}
+
 AS_Arbiter.vetoCount = {}   -- ["mod -> fonction"] = nombre de crochets écartés
+
+-- règle de MOD_BLOCKS en vigueur : les deux mods sont chargés
+function AS_Arbiter:isModBlockActive(block)
+    return g_modIsLoaded ~= nil and g_modIsLoaded[block.keep] == true and g_modIsLoaded[block.mod] == true
+end
 
 function AS_Arbiter:isVetoed(mod, target)
     local v = self.VETOES[target]
@@ -61,11 +91,8 @@ local function rebuildEnvMap()
     end
 end
 
-local function modOf(fn)
-    -- (v1.0.0.10) même ordre que ModMixer : le mod en cours de chargement d'abord,
-    -- l'environnement de la fonction ensuite. Un crochet posé plus tard depuis un
-    -- véhicule (DDPwheels, grip par roue) n'est donc pas bloqué, comme avec ModMixer.
-    if g_currentModName ~= nil and g_currentModName ~= "" then return g_currentModName end
+-- mod d'après l'environnement de la fonction seulement
+local function envModOf(fn)
     if type(getfenv) == "function" and type(fn) == "function" then
         local ok, env = pcall(getfenv, fn)
         if ok and type(env) == "table" then
@@ -76,6 +103,26 @@ local function modOf(fn)
                 name = envToMod[env]
             end
             if name ~= nil then return name end
+        end
+    end
+    return nil
+end
+
+local function modOf(fn)
+    -- (v1.0.0.10) même ordre que ModMixer : le mod en cours de chargement d'abord,
+    -- l'environnement de la fonction ensuite. Un crochet posé plus tard depuis un
+    -- véhicule (DDPwheels, grip par roue) n'est donc pas bloqué, comme avec ModMixer.
+    if g_currentModName ~= nil and g_currentModName ~= "" then return g_currentModName end
+    return envModOf(fn)
+end
+
+-- (v1.0.3.2) crochet d'un mod bloqué en entier (MOD_BLOCKS) ; RMS pose certains crochets
+-- pendant le chargement de la partie (vente), d'où l'environnement en plus du nom.
+local function blockedBy(target, mod, fn)
+    for _, block in ipairs(AS_Arbiter.MOD_BLOCKS) do
+        if block.targetSet[target] and AS_Arbiter:isModBlockActive(block)
+            and (mod == block.mod or envModOf(fn) == block.mod) then
+            return block.mod
         end
     end
     return nil
@@ -144,7 +191,9 @@ local function intercept(orig, existingFn, newFn)
     if target == nil then return orig(existingFn, newFn) end
 
     local mod = modOf(newFn)
-    if mod ~= nil and AS_Arbiter:isVetoed(mod, target) then
+    local blocked = blockedBy(target, mod, newFn)
+    if blocked ~= nil then mod = blocked end
+    if mod ~= nil and (blocked ~= nil or AS_Arbiter:isVetoed(mod, target)) then
         local key = mod .. " -> " .. target
         if AS_Arbiter.vetoCount[key] == nil then
             print(string.format("[AS_Arbiter] bloqué : %s", key))
@@ -223,6 +272,13 @@ function AS_Arbiter:install()
     if type(Utils) ~= "table" or type(Utils.overwrittenFunction) ~= "function" then return end
 
     for target in pairs(self.VETOES) do nameTarget(target) end
+    for _, block in ipairs(self.MOD_BLOCKS) do
+        block.targetSet = {}
+        for _, target in ipairs(block.targets) do
+            block.targetSet[target] = true
+            nameTarget(target)
+        end
+    end
     for target in pairs(self.ORDERS) do
         nameTarget(target)
         orderState[target] = { seen = {}, held = {} }
@@ -245,9 +301,32 @@ end
 
 -- Un crochet ordonné encore en attente (l'autre mod n'est pas installé) est posé
 -- par-dessus au premier passage dans la boucle de jeu : il n'est jamais perdu.
+-- (v1.0.3.2) mod bloqué en entier : une ligne dans log.txt et une notification en jeu
+function AS_Arbiter:notifyModBlocks()
+    if not self.active then return end
+    for _, block in ipairs(self.MOD_BLOCKS) do
+        if self:isModBlockActive(block) then
+            local n = 0
+            for key, count in pairs(self.vetoCount) do
+                if string.sub(key, 1, #block.mod + 4) == block.mod .. " -> " then n = n + count end
+            end
+            local raw = AS.rawPrint or print
+            raw(string.format("[AS_Arbiter] %s bloqué (%s gardé) : %d crochet(s) écarté(s)", block.mod, block.keep, n))
+            if g_currentMission ~= nil and g_currentMission.addIngameNotification ~= nil then
+                local text = "Realistic Mechanical Systems : bloqué par AutoSwitch (Advanced Damage System est le mod de pannes)"
+                if g_i18n ~= nil and g_i18n.hasText ~= nil and g_i18n:hasText("vtpas_rmsBlockedNotif") then
+                    text = g_i18n:getText("vtpas_rmsBlockedNotif")
+                end
+                pcall(g_currentMission.addIngameNotification, g_currentMission, FSBaseMission.INGAME_NOTIFICATION_CRITICAL, text)
+            end
+        end
+    end
+end
+
 function AS_Arbiter:update(dt)
     if self.flushed then return end
     self.flushed = true
+    self:notifyModBlocks()
     if self.active then
         local n = 0
         for key, count in pairs(self.vetoCount) do
